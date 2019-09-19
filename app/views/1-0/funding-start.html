@@ -1,0 +1,30 @@
+{% set _account = myData.accounts[myData.accountID] %}
+
+{% if _account.type == "employer" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "provider" %}
+  {% extends "layout-as-pro.html" %}
+{% endif %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "funding-reservations"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl">Reserve funding to train and assess an apprentice</h1>
+        <p class="govuk-body">To reserve funding, you will need:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>the month you expect the apprenticeship training to start</li>
+            <li>the <a href="#" target="_blank" class="govuk-link">apprenticeship training course</a> the apprentice will take, which can be changed later</li>
+        </ul>
+        <a role="button" draggable="false" class="govuk-button" tabindex="1" href="funding-choose-org">Reserve funding</a>
+
+    </div>
+</div>
+{% endblock %}

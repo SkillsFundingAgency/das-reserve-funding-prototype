@@ -1,0 +1,34 @@
+{% set _account = myData.accounts[myData.accountID] %}
+
+{% if _account.type == "employer" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "provider" %}
+  {% extends "layout-as-pro.html" %}
+{% endif %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+        {{ govukBackLink({
+            text: "Back",
+            href: "#"
+        }) }}
+
+        <h1 class="govuk-heading-xl" style="margin-bottom: 90px">
+            Your funding reservations
+        </h1>
+
+        <h2 class="govuk-heading-m ">There are no funding reservations to use</h2>
+
+        <p class="govuk-body ">You need to reserve funding in order to add a new apprentice.</p>
+
+        <a role="button" tabindex="1" draggable="false" class="govuk-button" href="funding-start">Reserve funding</a>
+
+    </div>
+</div>
+
+{% endblock %}

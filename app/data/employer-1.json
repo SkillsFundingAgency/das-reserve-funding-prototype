@@ -1,0 +1,11 @@
+{
+    "id": "employer-1",
+    "type": "employer",
+    "name": "ASTON MARTIN CLUB RACING LIMITED",
+    "entities": [
+        {
+            "id": "aston",
+            "name": "ASTON MARTIN CLUB RACING LIMITED"
+        }
+    ]
+}
