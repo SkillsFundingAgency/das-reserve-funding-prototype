@@ -1,9 +1,9 @@
 {% set _account = myData.accounts[myData.accountID] %}
 
 {% if _account.type == "employer" %}
-  {% extends "layout-as-emp.html" %}
+{% extends "layout-as-emp.html" %}
 {% elif _account.type == "provider" %}
-  {% extends "layout-as-pro.html" %}
+{% extends "layout-as-pro.html" %}
 {% endif %}
 
 {% set _inError = myData.validationError %}
@@ -11,7 +11,7 @@
 {% block beforeContent %}
 {{ govukBackLink({
     text: "Back",
-    href: "funding-choose-org"
+    href: "javascript: window.history.go(-1)"
   }) }}
 {% endblock %}
 
@@ -44,7 +44,28 @@
 
         <form method="POST">
 
-            <p class="govuk-body" style="color: red">TO DO</p>
+            <div class="govuk-form-group {% if myData.validationErrors.whichCourseAnswer %}govuk-form-group--error{% endif %}">
+                <label class="govuk-label" for="whichCourseAnswer">
+                    Search for a course
+                </label>
+                {% if myData.validationErrors.whichCourseAnswer %}
+                <span id="whichCourseAnswer-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>
+                    {{myData.validationErrors.whichCourseAnswer.message}} from the list
+                </span>
+                {% endif %}
+                <span class="govuk-hint">
+                    This information can be changed later. If you want to find the correct training, you can check <a href="#" target="_blank" class="govuk-link">Find apprenticeship training</a> or ask your training provider.
+                </span>
+                <div class="autocomplete-wrapper">
+                    <select class="govuk-select autocomplete-element" id="whichCourseAnswer" name="whichCourseAnswer">
+                        <option value="">Select one</option>
+                        {% for _course in myData.courses.list %}
+                        <option value="{{_course.name}}, Level: {{_course.level}}{{' (Standard)' if _course.standard === true}}">{{_course.name}}, Level: {{_course.level}}{{" (Standard)" if _course.standard === true}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
 
             <!-- Button -->
             {% from "govuk/components/button/macro.njk" import govukButton %}
@@ -57,4 +78,25 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block pageScripts %}
+<!-- <script src="/public/javascripts/jquery-1.11.3.js"></script> -->
+<script src="/public/javascripts/accessible-autocomplete.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.autocomplete-element').each(function() {
+      var selectEl = document.querySelector('#' + $(this).attr('id') )
+      accessibleAutocomplete.enhanceSelectElement({
+        autoselect: false,
+        defaultValue: '',
+        minLength: 3,
+        selectElement: selectEl,
+        placeholder: 'Start typing to search apprenticeships',
+        showAllValues: false,
+        displayMenu: "overlay"
+      })
+    })
+  })
+</script>
 {% endblock %}

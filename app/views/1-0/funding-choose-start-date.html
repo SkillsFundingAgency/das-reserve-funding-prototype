@@ -41,52 +41,35 @@
         {% endif %}
 
         <h1 class="govuk-heading-xl">
-            Choose organisation
+            When will the apprentice start their apprenticeship training?
         </h1>
 
         <form method="POST">
 
-            <div class="govuk-form-group {% if myData.validationErrors.whichOrgAnswer %}govuk-form-group--error{% endif %}">
+            <div
+                class="govuk-form-group {% if myData.validationErrors.whichStartDateAnswer %}govuk-form-group--error{% endif %}">
                 <fieldset class="govuk-fieldset" aria-describedby="radio-hint">
                     <span id="radio-hint" class="govuk-hint">
-                        Which organisation is named on the contract with the training provider for the apprentices you'd like to add?
+                        The apprentice can start their apprenticeship training anytime in the month you choose, or the following 2 months.
                     </span>
-                    {% if myData.validationErrors.whichOrgAnswer %}
-                    <span id="whichOrgAnswer-error" class="govuk-error-message">
+                    {% if myData.validationErrors.whichStartDateAnswer %}
+                    <span id="whichStartDateAnswer-error" class="govuk-error-message">
                         <span class="govuk-visually-hidden">Error:</span>
-                        {{myData.validationErrors.whichOrgAnswer.message}}
+                        You must select a start date
                     </span>
                     {% endif %}
-                    <div class="govuk-radios" id="whichOrgAnswer">
-                        {% for entity in _account.entities %}
+                    <div class="govuk-radios" id="whichStartDateAnswer">
+                        {% for startDate in myData.startDates %}
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="whichOrg-1" name="whichOrgAnswer" type="radio" value="entity.id" {% if myData.whichOrgAnswerTemp == entity.id %}checked{% endif %}>
-                            <label class="govuk-label govuk-radios__label" for="whichOrg-1">
-                                {{entity.name}}
+                            <input class="govuk-radios__input" id="whichStartDate-1" name="whichStartDateAnswer" type="radio" value="startDate.id" {% if myData.whichStartDateAnswerTemp == startDate.id %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="whichStartDate-1">
+                                {{startDate.name}}
                             </label>
                         </div>
                         {% endfor %}
                     </div>
                 </fieldset>
             </div>
-
-            <!-- Details -->
-            <details class="govuk-details" data-module="govuk-details">
-                <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">
-                        What is a contract for services?
-                    </span>
-                </summary>
-                <div class="govuk-details__text">
-                    <p class="govuk-body">A contract for services is a formal agreement between a buyer and a supplier.
-                    </p>
-                    <p class="govuk-body">In this case, the contract is between the organisation that's buying
-                        apprenticeship training for their apprentices and the training provider that's training the
-                        apprentices.</p>
-                    <p class="govuk-body">If you're and employer-provider, for example, you won't need a contract for
-                        services as your organisation is both the buyer and the supplier.</p>
-                </div>
-            </details>
 
             <!-- Button -->
             {% from "govuk/components/button/macro.njk" import govukButton %}
