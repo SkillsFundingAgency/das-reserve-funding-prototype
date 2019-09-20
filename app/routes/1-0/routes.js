@@ -132,6 +132,39 @@ module.exports = function (router,_myData) {
             });
         } else {
             req.session.myData.whichStartDateAnswer = req.session.myData.whichStartDateAnswerTemp
+            res.redirect(301, '/' + version + '/funding-check-answers');
+        }
+    });
+
+    // Check answers
+    router.get('/' + version + '/funding-check-answers', function (req, res) {
+        res.render(version + '/funding-check-answers', {
+            myData:req.session.myData
+        });
+    });
+    router.post('/' + version + '/funding-check-answers', function (req, res) {
+        var _account = req.session.myData.accounts[req.session.myData.accountID]
+        // Answer
+        req.session.myData.reserveNowAnswerTemp = req.body.reserveNowAnswer
+        //Set default answer if includeValidation is false and no answer given
+        if(req.session.myData.includeValidation == "false"){
+            req.session.myData.reserveNowAnswerTemp = req.session.myData.reserveNowAnswerTemp || 'yes'
+        }
+        // Validation
+        if(!req.session.myData.reserveNowAnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.reserveNowAnswer = {
+                "anchor": "reserveNow-1",
+                "message": "Select whether you want to reserve funding or not"
+            }
+        }
+        // Next action
+        if(req.session.myData.validationError == "true") {
+            res.render(version + '/funding-check-answers', {
+                myData: req.session.myData
+            });
+        } else {
+            req.session.myData.reserveNowAnswer = req.session.myData.reserveNowAnswerTemp
             res.redirect(301, '/' + version + '/TODO');
         }
     });

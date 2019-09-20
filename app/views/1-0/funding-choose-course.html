@@ -61,7 +61,7 @@
                     <select class="govuk-select autocomplete-element" id="whichCourseAnswer" name="whichCourseAnswer">
                         <option value="">Select one</option>
                         {% for _course in myData.courses.list %}
-                        <option value="{{_course.name}}, Level: {{_course.level}}{{' (Standard)' if _course.standard === true}}">{{_course.name}}, Level: {{_course.level}}{{" (Standard)" if _course.standard === true}}</option>
+                        <option {%if _course.value == myData.whichCourseAnswer %}selected{% endif %} value="{{_course.value}}">{{_course.name}} - Level {{_course.level}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -86,6 +86,7 @@
 <script>
   $(document).ready(function() {
     $('.autocomplete-element').each(function() {
+    //   var _defaultValue = '{{_defaultValue}}';
       var selectEl = document.querySelector('#' + $(this).attr('id') )
       accessibleAutocomplete.enhanceSelectElement({
         autoselect: false,

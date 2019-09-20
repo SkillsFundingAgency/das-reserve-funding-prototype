@@ -61,8 +61,8 @@
                     <div class="govuk-radios" id="whichStartDateAnswer">
                         {% for startDate in myData.startDates %}
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="whichStartDate-1" name="whichStartDateAnswer" type="radio" value="startDate.id" {% if myData.whichStartDateAnswerTemp == startDate.id %}checked{% endif %}>
-                            <label class="govuk-label govuk-radios__label" for="whichStartDate-1">
+                            <input class="govuk-radios__input" id="whichStartDate-{{loop.index}}" name="whichStartDateAnswer" type="radio" value="{{startDate.id}}" {% if myData.whichStartDateAnswerTemp == startDate.id %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="whichStartDate-{{loop.index}}">
                                 {{startDate.name}}
                             </label>
                         </div>
