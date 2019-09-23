@@ -2,6 +2,16 @@ module.exports = function (router,_myData) {
 
     var version = "1-0";
 
+    //Random function
+    function randomStr(len) { 
+        var ans = ''
+            arr = 'abcdefghijklimnopqrstuvwxyz'; 
+        for (var i = len; i > 0; i--) { 
+            ans += arr[Math.floor(Math.random() * arr.length)]; 
+        } 
+        return ans;
+    }
+
     function resetSession(req){
         req.session.myData = JSON.parse(JSON.stringify(_myData))
         req.session.myData.accountID = req.session.myData.defaultAccountID
@@ -21,27 +31,34 @@ module.exports = function (router,_myData) {
         next()
     });
 
+    // Employer home
+    router.get('/' + version + '/employer-home', function (req, res) {
+        res.render(version + '/employer-home', {
+            myData:req.session.myData
+        });
+    });
+
     // Your reservations
-    router.get('/' + version + '/funding-reservations', function (req, res) {
-        res.render(version + '/funding-reservations', {
+    router.get('/' + version + '/reserve-reservations', function (req, res) {
+        res.render(version + '/reserve-reservations', {
             myData:req.session.myData
         });
     });
 
     // Start
-    router.get('/' + version + '/funding-start', function (req, res) {
-        res.render(version + '/funding-start', {
+    router.get('/' + version + '/reserve-start', function (req, res) {
+        res.render(version + '/reserve-start', {
             myData:req.session.myData
         });
     });
 
     // Choose organisation
-    router.get('/' + version + '/funding-choose-org', function (req, res) {
-        res.render(version + '/funding-choose-org', {
+    router.get('/' + version + '/reserve-choose-org', function (req, res) {
+        res.render(version + '/reserve-choose-org', {
             myData:req.session.myData
         });
     });
-    router.post('/' + version + '/funding-choose-org', function (req, res) {
+    router.post('/' + version + '/reserve-choose-org', function (req, res) {
         var _account = req.session.myData.accounts[req.session.myData.accountID]
         // Answer
         req.session.myData.whichOrgAnswerTemp = req.body.whichOrgAnswer
@@ -59,23 +76,24 @@ module.exports = function (router,_myData) {
         }
         // Next action
         if(req.session.myData.validationError == "true") {
-            res.render(version + '/funding-choose-org', {
+            res.render(version + '/reserve-choose-org', {
                 myData: req.session.myData
             });
         } else {
             req.session.myData.whichOrgAnswer = req.session.myData.whichOrgAnswerTemp
-            res.redirect(301, '/' + version + '/funding-choose-course');
+            req.session.myData.whichOrgAnswerTemp = ""
+            res.redirect(301, '/' + version + '/reserve-choose-course');
         }
     });
 
     // Choose course
-    router.get('/' + version + '/funding-choose-course', function (req, res) {
-        res.render(version + '/funding-choose-course', {
+    router.get('/' + version + '/reserve-choose-course', function (req, res) {
+        res.render(version + '/reserve-choose-course', {
             myData:req.session.myData
         });
     });
     // TODO
-    router.post('/' + version + '/funding-choose-course', function (req, res) {
+    router.post('/' + version + '/reserve-choose-course', function (req, res) {
         var _account = req.session.myData.accounts[req.session.myData.accountID],
             _courses = req.session.myData.courses.list
         // Answer
@@ -94,22 +112,23 @@ module.exports = function (router,_myData) {
         }
         // Next action
         if(req.session.myData.validationError == "true") {
-            res.render(version + '/funding-choose-course', {
+            res.render(version + '/reserve-choose-course', {
                 myData: req.session.myData
             });
         } else {
             req.session.myData.whichCourseAnswer = req.session.myData.whichCourseAnswerTemp
-            res.redirect(301, '/' + version + '/funding-choose-start-date');
+            req.session.myData.whichCourseAnswerTemp = ""
+            res.redirect(301, '/' + version + '/reserve-choose-start-date');
         }
     });
 
     // Choose start date
-    router.get('/' + version + '/funding-choose-start-date', function (req, res) {
-        res.render(version + '/funding-choose-start-date', {
+    router.get('/' + version + '/reserve-choose-start-date', function (req, res) {
+        res.render(version + '/reserve-choose-start-date', {
             myData:req.session.myData
         });
     });
-    router.post('/' + version + '/funding-choose-start-date', function (req, res) {
+    router.post('/' + version + '/reserve-choose-start-date', function (req, res) {
         var _account = req.session.myData.accounts[req.session.myData.accountID]
         // Answer
         req.session.myData.whichStartDateAnswerTemp = req.body.whichStartDateAnswer
@@ -127,23 +146,36 @@ module.exports = function (router,_myData) {
         }
         // Next action
         if(req.session.myData.validationError == "true") {
-            res.render(version + '/funding-choose-start-date', {
+            res.render(version + '/reserve-choose-start-date', {
                 myData: req.session.myData
             });
         } else {
             req.session.myData.whichStartDateAnswer = req.session.myData.whichStartDateAnswerTemp
-            res.redirect(301, '/' + version + '/funding-check-answers');
+            req.session.myData.whichStartDateAnswerTemp = ""
+            res.redirect(301, '/' + version + '/reserve-check-answers');
         }
     });
 
     // Check answers
-    router.get('/' + version + '/funding-check-answers', function (req, res) {
-        res.render(version + '/funding-check-answers', {
+    router.get('/' + version + '/reserve-check-answers', function (req, res) {
+        res.render(version + '/reserve-check-answers', {
             myData:req.session.myData
         });
     });
-    router.post('/' + version + '/funding-check-answers', function (req, res) {
+    router.post('/' + version + '/reserve-check-answers', function (req, res) {
         var _account = req.session.myData.accounts[req.session.myData.accountID]
+        
+        //Selected entity
+        var _selectedEntityID = req.session.myData.whichOrgAnswer,
+            _selectedEntity = _account.entities[0]
+        if(_selectedEntityID){
+            _account.entities.forEach(function(_entity) {
+                if(_entity.id == _selectedEntityID){
+                    _selectedEntity = _entity
+                }
+            });
+        }
+
         // Answer
         req.session.myData.reserveNowAnswerTemp = req.body.reserveNowAnswer
         //Set default answer if includeValidation is false and no answer given
@@ -160,12 +192,65 @@ module.exports = function (router,_myData) {
         }
         // Next action
         if(req.session.myData.validationError == "true") {
-            res.render(version + '/funding-check-answers', {
+            res.render(version + '/reserve-check-answers', {
                 myData: req.session.myData
             });
         } else {
             req.session.myData.reserveNowAnswer = req.session.myData.reserveNowAnswerTemp
-            res.redirect(301, '/' + version + '/TODO');
+            req.session.myData.reserveNowAnswerTemp = ""
+            if(req.session.myData.reserveNowAnswer == "yes"){
+                var _id = randomStr(10)
+                _reservationObject = {
+                    "id": _id,
+                    "startDate": req.session.myData.whichStartDateAnswer,
+                    "course": req.session.myData.whichCourseAnswer,
+                    "entity": _selectedEntityID,
+                    "status": "available",
+                    "created": new Date()
+                }
+                _account.reservations.push(_reservationObject)
+                _selectedEntity.reservations.push(_reservationObject)
+                res.redirect(301, '/' + version + '/reserve-confirmation');
+            } else {
+                res.redirect(301, '/' + version + '/employer-home');
+            }
+            
+        }
+    });
+
+    // Confirmation
+    router.get('/' + version + '/reserve-confirmation', function (req, res) {
+        res.render(version + '/reserve-confirmation', {
+            myData:req.session.myData
+        });
+    });
+    router.post('/' + version + '/reserve-confirmation', function (req, res) {
+        var _account = req.session.myData.accounts[req.session.myData.accountID]
+
+        // Answer
+        req.session.myData.whatNextAnswerTemp = req.body.whatNextAnswer
+        //Set default answer if includeValidation is false and no answer given
+        if(req.session.myData.includeValidation == "false"){
+            req.session.myData.whatNextAnswerTemp = req.session.myData.whatNextAnswerTemp || 'home'
+        }
+        // Validation
+        if(!req.session.myData.whatNextAnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.whatNextAnswer = {
+                "anchor": "whatNext-1",
+                "message": "Select what you would like to do next"
+            }
+        }
+        // Next action
+        if(req.session.myData.validationError == "true") {
+            res.render(version + '/reserve-confirmation', {
+                myData: req.session.myData
+            });
+        } else {
+            req.session.myData.whatNextAnswer = req.session.myData.whatNextAnswerTemp
+            req.session.myData.whatNextAnswerTemp = ""
+            // TODO multiple exit routes
+            res.redirect(301, '/' + version + '/employer-home');
         }
     });
 

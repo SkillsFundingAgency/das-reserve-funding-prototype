@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
+// Base session data
 var _myData = {
     "includeValidation": "true",
     "accounts":

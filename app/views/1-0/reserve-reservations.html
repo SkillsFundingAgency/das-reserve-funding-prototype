@@ -1,0 +1,101 @@
+{% set _account = myData.accounts[myData.accountID] %}
+{% set _reservations = _account.reservations | length %}
+
+{% if _account.type == "employer" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "provider" %}
+  {% extends "layout-as-pro.html" %}
+{% endif %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+
+{% block beforeContent %}
+{% if _reservations > 0 %}
+  {{ govukBackLink({
+      text: "Back",
+      href: "javascript: window.history.go(-1)"
+  }) }}
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        {% if _reservations == 0 %}
+          {{ govukBackLink({
+              text: "Back",
+              href: "javascript: window.history.go(-1)"
+          }) }}
+        {% endif %}
+
+        <h1 class="govuk-heading-xl" style="margin-bottom: 90px">
+            Your funding reservations
+        </h1>
+
+        {% if _reservations > 0 %}
+          <p class="govuk-heading-m"><a class="govuk-link" href="reserve-start">Reserve more funding</a></p>
+          <p class="govuk-body">{{_reservations}} {% if _reservations == 1 %}reservation{% else %}reservations{% endif %}</p>
+          <table class="govuk-table">
+              <!-- <caption class="govuk-table__caption">Dates and amounts</caption> -->
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Organisation</th>
+                  <th scope="col" class="govuk-table__header">Apprenticeship training</th>
+                  <th scope="col" class="govuk-table__header">Apprenticeship start date</th>
+                  <th scope="col" class="govuk-table__header"></th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                {% for _reservation in _account.reservations %}
+                  <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                      {% for _entity in _account.entities %}
+                        {% if _entity.id == _reservation.entity %}
+                          {{_entity.name}}
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                    <td class="govuk-table__cell">
+                      {% for _course in myData.courses.list %}
+                        {% if _course.value == _reservation.course %}
+                          {{_course.name}} - Level {{_course.level}}
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                    <td class="govuk-table__cell">
+                      {% for _startDate in myData.startDates %}
+                        {% if _startDate.id == _reservation.startDate %}
+                          {{_startDate.range}}
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                    <td class="govuk-table__cell" style="text-align: right">
+                      {% if _reservation.status == "available" %}
+                      <a href="#add" class="govuk-link">Add apprentice</a><br>
+                      <a href="#delete" class="govuk-link">Delete</a>
+                      {% elif _reservation.status == "expired" %}
+                      <!-- TODO -->
+                      Expired
+                      {% elif _reservation.status == "used" %}
+                      <!-- TODO -->
+                      Used
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <h2 class="govuk-heading-m ">There are no funding reservations to use</h2>
+          <p class="govuk-body ">You need to reserve funding in order to add a new apprentice.</p>
+          <a role="button" tabindex="1" draggable="false" class="govuk-button" href="reserve-start">Reserve funding</a>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

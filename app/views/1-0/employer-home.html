@@ -1,0 +1,20 @@
+{% set _account = myData.accounts[myData.accountID] %}
+
+{% extends "layout-as-emp.html" %}
+
+{% block content %}
+
+<div class="govuk-grid-row" style="padding-top: 40px">
+    <div class="govuk-grid-column-full">
+
+        <span class="govuk-caption-xl">Account ID: {{_account.accountID}}</span>
+        <h1 class="govuk-heading-xl">{{_account.name}}</h1>
+
+        <p class="govuk-body" style="color: red">TODO homepage</p>
+
+        <p class="govuk-body"><a href="reserve-reservations" class="govuk-link">Your funding reservations</a></p>
+
+    </div>
+</div>
+
+{% endblock %}

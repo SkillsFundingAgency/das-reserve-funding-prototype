@@ -61,7 +61,7 @@
                     <select class="govuk-select autocomplete-element" id="whichCourseAnswer" name="whichCourseAnswer">
                         <option value="">Select one</option>
                         {% for _course in myData.courses.list %}
-                        <option {%if _course.value == myData.whichCourseAnswer %}selected{% endif %} value="{{_course.value}}">{{_course.name}} - Level {{_course.level}}</option>
+                        <option {%if _course.value == myData.whichCourseAnswerTemp %}selected{% endif %} value="{{_course.value}}">{{_course.name}} - Level {{_course.level}}</option>
                         {% endfor %}
                     </select>
                 </div>
