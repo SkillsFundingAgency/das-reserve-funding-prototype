@@ -199,15 +199,15 @@ module.exports = function (router,_myData) {
             req.session.myData.reserveNowAnswer = req.session.myData.reserveNowAnswerTemp
             req.session.myData.reserveNowAnswerTemp = ""
             if(req.session.myData.reserveNowAnswer == "yes"){
-                var _id = randomStr(10)
-                _reservationObject = {
-                    "id": _id,
-                    "startDate": req.session.myData.whichStartDateAnswer,
-                    "course": req.session.myData.whichCourseAnswer,
-                    "entity": _selectedEntityID,
-                    "status": "available",
-                    "created": new Date()
-                }
+                var _id = randomStr(10),
+                    _reservationObject = {
+                        "id": _id,
+                        "startDate": req.session.myData.whichStartDateAnswer,
+                        "course": req.session.myData.whichCourseAnswer,
+                        "entity": _selectedEntityID,
+                        "status": "available",
+                        "created": new Date()
+                    }
                 _account.reservations.push(_reservationObject)
                 _selectedEntity.reservations.push(_reservationObject)
                 res.redirect(301, '/' + version + '/reserve-confirmation');
