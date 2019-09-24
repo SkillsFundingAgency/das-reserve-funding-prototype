@@ -1,6 +1,6 @@
 module.exports = function (router,_myData) {
 
-    var version = "1-0";
+    var version = "14-0";
 
     //Random function
     function randomStr(len) { 
