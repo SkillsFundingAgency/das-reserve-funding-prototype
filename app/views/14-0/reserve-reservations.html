@@ -1,17 +1,29 @@
 {% set _account = myData.accounts[myData.accountID] %}
-{% set _reservations = _account.reservations | length %}
 
-{% if _account.type == "employer" %}
+<!-- Visible reservations -->
+{% set _reservations = [] %}
+{% for _reservation in _account.reservations %}
+  {% if _reservation.visible == true %}
+    {% set _reservations = (_reservations.push(_reservation), _reservations) %}
+  {% endif %}
+{% endfor %}
+
+{% set _reservationstotal = _reservations | length %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
   {% extends "layout-as-emp.html" %}
-{% elif _account.type == "provider" %}
+{% elif _account.type == "pro" %}
   {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
 {% endif %}
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 
 {% block beforeContent %}
-{% if _reservations > 0 %}
+{% if _reservationstotal > 0 %}
   {{ govukBackLink({
       text: "Back",
       href: "javascript: window.history.go(-1)"
@@ -25,7 +37,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
-        {% if _reservations == 0 %}
+        {% if _reservationstotal == 0 %}
           {{ govukBackLink({
               text: "Back",
               href: "javascript: window.history.go(-1)"
@@ -36,9 +48,9 @@
             Your funding reservations
         </h1>
 
-        {% if _reservations > 0 %}
+        {% if _reservationstotal > 0 %}
           <p class="govuk-heading-m"><a class="govuk-link" href="reserve-start">Reserve more funding</a></p>
-          <p class="govuk-body">{{_reservations}} {% if _reservations == 1 %}reservation{% else %}reservations{% endif %}</p>
+          <p class="govuk-body">{{_reservationstotal}} {% if _reservationstotal == 1 %}reservation{% else %}reservations{% endif %}</p>
           <table class="govuk-table">
               <!-- <caption class="govuk-table__caption">Dates and amounts</caption> -->
               <thead class="govuk-table__head">
@@ -50,7 +62,7 @@
                 </tr>
               </thead>
               <tbody class="govuk-table__body">
-                {% for _reservation in _account.reservations %}
+                {% for _reservation in _reservations %}
                   <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
                       {% for _entity in _account.entities %}
@@ -75,14 +87,12 @@
                     </td>
                     <td class="govuk-table__cell" style="text-align: right">
                       {% if _reservation.status == "available" %}
-                      <a href="#add" class="govuk-link">Add apprentice</a><br>
-                      <a href="#delete" class="govuk-link">Delete</a>
+                      <a href="#add" class="govuk-link">Add apprentice</a>
+                      <br><a href="#delete" class="govuk-link">Delete</a>
                       {% elif _reservation.status == "expired" %}
-                      <!-- TODO -->
-                      Expired
+                      <strong class="govuk-tag govuk-tag--inactive">expired</strong>
                       {% elif _reservation.status == "used" %}
-                      <!-- TODO -->
-                      Used
+                      <strong class="govuk-tag govuk-tag--inactive">used</strong>
                       {% endif %}
                     </td>
                   </tr>

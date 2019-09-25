@@ -9,7 +9,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
-        <!-- Start from -->
+        <!-- Employer or Provider -->
         <div class="govuk-form-group">
             <label class="govuk-label" for="setupType">
                 Employer or provider
@@ -17,6 +17,32 @@
             <select class="govuk-select" id="setupType" name="setupType" data-option="setupType">
                 <option {% if myData.type == 'emp' %}selected{% endif %} value="emp">Employer</option>
                 <option {% if myData.type == 'pro' %}selected{% endif %} value="pro">Provider</option>
+            </select>
+        </div>
+
+        <!-- Employer dataset -->
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="setupEmpAccount">
+                Employer account
+            </label>
+            <select class="govuk-select" id="setupEmpAccount" name="setupEmpAccount" data-option="setupEmpAccount">
+                {% for key, _account in myData.accounts %}
+                    {% if _account.type == "emp" %}
+                        <option {% if myData.emp == key %}selected{% endif %} value="{{key}}">{{_account.name}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Reservations -->
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="setupReservations">
+                Reservations
+            </label>
+            <select class="govuk-select" id="setupReservations" name="setupReservations" data-option="setupReservations">
+                <option {% if myData.res == '0' %}selected{% endif %} value="0">0 reservations</option>
+                <option {% if myData.res == '1' %}selected{% endif %} value="1">1 reservation</option>
+                <option {% if myData.res == '10' %}selected{% endif %} value="10">10 reservations</option>
             </select>
         </div>
 
@@ -39,39 +65,35 @@
 
 {% endblock %}
 
-
 {% block pageScripts %}
 <script>
-$(document).ready(function(){
-    var _startURL = $("#start-url a"),
-        _startURLLabel = $("#start-url-label"),
-        _options = $("[data-option]")
-
-    _options.change(function(){
-
-        //Base URL
-        var _urlBase = "https://das-reserve-funding-prototype.herokuapp.com/" + {{myData.version|dump|safe}} + "/";
-        //Queries
-        var _urlPage = (_options.filter("#setupType").val() == "pro") ? "provider-home?" : "employer-home?",
-            _urlReset = "reset=true",
-            _urlType = "&type=" + _options.filter("#setupType").val();
-        //Queries combined
-        var _urlPageQueries = _urlPage + _urlReset + _urlType;
-        //URL text
-        var _startURLText = _urlBase + _urlPageQueries,
-            _startURLHREF =  _urlPageQueries;
-
-        // update label
-        _startURLLabel
-            .text(_startURLText)
-            .hide().fadeIn()
-        //update link
-        _startURL
-            .attr("href", _startURLHREF)
-            .parent().show()
-
-    }).trigger("change");
-    
-});
+    $(document).ready(function(){
+        var _startURL = $("#start-url a"),
+            _startURLLabel = $("#start-url-label"),
+            _options = $("[data-option]")
+        _options.change(function(){
+            //Base URL
+            var _urlBase = "https://das-reserve-funding-prototype.herokuapp.com/" + {{myData.version|dump|safe}} + "/";
+            //Queries
+            var _urlPage = (_options.filter("#setupType").val() == "pro") ? "provider-home?" : "employer-home?",
+                _urlReset = "reset=true",
+                _urlType = "&type=" + _options.filter("#setupType").val(),
+                _urlSetupEmpAccount = "&emp=" + _options.filter("#setupEmpAccount").val(),
+                _urlSetupReservations = "&res=" + _options.filter("#setupReservations").val();
+            //Queries combined
+            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlSetupEmpAccount + _urlSetupReservations;
+            //URL text
+            var _startURLText = _urlBase + _urlPageQueries,
+                _startURLHREF =  _urlPageQueries;
+            // update label
+            _startURLLabel
+                .text(_startURLText)
+                .hide().fadeIn()
+            //update link
+            _startURL
+                .attr("href", _startURLHREF)
+                .parent().show()
+        }).trigger("change");
+    });
 </script>
 {% endblock %}

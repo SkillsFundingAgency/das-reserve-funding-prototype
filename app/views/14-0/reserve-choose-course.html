@@ -1,8 +1,8 @@
 {% set _account = myData.accounts[myData.accountID] %}
 
-{% if _account.type == "employer" %}
+{% if _account.type == "emp" %}
 {% extends "layout-as-emp.html" %}
-{% elif _account.type == "provider" %}
+{% elif _account.type == "pro" %}
 {% extends "layout-as-pro.html" %}
 {% endif %}
 

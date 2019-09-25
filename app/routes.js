@@ -6,9 +6,12 @@ var _myData = {
     "includeValidation": "true",
     "accounts":
     {
-        "employer-1": require(__dirname + '/data/employer-1.json')
+        "emp-1": require(__dirname + '/data/emp-1.json')
     },
-    "defaultAccountID": "employer-1",
+    "defaultEmpAccount": "emp-1",
+    "defaultProAccount": "pro-1",
+    "defaultAccountID": "emp-1",
+    "defaultType": "emp",
     "courses": require(__dirname + '/data/courses.json'),
     "startDates": [
         {
@@ -28,8 +31,6 @@ var _myData = {
         }
     ]
 }
-
-// Add your routes here - above the module.exports line
 
 require('./routes/14-0/routes.js')(router,JSON.parse(JSON.stringify(_myData)));
 

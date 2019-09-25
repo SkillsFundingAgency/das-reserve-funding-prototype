@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% set mainClasses = (mainClasses | default("govuk-main-wrapper--auto-spacing")) + " app-apprentice-service" %}
+{% set _currentPage = _currentPage or "" %}
 
 {% block header %}
 {% include "includes/cookie-banner.html" %}

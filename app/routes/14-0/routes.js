@@ -2,19 +2,13 @@ module.exports = function (router,_myData) {
 
     var version = "14-0";
 
-    //Random function
-    function randomStr(len) { 
-        var ans = ''
-            arr = 'abcdefghijklimnopqrstuvwxyz'; 
-        for (var i = len; i > 0; i--) { 
-            ans += arr[Math.floor(Math.random() * arr.length)]; 
-        } 
-        return ans;
-    }
-
     function reset(req){
         req.session.myData = JSON.parse(JSON.stringify(_myData))
+        req.session.myData.type = req.session.myData.defaultType
         req.session.myData.accountID = req.session.myData.defaultAccountID
+        req.session.myData.emp = req.session.myData.defaultEmpAccount
+        req.session.myData.proAccount = req.session.myData.defaultProAccount
+        req.session.myData.res = 0
     }
 
     router.all('/' + version + '/*', function (req, res, next) {
@@ -27,6 +21,26 @@ module.exports = function (router,_myData) {
         req.session.myData.validationErrors = {}
         req.session.myData.validationError = "false"
         req.session.myData.includeValidation =  req.query.includeValidation || req.session.myData.includeValidation
+
+        // Query string values
+        req.session.myData.type = req.query.type || req.session.myData.type
+        req.session.myData.emp = req.query.emp || req.session.myData.emp
+        req.session.myData.proAccount = req.query.proAccount || req.session.myData.proAccount
+        if(req.session.myData.type == "emp") {
+            req.session.myData.accountID = req.session.myData.emp
+        } else if (req.session.myData.type == "pro") {
+            req.session.myData.accountID = req.session.myData.proAccount
+        }
+        req.session.myData.res = Number(req.query.res || req.session.myData.res)
+        //Add required number of premade reservations to account data
+        if(req.query.reset) {
+            var _reservations = req.session.myData.accounts[req.session.myData.accountID].reservations
+            _reservations.forEach(function(_reservation, index) {
+                if(index < req.session.myData.res) {
+                    _reservation.visible = true
+                }
+            });
+        }
 
         next()
     });
@@ -102,13 +116,11 @@ module.exports = function (router,_myData) {
     });
     // TODO
     router.post('/' + version + '/reserve-choose-course', function (req, res) {
-        var _account = req.session.myData.accounts[req.session.myData.accountID],
-            _courses = req.session.myData.courses.list
         // Answer
         req.session.myData.whichCourseAnswerTemp = req.body.whichCourseAnswer
         //Set default answer if includeValidation is false and no answer given
         if(req.session.myData.includeValidation == "false"){
-            req.session.myData.whichCourseAnswerTemp = req.session.myData.whichCourseAnswerTemp || _courses[0].value
+            req.session.myData.whichCourseAnswerTemp = req.session.myData.whichCourseAnswerTemp || req.session.myData.courses.list[0].value
         }
         // Validation
         if(!req.session.myData.whichCourseAnswerTemp) {
@@ -137,7 +149,6 @@ module.exports = function (router,_myData) {
         });
     });
     router.post('/' + version + '/reserve-choose-start-date', function (req, res) {
-        var _account = req.session.myData.accounts[req.session.myData.accountID]
         // Answer
         req.session.myData.whichStartDateAnswerTemp = req.body.whichStartDateAnswer
         //Set default answer if includeValidation is false and no answer given
@@ -172,18 +183,6 @@ module.exports = function (router,_myData) {
     });
     router.post('/' + version + '/reserve-check-answers', function (req, res) {
         var _account = req.session.myData.accounts[req.session.myData.accountID]
-        
-        //Selected entity
-        var _selectedEntityID = req.session.myData.whichOrgAnswer,
-            _selectedEntity = _account.entities[0]
-        if(_selectedEntityID){
-            _account.entities.forEach(function(_entity) {
-                if(_entity.id == _selectedEntityID){
-                    _selectedEntity = _entity
-                }
-            });
-        }
-
         // Answer
         req.session.myData.reserveNowAnswerTemp = req.body.reserveNowAnswer
         //Set default answer if includeValidation is false and no answer given
@@ -207,22 +206,20 @@ module.exports = function (router,_myData) {
             req.session.myData.reserveNowAnswer = req.session.myData.reserveNowAnswerTemp
             req.session.myData.reserveNowAnswerTemp = ""
             if(req.session.myData.reserveNowAnswer == "yes"){
-                var _id = randomStr(10),
-                    _reservationObject = {
-                        "id": _id,
+                _account.reservations.push(
+                    {
+                        "id": randomStr(10),
                         "startDate": req.session.myData.whichStartDateAnswer,
                         "course": req.session.myData.whichCourseAnswer,
-                        "entity": _selectedEntityID,
+                        "entity": req.session.myData.whichOrgAnswer,
                         "status": "available",
-                        "created": new Date()
+                        "visible": true
                     }
-                _account.reservations.push(_reservationObject)
-                _selectedEntity.reservations.push(_reservationObject)
+                )
                 res.redirect(301, '/' + version + '/reserve-confirmation');
             } else {
                 res.redirect(301, '/' + version + '/employer-home');
             }
-            
         }
     });
 
@@ -233,8 +230,6 @@ module.exports = function (router,_myData) {
         });
     });
     router.post('/' + version + '/reserve-confirmation', function (req, res) {
-        var _account = req.session.myData.accounts[req.session.myData.accountID]
-
         // Answer
         req.session.myData.whatNextAnswerTemp = req.body.whatNextAnswer
         //Set default answer if includeValidation is false and no answer given
@@ -261,7 +256,4 @@ module.exports = function (router,_myData) {
             res.redirect(301, '/' + version + '/employer-home');
         }
     });
-
-
  };
-
