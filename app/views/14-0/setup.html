@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">Prototype setup</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        <!-- Start from -->
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="setupType">
+                Employer or provider
+            </label>
+            <select class="govuk-select" id="setupType" name="setupType" data-option="setupType">
+                <option {% if myData.type == 'emp' %}selected{% endif %} value="emp">Employer</option>
+                <option {% if myData.type == 'pro' %}selected{% endif %} value="pro">Provider</option>
+            </select>
+        </div>
+
+        <p class="govuk-body" id="start-url" style="display:none">
+            <a href="#" role="button" draggable="false" class="govuk-button">Start prototype</a>
+        </p>
+
+        <p class="govuk-body" >
+            <span class="govuk-!-font-weight-bold">Shareable link:</span><br>
+            <span class="govuk-body" id="start-url-label" style="display:none"></span>
+        </p>
+
+        <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    </div>
+    <!-- <div class="govuk-grid-column-one-third">
+        &nbsp;
+    </div> -->
+</div>
+
+{% endblock %}
+
+
+{% block pageScripts %}
+<script>
+$(document).ready(function(){
+    var _startURL = $("#start-url a"),
+        _startURLLabel = $("#start-url-label"),
+        _options = $("[data-option]")
+
+    _options.change(function(){
+
+        //Base URL
+        var _urlBase = "https://das-reserve-funding-prototype.herokuapp.com/" + {{myData.version|dump|safe}} + "/";
+        //Queries
+        var _urlPage = (_options.filter("#setupType").val() == "pro") ? "provider-home?" : "employer-home?",
+            _urlReset = "reset=true",
+            _urlType = "&type=" + _options.filter("#setupType").val();
+        //Queries combined
+        var _urlPageQueries = _urlPage + _urlReset + _urlType;
+        //URL text
+        var _startURLText = _urlBase + _urlPageQueries,
+            _startURLHREF =  _urlPageQueries;
+
+        // update label
+        _startURLLabel
+            .text(_startURLText)
+            .hide().fadeIn()
+        //update link
+        _startURL
+            .attr("href", _startURLHREF)
+            .parent().show()
+
+    }).trigger("change");
+    
+});
+</script>
+{% endblock %}

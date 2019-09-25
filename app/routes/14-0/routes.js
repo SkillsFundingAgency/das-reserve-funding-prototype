@@ -12,15 +12,15 @@ module.exports = function (router,_myData) {
         return ans;
     }
 
-    function resetSession(req){
+    function reset(req){
         req.session.myData = JSON.parse(JSON.stringify(_myData))
         req.session.myData.accountID = req.session.myData.defaultAccountID
     }
 
     router.all('/' + version + '/*', function (req, res, next) {
 
-        if(!req.session.myData || req.query.resetSession) {
-            resetSession(req)
+        if(!req.session.myData || req.query.reset) {
+            reset(req)
         }
         
         // Reset page validation to false by default. Will only be set to true, if applicable, on a POST of a page
@@ -29,6 +29,14 @@ module.exports = function (router,_myData) {
         req.session.myData.includeValidation =  req.query.includeValidation || req.session.myData.includeValidation
 
         next()
+    });
+
+    // Prototype setup
+    router.get('/' + version + '/setup', function (req, res) {
+        req.session.myData.version = version
+        res.render(version + '/setup', {
+            myData:req.session.myData
+        });
     });
 
     // Employer home

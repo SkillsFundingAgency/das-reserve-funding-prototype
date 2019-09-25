@@ -20,3 +20,149 @@ $govuk-assets-path: '/govuk/assets/';
 @import "components/notifications";
 @import "components/apprenticeship-service-header";
 @import "components/accessible-autocomplete";
+
+//
+//Home page
+//
+
+//Cards
+.das-cards {
+    margin: 0 -15px;
+    flex-wrap: wrap;
+    -ms-flex-wrap: wrap
+}
+
+@media (min-width: 40.0625em) {
+    .das-cards {
+        display: flex;
+        display: -ms-flex
+    }
+}
+
+.das-card {
+    padding: 0 15px;
+    margin-bottom: 15px;
+    box-sizing: border-box
+}
+
+@media (min-width: 40.0625em) {
+    .das-card {
+        width: 50%
+    }
+}
+
+.das-card__heading {
+    margin-top: 0;
+    margin-bottom: .5em
+}
+
+//Sections
+.das-section-dashboard {
+    border-bottom: 2px solid #bfc1c3;
+    padding-bottom: 15px
+}
+
+.das-section__heading {
+    margin-top: 10px;
+    margin-bottom: 10px
+}
+
+.das-section__description {
+    color: #6f777b;
+    margin-top: 0
+}
+
+//Panels
+
+.das-panel {
+    padding: 20px;
+    background: #fff;
+    margin-bottom: 15px;
+    border-left-style: solid;
+    border-color: #bfc1c3;
+    box-sizing: border-box;
+    clear: both;
+}
+
+.das-panel-filled {
+    background: #dee0e2;
+}
+
+//Tabs (tasks)
+.js-tabs {
+    border-bottom: 1px solid #bfc1c3;
+    padding: 0 10px;
+    list-style: none;
+    margin: 20px 0 0;
+}
+.js-tabs:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+.js-tabs li {
+    float: left;
+    margin-bottom: 0;
+    margin-right: 5px;
+}
+.js-tabs a.selected {
+    outline: none;
+}
+@media (min-width: 641px) {
+    .js-tabs a.selected {
+        border-bottom: 1px solid #fff;
+    }
+}
+.js-tabs a.selected {
+    background: #fff;
+    text-decoration: none;
+    color: #0b0c0c;
+    font-weight: bold;
+}
+.js-tabs a {
+    display: block;
+    padding: 10px 20px;
+    border: 1px solid #bfc1c3;
+    position: relative;
+    margin-bottom: -1px;
+    background: #f8f8f8;
+}
+.das-panes {
+    border: 1px solid #bfc1c3;
+    border-top: none;
+}
+.js-tab-pane {
+    padding: 15px;
+}
+
+// Favourites item
+.das-favourites-link{
+    display:-ms-inline-flexbox;
+    display:inline-flex;
+    align-items:center;
+    color:#005ea5;
+    text-decoration:underline;
+    line-height:1;
+    margin-top:5px;
+    margin-bottom:0
+}
+.das-favourites-link:focus{
+    outline:3px solid #ffbf47;
+    outline-offset:0
+}
+.das-favourites-link:hover,
+.das-favourites-link:focus{
+    text-decoration:none
+}
+.das-favourites-link__icon{
+    width:1.6em;margin-right:8px
+}
+.das-favourites-link__icon>img{
+    max-width:100%;display:block
+}
+.das-favourites-link__text{
+    margin-top:5px
+}
+.das-favourites-link__count{
+    font-weight:700
+}
