@@ -8,10 +8,10 @@ var _myData = {
     {
         "emp-1": require(__dirname + '/data/emp-1.json')
     },
-    "defaultEmpAccount": "emp-1",
-    "defaultProAccount": "pro-1",
-    "defaultAccountID": "emp-1",
-    "defaultType": "emp",
+    "emp": "emp-1",
+    "pro": "pro-1",
+    "account": "emp-1",
+    "type": "emp",
     "courses": require(__dirname + '/data/courses.json'),
     "startDates": [
         {

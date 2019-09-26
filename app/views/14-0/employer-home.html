@@ -1,4 +1,4 @@
-{% set _account = myData.accounts[myData.accountID] %}
+{% set _account = myData.accounts[myData.account] %}
 {% set _currentPage = 'employer-home' %}
 
 {% extends "layout-as-emp.html" %}
@@ -12,7 +12,7 @@ Home - Manage apprentices
 <div class="govuk-grid-row" style="padding-top: 40px">
     <div class="govuk-grid-column-full">
 
-        <span class="govuk-caption-xl">Account ID: {{_account.accountID}}</span>
+        <span class="govuk-caption-xl">Account ID: 78NV48</span>
         <h1 class="govuk-heading-xl" style="margin-bottom: 0">{{_account.name}}</h1>
 
         <p class="govuk-body">

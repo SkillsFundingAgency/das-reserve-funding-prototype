@@ -1,4 +1,4 @@
-{% set _account = myData.accounts[myData.accountID] %}
+{% set _account = myData.accounts[myData.account] %}
 
 {% if _account.type == "emp" %}
   {% extends "layout-as-emp.html" %}
@@ -14,8 +14,6 @@
     href: "javascript: window.history.go(-1)"
   }) }}
 {% endblock %}
-
-{% set _account = myData.accounts[myData.accountID] %}
 
 {% block content %}
 

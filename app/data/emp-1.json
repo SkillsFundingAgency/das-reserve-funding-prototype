@@ -1,6 +1,5 @@
 {
     "id": "emp-1",
-    "accountID": "78NV48",
     "type": "emp",
     "name": "Aston Martin Racing",
     "entities": [
@@ -16,7 +15,6 @@
             "course": "196",
             "entity": "aston",
             "status": "available",
-            
             "visible": false
         },
         {
@@ -25,7 +23,6 @@
             "course": "153",
             "entity": "aston",
             "status": "expired",
-            
             "visible": false
         },
         {
@@ -34,7 +31,6 @@
             "course": "455-2-5",
             "entity": "aston",
             "status": "used",
-            
             "visible": false
         },
         {
@@ -43,7 +39,6 @@
             "course": "196",
             "entity": "aston",
             "status": "available",
-            
             "visible": false
         },
         {
@@ -52,7 +47,6 @@
             "course": "153",
             "entity": "aston",
             "status": "available",
-            
             "visible": false
         },
         {
@@ -61,7 +55,6 @@
             "course": "153",
             "entity": "aston",
             "status": "expired",
-            
             "visible": false
         },
         {
@@ -70,7 +63,6 @@
             "course": "51",
             "entity": "aston",
             "status": "available",
-            
             "visible": false
         },
         {
@@ -79,7 +71,6 @@
             "course": "51",
             "entity": "aston",
             "status": "available",
-            
             "visible": false
         },
         {
@@ -88,7 +79,6 @@
             "course": "32",
             "entity": "aston",
             "status": "available",
-            
             "visible": false
         },
         {
@@ -97,7 +87,6 @@
             "course": "32",
             "entity": "aston",
             "status": "used",
-            
             "visible": false
         }
     ]

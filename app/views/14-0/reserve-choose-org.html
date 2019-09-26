@@ -1,4 +1,4 @@
-{% set _account = myData.accounts[myData.accountID] %}
+{% set _account = myData.accounts[myData.account] %}
 
 {% if _account.type == "emp" %}
   {% extends "layout-as-emp.html" %}
@@ -14,8 +14,6 @@
     href: "javascript: window.history.go(-1)"
   }) }}
 {% endblock %}
-
-{% set _account = myData.accounts[myData.accountID] %}
 
 {% block content %}
 
@@ -60,9 +58,9 @@
                     <div class="govuk-radios" id="whichOrgAnswer">
                         {% for entity in _account.entities %}
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="whichOrg-1" name="whichOrgAnswer" type="radio" value="{{entity.id}}" {% if myData.whichOrgAnswerTemp == entity.id %}checked{% endif %}>
-                            <label class="govuk-label govuk-radios__label" for="whichOrg-1">
-                                {{entity.name}}
+                            <input class="govuk-radios__input" id="whichOrg-{{loop.index}}" name="whichOrgAnswer" type="radio" value="{{entity.id}}" {% if myData.whichOrgAnswerTemp == entity.id %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="whichOrg-{{loop.index}}">
+                                {{entity.name | upper}}
                             </label>
                         </div>
                         {% endfor %}

@@ -1,4 +1,4 @@
-{% set _account = myData.accounts[myData.accountID] %}
+{% set _account = myData.accounts[myData.account] %}
 
 <!-- Visible reservations -->
 {% set _reservations = [] %}
@@ -7,7 +7,6 @@
     {% set _reservations = (_reservations.push(_reservation), _reservations) %}
   {% endif %}
 {% endfor %}
-
 {% set _reservationstotal = _reservations | length %}
 
 <!-- Layout type -->
@@ -21,7 +20,6 @@
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
-
 {% block beforeContent %}
 {% if _reservationstotal > 0 %}
   {{ govukBackLink({
@@ -30,7 +28,6 @@
   }) }}
   {% endif %}
 {% endblock %}
-
 
 {% block content %}
 
@@ -62,33 +59,34 @@
                 </tr>
               </thead>
               <tbody class="govuk-table__body">
-                {% for _reservation in _reservations %}
+              {% for _reservation in _reservations %}
+                {% set _entityLabel = "" %}
+                {% for _entity in _account.entities %}
+                  {% if _entity.id == _reservation.entity %}
+                    {% set _entityLabel = _entity.name | upper %}
+                  {% endif %}
+                {% endfor %}
+                {% set _courseLabel = "" %}
+                {% for _course in myData.courses.list %}
+                  {% if _course.value == _reservation.course %}
+                    {% set _courseLabel = _course.name + " - Level " + _course.level %}
+                  {% endif %}
+                {% endfor %}
+                {% set _startDateLabel = "" %}
+                {% for _startDate in myData.startDates %}
+                  {% if _startDate.id == _reservation.startDate %}
+                    {% set _startDateLabel = _startDate.range %}
+                  {% endif %}
+                {% endfor %}
+                
                   <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                      {% for _entity in _account.entities %}
-                        {% if _entity.id == _reservation.entity %}
-                          {{_entity.name}}
-                        {% endif %}
-                      {% endfor %}
-                    </td>
-                    <td class="govuk-table__cell">
-                      {% for _course in myData.courses.list %}
-                        {% if _course.value == _reservation.course %}
-                          {{_course.name}} - Level {{_course.level}}
-                        {% endif %}
-                      {% endfor %}
-                    </td>
-                    <td class="govuk-table__cell">
-                      {% for _startDate in myData.startDates %}
-                        {% if _startDate.id == _reservation.startDate %}
-                          {{_startDate.range}}
-                        {% endif %}
-                      {% endfor %}
-                    </td>
-                    <td class="govuk-table__cell" style="text-align: right">
+                    <td class="govuk-table__cell">{{_entityLabel}}</td>
+                    <td class="govuk-table__cell">{{_courseLabel}}</td>
+                    <td class="govuk-table__cell">{{_startDateLabel}}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" >
                       {% if _reservation.status == "available" %}
-                      <a href="#add" class="govuk-link">Add apprentice</a>
-                      <br><a href="#delete" class="govuk-link">Delete</a>
+                      <a href="#add" class="govuk-link">Add apprentice</a><br>
+                      <a href="#delete" class="govuk-link">Delete</a>
                       {% elif _reservation.status == "expired" %}
                       <strong class="govuk-tag govuk-tag--inactive">expired</strong>
                       {% elif _reservation.status == "used" %}

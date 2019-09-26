@@ -2,13 +2,26 @@ module.exports = function (router,_myData) {
 
     var version = "14-0";
 
+    //Random function
+    function randomStr(len) { 
+        var ans = ''
+            arr = 'abcdefghijklimnopqrstuvwxyz'; 
+        for (var i = len; i > 0; i--) { 
+            ans += arr[Math.floor(Math.random() * arr.length)]; 
+        } 
+        return ans;
+    }
+
+    function setVisibleReservations(req){
+        req.session.myData.accounts[req.session.myData.account].reservations.forEach(function(_reservation, index) {
+            _reservation.visible = (index < req.session.myData.count)
+        });
+    }
+
     function reset(req){
         req.session.myData = JSON.parse(JSON.stringify(_myData))
-        req.session.myData.type = req.session.myData.defaultType
-        req.session.myData.accountID = req.session.myData.defaultAccountID
-        req.session.myData.emp = req.session.myData.defaultEmpAccount
-        req.session.myData.proAccount = req.session.myData.defaultProAccount
-        req.session.myData.res = 0
+        req.session.myData.count = 6
+        setVisibleReservations(req)
     }
 
     router.all('/' + version + '/*', function (req, res, next) {
@@ -23,25 +36,25 @@ module.exports = function (router,_myData) {
         req.session.myData.includeValidation =  req.query.includeValidation || req.session.myData.includeValidation
 
         // Query string values
+        //
+        // Accounts
         req.session.myData.type = req.query.type || req.session.myData.type
         req.session.myData.emp = req.query.emp || req.session.myData.emp
-        req.session.myData.proAccount = req.query.proAccount || req.session.myData.proAccount
-        if(req.session.myData.type == "emp") {
-            req.session.myData.accountID = req.session.myData.emp
-        } else if (req.session.myData.type == "pro") {
-            req.session.myData.accountID = req.session.myData.proAccount
+        req.session.myData.pro = req.query.pro || req.session.myData.pro
+        req.session.myData.account = (req.session.myData.type == "emp") ? req.session.myData.emp : req.session.myData.pro
+        //Account name
+        var _account = req.session.myData.accounts[req.session.myData.account]
+        req.session.myData.name = req.query.name || (req.session.myData.name || _account.name)
+        _account.name = req.session.myData.name
+        //Entity name
+        req.session.myData.ename = req.query.ename || (req.session.myData.ename || _account.entities[0].name)
+        _account.entities[0].name = req.session.myData.ename
+        //Visible reservations
+        req.session.myData.count = Number(req.query.count || req.session.myData.count)
+        if(req.query.count){
+            setVisibleReservations(req)
         }
-        req.session.myData.res = Number(req.query.res || req.session.myData.res)
-        //Add required number of premade reservations to account data
-        if(req.query.reset) {
-            var _reservations = req.session.myData.accounts[req.session.myData.accountID].reservations
-            _reservations.forEach(function(_reservation, index) {
-                if(index < req.session.myData.res) {
-                    _reservation.visible = true
-                }
-            });
-        }
-
+        
         next()
     });
 
@@ -81,7 +94,7 @@ module.exports = function (router,_myData) {
         });
     });
     router.post('/' + version + '/reserve-choose-org', function (req, res) {
-        var _account = req.session.myData.accounts[req.session.myData.accountID]
+        var _account = req.session.myData.accounts[req.session.myData.account]
         // Answer
         req.session.myData.whichOrgAnswerTemp = req.body.whichOrgAnswer
         //Set default answer if includeValidation is false and no answer given
@@ -182,7 +195,7 @@ module.exports = function (router,_myData) {
         });
     });
     router.post('/' + version + '/reserve-check-answers', function (req, res) {
-        var _account = req.session.myData.accounts[req.session.myData.accountID]
+        var _account = req.session.myData.accounts[req.session.myData.account]
         // Answer
         req.session.myData.reserveNowAnswerTemp = req.body.reserveNowAnswer
         //Set default answer if includeValidation is false and no answer given
@@ -206,7 +219,7 @@ module.exports = function (router,_myData) {
             req.session.myData.reserveNowAnswer = req.session.myData.reserveNowAnswerTemp
             req.session.myData.reserveNowAnswerTemp = ""
             if(req.session.myData.reserveNowAnswer == "yes"){
-                _account.reservations.push(
+                _account.reservations.unshift(
                     {
                         "id": randomStr(10),
                         "startDate": req.session.myData.whichStartDateAnswer,
