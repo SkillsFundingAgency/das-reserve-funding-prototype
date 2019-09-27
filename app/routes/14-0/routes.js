@@ -18,9 +18,27 @@ module.exports = function (router,_myData) {
         });
     }
 
+    function returnReservationData(req, _id){
+        var _returnReservation = {
+            "item": null,
+            "index": 0
+        }
+        if(_id){
+            req.session.myData.accounts[req.session.myData.account].reservations.forEach(function(_reservation, index) {
+                if(_id == _reservation.id) {
+                    _returnReservation.item = _reservation
+                    _returnReservation.index = index
+                }
+            }); 
+        }
+        return _returnReservation
+    }
+
     function reset(req){
         req.session.myData = JSON.parse(JSON.stringify(_myData))
-        req.session.myData.count = 6
+        req.session.myData.count = 8
+        req.session.myData.limit = 10
+        req.session.myData.upcoming = "false"
         setVisibleReservations(req)
     }
 
@@ -54,6 +72,9 @@ module.exports = function (router,_myData) {
         if(req.query.count){
             setVisibleReservations(req)
         }
+        //Restrictions
+        req.session.myData.limit = req.query.limit || req.session.myData.limit
+        req.session.myData.upcoming = req.query.upcoming || req.session.myData.upcoming
         
         next()
     });
@@ -231,7 +252,11 @@ module.exports = function (router,_myData) {
                 )
                 res.redirect(301, '/' + version + '/reserve-confirmation');
             } else {
-                res.redirect(301, '/' + version + '/employer-home');
+                if(req.session.myData.type == "pro"){
+                    res.redirect(301, '/' + version + '/provider-home');
+                } else {
+                    res.redirect(301, '/' + version + '/employer-home');
+                }
             }
         }
     });
@@ -266,7 +291,117 @@ module.exports = function (router,_myData) {
             req.session.myData.whatNextAnswer = req.session.myData.whatNextAnswerTemp
             req.session.myData.whatNextAnswerTemp = ""
             // TODO multiple exit routes
-            res.redirect(301, '/' + version + '/employer-home');
+            if(req.session.myData.type == "pro"){
+                res.redirect(301, '/' + version + '/provider-home');
+            } else {
+                res.redirect(301, '/' + version + '/employer-home');
+            }
         }
     });
+
+    // Delete
+    router.get('/' + version + '/reserve-delete', function (req, res) {
+        req.session.myData.selectedReservation = req.query.delete || req.session.myData.accounts[req.session.myData.account].reservations[0].id
+        res.render(version + '/reserve-delete', {
+            myData:req.session.myData
+        });
+    });
+    router.post('/' + version + '/reserve-delete', function (req, res) {
+        var _account = req.session.myData.accounts[req.session.myData.account]
+        // Answer
+        req.session.myData.deleteAnswerTemp = req.body.deleteAnswer
+        //Set default answer if includeValidation is false and no answer given
+        if(req.session.myData.includeValidation == "false"){
+            req.session.myData.deleteAnswerTemp = req.session.myData.deleteAnswerTemp || 'yes'
+        }
+        // Validation
+        if(!req.session.myData.deleteAnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.deleteAnswer = {
+                "anchor": "delete-1",
+                "message": "Select whether you want to delete this reservation"
+            }
+        }
+        // Next action
+        if(req.session.myData.validationError == "true") {
+            res.render(version + '/reserve-delete', {
+                myData: req.session.myData
+            });
+        } else {
+            req.session.myData.deleteAnswer = req.session.myData.deleteAnswerTemp
+            req.session.myData.deleteAnswerTemp = ""
+            if(req.session.myData.deleteAnswer == "yes"){
+                //Delete reservation
+                var _reservation = returnReservationData(req, req.session.myData.selectedReservation)
+                if(_reservation.item){
+                    _reservation.item.visible = false
+                }
+                res.redirect(301, '/' + version + '/reserve-delete-confirmation');
+            } else {
+                res.redirect(301, '/' + version + '/reserve-reservations');
+            }
+        }
+    });
+
+    // Delete Confirmation
+    router.get('/' + version + '/reserve-delete-confirmation', function (req, res) {
+        res.render(version + '/reserve-delete-confirmation', {
+            myData:req.session.myData
+        });
+    });
+    router.post('/' + version + '/reserve-delete-confirmation', function (req, res) {
+        // Answer
+        req.session.myData.deleteWhatNextAnswerTemp = req.body.deleteWhatNextAnswer
+        //Set default answer if includeValidation is false and no answer given
+        if(req.session.myData.includeValidation == "false"){
+            req.session.myData.deleteWhatNextAnswerTemp = req.session.myData.deleteWhatNextAnswerTemp || 'manage'
+        }
+        // Validation
+        if(!req.session.myData.deleteWhatNextAnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.deleteWhatNextAnswer = {
+                "anchor": "delete-1",
+                "message": "Select what you want to do next"
+            }
+        }
+        // Next action
+        if(req.session.myData.validationError == "true") {
+            res.render(version + '/reserve-delete-confirmation', {
+                myData: req.session.myData
+            });
+        } else {
+            req.session.myData.deleteWhatNextAnswer = req.session.myData.deleteWhatNextAnswerTemp
+            req.session.myData.deleteWhatNextAnswerTemp = ""
+            if(req.session.myData.deleteWhatNextAnswer == "home"){
+                if(req.session.myData.type == "pro"){
+                    res.redirect(301, '/' + version + '/provider-home');
+                } else {
+                    res.redirect(301, '/' + version + '/employer-home');
+                }
+            } else {
+                res.redirect(301, '/' + version + '/reserve-reservations');
+            }
+        }
+    });
+
+    // Limit reached
+    router.get('/' + version + '/reserve-limit-reached', function (req, res) {
+        res.render(version + '/reserve-limit-reached', {
+            myData:req.session.myData
+        });
+    });
+
+    // Upcoming
+    router.get('/' + version + '/reserve-upcoming', function (req, res) {
+        res.render(version + '/reserve-upcoming', {
+            myData:req.session.myData
+        });
+    });
+    router.post('/' + version + '/reserve-upcoming', function (req, res) {
+        if(req.body.upcominghide == "upcominghide"){
+            req.session.myData.upcoming = "false"
+        }
+        res.redirect(301, '/' + version + '/reserve-start');
+    });
+
  };

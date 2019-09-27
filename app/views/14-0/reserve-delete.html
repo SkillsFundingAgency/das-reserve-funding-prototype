@@ -9,14 +9,21 @@
   {% extends "layout.html" %}
 {% endif %}
 
-{% set _inError = myData.validationError %}
-
 {% block beforeContent %}
 {{ govukBackLink({
     text: "Back",
     href: "javascript: window.history.go(-1)"
   }) }}
 {% endblock %}
+
+{% set _inError = myData.validationError %}
+
+{% set _reservation = {} %}
+{% for reservation in _account.reservations %}
+    {% if myData.selectedReservation == reservation.id %}
+        {% set _reservation = reservation %}
+    {% endif %}
+{% endfor %}
 
 {% block content %}
 
@@ -41,11 +48,9 @@
         </div>
         {% endif %}
 
-        <div class="app-notification app-notification--success">
-            <h1 class="govuk-heading-xl app-content-required">
-                Apprenticeship funding is available to train and assess your apprentice
-            </h1>
-        </div>
+        <h1 class="govuk-heading-xl">
+            Delete Reservation
+        </h1>
 
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
@@ -54,30 +59,22 @@
                 </dt>
                 <dd class="govuk-summary-list__value">
                     {% for _entity in _account.entities %}
-                        {% if myData.whichOrgAnswer == _entity.id %}
+                        {% if _reservation.entity == _entity.id %}
                             {{_entity.name}}
                         {% endif %}
                     {% endfor %}
                 </dd>
-                <dd class="govuk-summary-list__actions">
-                    
-                </dd>
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    Apprenticeship training start date
+                    Apprenticeship start date
                 </dt>
                 <dd class="govuk-summary-list__value">
                     {% for _startDate in myData.startDates %}
-                        {% if myData.whichStartDateAnswer == _startDate.id %}
+                        {% if _reservation.startDate == _startDate.id %}
                             {{_startDate.range}}
                         {% endif %}
                     {% endfor %}
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="reserve-choose-start-date">
-                        Change
-                    </a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -86,43 +83,38 @@
                 </dt>
                 <dd class="govuk-summary-list__value">
                     {% for _course in myData.courses.list %}
-                        {% if myData.whichCourseAnswer == _course.value %}
+                        {% if _reservation.course == _course.value %}
                             {{_course.name}} - Level {{_course.level}}
                         {% endif %}
                     {% endfor %}
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="reserve-choose-course">
-                        Change
-                    </a>
                 </dd>
             </div>
         </dl>
 
         <form method="POST">
 
-            <div class="govuk-form-group {% if myData.validationErrors.reserveNowAnswer %}govuk-form-group--error{% endif %}">
+            <div class="govuk-form-group {% if myData.validationErrors.deleteAnswer %}govuk-form-group--error{% endif %}">
                 <fieldset class="govuk-fieldset" aria-describedby="radio-hint">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        Do you want to reserve funding now?
+                        Are you sure that you want to delete this reservation?
                     </legend>
-                    {% if myData.validationErrors.reserveNowAnswer %}
-                    <span id="reserveNowAnswer-error" class="govuk-error-message">
+                    {% if myData.validationErrors.deleteAnswer %}
+                    <span id="deleteAnswer-error" class="govuk-error-message">
                         <span class="govuk-visually-hidden">Error:</span>
-                        {{myData.validationErrors.reserveNowAnswer.message}}
+                        {{myData.validationErrors.deleteAnswer.message}}
                     </span>
                     {% endif %}
-                    <div class="govuk-radios" id="reserveNowAnswer">
+                    <div class="govuk-radios" id="deleteAnswer">
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="reserveNow-1" name="reserveNowAnswer" type="radio" value="yes" {% if myData.reserveNowAnswerTemp == 'yes' %}checked{% endif %}>
-                            <label class="govuk-label govuk-radios__label" for="reserveNow-1">
-                                Yes, reserve funding now
+                            <input class="govuk-radios__input" id="delete-1" name="deleteAnswer" type="radio" value="yes" {% if myData.deleteAnswerTemp == 'yes' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="delete-1">
+                                Yes, delete this reservation
                             </label>
                         </div>
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="reserveNow-2" name="reserveNowAnswer" type="radio" value="no" {% if myData.reserveNowAnswerTemp == 'no' %}checked{% endif %}>
-                            <label class="govuk-label govuk-radios__label" for="reserveNow-2">
-                                No, return to account
+                            <input class="govuk-radios__input" id="delete-2" name="deleteAnswer" type="radio" value="no" {% if myData.deleteAnswerTemp == 'no' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="delete-2">
+                                No, go back to manage reservations
                             </label>
                         </div>
                     </div>

@@ -1,14 +1,15 @@
 {% set _account = myData.accounts[myData.account] %}
 
+<!-- Layout type -->
 {% if _account.type == "emp" %}
   {% extends "layout-as-emp.html" %}
 {% elif _account.type == "pro" %}
   {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
 {% endif %}
 
 {% set _inError = myData.validationError %}
-
-{% set _account = myData.accounts[myData.account] %}
 
 {% block content %}
 

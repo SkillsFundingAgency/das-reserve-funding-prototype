@@ -1,11 +1,11 @@
 {
     "id": "emp-1",
     "type": "emp",
-    "name": "Aston Martin Racing",
+    "name": "Aston Martin",
     "entities": [
         {
             "id": "aston",
-            "name": "ASTON MARTIN CLUB RACING LIMITED"
+            "name": "ASTON MARTIN LIMITED"
         }
     ],
     "reservations": [

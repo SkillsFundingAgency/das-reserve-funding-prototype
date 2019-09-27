@@ -1,0 +1,42 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% set _returnURL = "employer-home" %}
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+    {% set _returnURL = "provider-home" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl">
+            Reservation limit reached
+        </h1>
+
+        <p class="govuk-body">You have reached the limit of the number of funding reservations you can make.</p>
+
+        <!-- Button -->
+        {% from "govuk/components/button/macro.njk" import govukButton %}
+        {{ govukButton({
+            text: "Return to account",
+            href: _returnURL
+        }) }}
+
+    </div>
+</div>
+
+{% endblock %}

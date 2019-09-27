@@ -71,6 +71,17 @@
             </select>
         </div>
 
+        <!--Upcoming change -->
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="setupUpcoming">
+                Upcoming change
+            </label>
+            <select class="govuk-select" id="setupUpcoming" name="setupUpcoming" data-option="setupUpcoming">
+                <option {% if myData.upcoming == "false" %}selected{% endif %} value="false">No</option>
+                <option {% if myData.upcoming == "true" %}selected{% endif %} value="true">Yes</option>
+            </select>
+        </div>
+
         <p class="govuk-body" id="start-url" style="display:none">
             <a href="#" role="button" draggable="false" class="govuk-button">Start prototype</a>
         </p>
@@ -113,9 +124,10 @@
                 _urlType = "&type=" + _options.filter("#setupType").val(),
                 _urlName = "&name=" + _options.filter("#setupName").val(),
                 _urlEntityName = "&ename=" + _options.filter("#setupEntity").val(),
-                _urlCount = "&count=" + _options.filter("#setupCount").val();
+                _urlCount = "&count=" + _options.filter("#setupCount").val(),
+                _urlUpcoming = "&upcoming=" + _options.filter("#setupUpcoming").val();
             //Queries combined
-            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlEntityName + _urlCount;
+            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlEntityName + _urlCount + _urlUpcoming;
             //URL text
             var _startURLText = _urlBase + _urlPageQueries,
                 _startURLHREF =  _urlPageQueries;
