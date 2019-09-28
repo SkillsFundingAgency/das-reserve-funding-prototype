@@ -6,7 +6,8 @@ var _myData = {
     "includeValidation": "true",
     "accounts":
     {
-        "emp-1": require(__dirname + '/data/emp-1.json')
+        "emp-1": require(__dirname + '/data/emp-1.json'),
+        "pro-1": require(__dirname + '/data/pro-1.json')
     },
     "emp": "emp-1",
     "pro": "pro-1",

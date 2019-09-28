@@ -1,0 +1,62 @@
+{% set _account = myData.accounts[myData.pro] %}\
+
+{% set _employersTotal = _account.employers | length %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+      text: "Back",
+      href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl" >
+            Choose an employer
+        </h1>
+
+        <p class="govuk-body">This is the employer you are reserving funds on behalf of.</p>
+
+        <p class="govuk-body">{{_employersTotal}} {% if _employersTotal == 1 %}result{% else %}results{% endif %} found.</p>
+
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Employer</th>
+                <th scope="col" class="govuk-table__header">Account name</th>
+                <th scope="col" class="govuk-table__header">Agreement ID</th>
+                <th scope="col" class="govuk-table__header"></th>
+              </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            {% for _employer in _account.employers %}
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">{{_employer.name|upper}}</th>
+                  <td class="govuk-table__cell">{{_employer.name|upper}}</td>
+                  <td class="govuk-table__cell">{{_employer.id}}</td>
+                  <td class="govuk-table__cell govuk-table__cell--numeric" >
+                    <a href="reserve-confirm-org?type=pro&employer={{_employer.id}}" class="govuk-link">Select</a>
+                  </td>
+                </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}

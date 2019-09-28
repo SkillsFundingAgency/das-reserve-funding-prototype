@@ -5,7 +5,8 @@
 {% block content %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l">Prototype setup</h1>
+        <h1 class="govuk-heading-m">Prototype setup</h1>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     </div>
 </div>
 <div class="govuk-grid-row">
@@ -13,10 +14,10 @@
 
         <!-- Employer or Provider -->
         <div class="govuk-form-group">
-            <label class="govuk-label" for="setupType">
+            <!-- <label class="govuk-label govuk-!-font-size-24" for="setupType" >
                 Employer or provider
-            </label>
-            <select class="govuk-select" id="setupType" name="setupType" data-option="setupType">
+            </label> -->
+            <select class="govuk-select govuk-!-font-size-27" style="height: 50px" id="setupType" name="setupType" data-option="setupType">
                 <option {% if myData.type == 'emp' %}selected{% endif %} value="emp">Employer</option>
                 <option {% if myData.type == 'pro' %}selected{% endif %} value="pro">Provider</option>
             </select>
@@ -36,51 +37,66 @@
             </select>
         </div> -->
 
-        <!-- Employer account name -->
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="setupName">
-                DAS Account name
-            </label>
-            <input class="govuk-input" id="setupName" name="setupName" data-option="setupName" type="text" value="{{_account.name}}">
-        </div>
-        <!-- Employer account name -->
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="setupEntity">
-                Company Name
-            </label>
-            <input class="govuk-input" id="setupEntity" name="setupEntity" data-option="setupEntity" type="text" value="{{_account.entities[0].name}}" onkeyup="this.value = this.value.toUpperCase();">
-        </div>
+        <fieldset>
 
-        <!-- Reservations -->
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="setupCount">
-                Employer reservations
-            </label>
-            <select class="govuk-select" id="setupCount" name="setupCount" data-option="setupCount">
-                <option {% if myData.count == '0' %}selected{% endif %} value="0">0 reservations</option>
-                <option {% if myData.count == '1' %}selected{% endif %} value="1">1 reservation</option>
-                <option {% if myData.count == '2' %}selected{% endif %} value="2">2 reservations</option>
-                <option {% if myData.count == '3' %}selected{% endif %} value="3">3 reservations</option>
-                <option {% if myData.count == '4' %}selected{% endif %} value="4">4 reservations</option>
-                <option {% if myData.count == '5' %}selected{% endif %} value="5">5 reservations</option>
-                <option {% if myData.count == '6' %}selected{% endif %} value="6">6 reservations</option>
-                <option {% if myData.count == '7' %}selected{% endif %} value="7">7 reservations</option>
-                <option {% if myData.count == '8' %}selected{% endif %} value="8">8 reservations</option>
-                <option {% if myData.count == '9' %}selected{% endif %} value="9">9 reservations</option>
-                <option {% if myData.count == '10' %}selected{% endif %} value="10">10 reservations</option>
-            </select>
-        </div>
+            <!-- Employer account name -->
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="setupName">
+                    DAS Account name
+                </label>
+                <input class="govuk-input" id="setupName" name="setupName" data-option="setupName" type="text" value="{{_account.name}}">
+            </div>
+            <!-- Employer account name -->
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="setupEntity">
+                    Company Name
+                </label>
+                <input class="govuk-input" id="setupEntity" name="setupEntity" data-option="setupEntity" type="text" value="{{_account.entities[0].name}}" onkeyup="this.value = this.value.toUpperCase();">
+            </div>
 
-        <!--Upcoming change -->
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="setupUpcoming">
-                Upcoming change
-            </label>
-            <select class="govuk-select" id="setupUpcoming" name="setupUpcoming" data-option="setupUpcoming">
-                <option {% if myData.upcoming == "false" %}selected{% endif %} value="false">No</option>
-                <option {% if myData.upcoming == "true" %}selected{% endif %} value="true">Yes</option>
-            </select>
-        </div>
+            <!-- Reservations -->
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="setupCount">
+                    Preload
+                </label>
+                <select class="govuk-select" id="setupCount" name="setupCount" data-option="setupCount">
+                    <option {% if myData.count == '0' %}selected{% endif %} value="0">0 reservations</option>
+                    <option {% if myData.count == '1' %}selected{% endif %} value="1">1 reservation</option>
+                    <option {% if myData.count == '2' %}selected{% endif %} value="2">2 reservations</option>
+                    <option {% if myData.count == '3' %}selected{% endif %} value="3">3 reservations</option>
+                    <option {% if myData.count == '4' %}selected{% endif %} value="4">4 reservations</option>
+                    <option {% if myData.count == '5' %}selected{% endif %} value="5">5 reservations</option>
+                    <option {% if myData.count == '6' %}selected{% endif %} value="6">6 reservations</option>
+                    <option {% if myData.count == '7' %}selected{% endif %} value="7">7 reservations</option>
+                    <option {% if myData.count == '8' %}selected{% endif %} value="8">8 reservations</option>
+                    <option {% if myData.count == '9' %}selected{% endif %} value="9">9 reservations</option>
+                    <option {% if myData.count == '10' %}selected{% endif %} value="10">10 reservations</option>
+                </select>
+            </div>
+
+            <!-- Reservations limit -->
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="setupLimit">
+                    Limit
+                </label>
+                <select class="govuk-select" id="setupLimit" name="setupLimit" data-option="setupLimit">
+                    <option {% if myData.limit == 'no' %}selected{% endif %} value="no">No limit</option>
+                    <option {% if myData.limit == '10' %}selected{% endif %} value="10">10 limit</option>
+                </select>
+            </div>
+
+            <!--Upcoming change -->
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="setupUpcoming">
+                    Upcoming change
+                </label>
+                <select class="govuk-select" id="setupUpcoming" name="setupUpcoming" data-option="setupUpcoming">
+                    <option {% if myData.upcoming == "false" %}selected{% endif %} value="false">No</option>
+                    <option {% if myData.upcoming == "true" %}selected{% endif %} value="true">Yes</option>
+                </select>
+            </div>
+
+        </fieldset>
 
         <p class="govuk-body" id="start-url" style="display:none">
             <a href="#" role="button" draggable="false" class="govuk-button">Start prototype</a>
@@ -125,9 +141,10 @@
                 _urlName = "&name=" + _options.filter("#setupName").val(),
                 _urlEntityName = "&ename=" + _options.filter("#setupEntity").val(),
                 _urlCount = "&count=" + _options.filter("#setupCount").val(),
+                _urlLimit = "&limit=" + _options.filter("#setupLimit").val(),
                 _urlUpcoming = "&upcoming=" + _options.filter("#setupUpcoming").val();
             //Queries combined
-            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlEntityName + _urlCount + _urlUpcoming;
+            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlEntityName + _urlCount + _urlLimit + _urlUpcoming;
             //URL text
             var _startURLText = _urlBase + _urlPageQueries,
                 _startURLHREF =  _urlPageQueries;

@@ -14,7 +14,7 @@ module.exports = function (router,_myData) {
 
     function setVisibleReservations(req){
         req.session.myData.accounts[req.session.myData.account].reservations.forEach(function(_reservation, index) {
-            _reservation.visible = (index < req.session.myData.count)
+            _reservation.visible = (index < req.session.myData.count) || req.session.myData.type == "pro"
         });
     }
 
@@ -65,8 +65,10 @@ module.exports = function (router,_myData) {
         req.session.myData.name = req.query.name || (req.session.myData.name || _account.name)
         _account.name = req.session.myData.name
         //Entity name
-        req.session.myData.ename = req.query.ename || (req.session.myData.ename || _account.entities[0].name)
-        _account.entities[0].name = req.session.myData.ename
+        if(req.session.myData.type == "emp"){
+            req.session.myData.ename = req.query.ename || (req.session.myData.ename || _account.entities[0].name)
+            _account.entities[0].name = req.session.myData.ename
+        }
         //Visible reservations
         req.session.myData.count = Number(req.query.count || req.session.myData.count)
         if(req.query.count){
@@ -94,9 +96,23 @@ module.exports = function (router,_myData) {
         });
     });
 
+    // Provider home
+    router.get('/' + version + '/provider-home', function (req, res) {
+        res.render(version + '/provider-home', {
+            myData:req.session.myData
+        });
+    });
+
     // Your reservations
     router.get('/' + version + '/reserve-reservations', function (req, res) {
         res.render(version + '/reserve-reservations', {
+            myData:req.session.myData
+        });
+    });
+
+    // Your reservations - Provider
+    router.get('/' + version + '/reserve-reservations-pro', function (req, res) {
+        res.render(version + '/reserve-reservations-pro', {
             myData:req.session.myData
         });
     });
@@ -142,13 +158,57 @@ module.exports = function (router,_myData) {
         }
     });
 
+    // Choose organisation - pro
+    router.get('/' + version + '/reserve-choose-org-pro', function (req, res) {
+        res.render(version + '/reserve-choose-org-pro', {
+            myData:req.session.myData
+        });
+    });
+
+    // Confirm organisation
+    router.get('/' + version + '/reserve-confirm-org', function (req, res) {
+        req.session.myData.selectedEmployer = req.query.employer || req.session.myData.accounts[req.session.myData.account].employers[0].id
+        res.render(version + '/reserve-confirm-org', {
+            myData:req.session.myData
+        });
+    });
+    router.post('/' + version + '/reserve-confirm-org', function (req, res) {
+        // Answer
+        req.session.myData.confirmOrgAnswerTemp = req.body.confirmOrgAnswer
+        //Set default answer if includeValidation is false and no answer given
+        if(req.session.myData.includeValidation == "false"){
+            req.session.myData.confirmOrgAnswerTemp = req.session.myData.confirmOrgAnswerTemp || "yes"
+        }
+        // Validation
+        if(!req.session.myData.confirmOrgAnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.confirmOrgAnswer = {
+                "anchor": "confirmOrg-1",
+                "message": "Select whether to secure funds for this employer or not"
+            }
+        }
+        // Next action
+        if(req.session.myData.validationError == "true") {
+            res.render(version + '/reserve-confirm-org', {
+                myData: req.session.myData
+            });
+        } else {
+            req.session.myData.confirmOrgAnswer = req.session.myData.confirmOrgAnswerTemp
+            req.session.myData.confirmOrgAnswerTemp = ""
+            if(req.session.myData.confirmOrgAnswer == "yes") {
+                res.redirect(301, '/' + version + '/reserve-choose-training');
+            } else {
+                res.redirect(301, '/' + version + '/reserve-choose-org-pro');
+            }
+        }
+    });
+
     // Choose course
     router.get('/' + version + '/reserve-choose-course', function (req, res) {
         res.render(version + '/reserve-choose-course', {
             myData:req.session.myData
         });
     });
-    // TODO
     router.post('/' + version + '/reserve-choose-course', function (req, res) {
         // Answer
         req.session.myData.whichCourseAnswerTemp = req.body.whichCourseAnswer

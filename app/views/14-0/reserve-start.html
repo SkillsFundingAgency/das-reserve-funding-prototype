@@ -20,6 +20,20 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
+        {% if myData.type == "pro" %}
+        
+        <h1 class="govuk-heading-xl">Reserve funding for non-levy employers</h1>
+        <p class="govuk-body">This feature is currently only available to employers and training providers taking part in testing.</p>
+        <p class="govuk-body">To reserve funds, you'll need:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>permission from the employer to reserve funding on their behalf</li>
+            <li>the month you expect the apprenticeship training course to start</li>
+            <li>the apprenticeship training course the apprentice will take</li>
+        </ul>
+        <a role="button" draggable="false" class="govuk-button" tabindex="1" href="reserve-choose-org-pro">Reserve funding</a>
+        
+        {% else %}
+
         <h1 class="govuk-heading-xl">Reserve funding to train and assess an apprentice</h1>
         <p class="govuk-body">To reserve funding, you will need:</p>
         <ul class="govuk-list govuk-list--bullet">
@@ -27,6 +41,8 @@
             <li>the <a href="#" target="_blank" class="govuk-link">apprenticeship training course</a> the apprentice will take, which can be changed later</li>
         </ul>
         <a role="button" draggable="false" class="govuk-button" tabindex="1" href="reserve-choose-org">Reserve funding</a>
+            
+        {% endif %}
 
     </div>
 </div>
