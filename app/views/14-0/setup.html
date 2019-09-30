@@ -1,5 +1,8 @@
 {% set _account = myData.accounts[myData.account] %}
 
+{% set _empAccountName = myData.accounts[myData.emp].name %}
+{% set _proAccountName = myData.accounts[myData.pro].name %}
+
 {% extends "layout.html" %}
 
 {% block content %}
@@ -37,7 +40,7 @@
             </select>
         </div> -->
 
-        <fieldset>
+
 
             <!-- Employer account name -->
             <div class="govuk-form-group">
@@ -46,8 +49,9 @@
                 </label>
                 <input class="govuk-input" id="setupName" name="setupName" data-option="setupName" type="text" value="{{_account.name}}">
             </div>
+
             <!-- Employer account name -->
-            <div class="govuk-form-group">
+            <div class="govuk-form-group" id="entity">
                 <label class="govuk-label" for="setupEntity">
                     Company Name
                 </label>
@@ -75,7 +79,7 @@
             </div>
 
             <!-- Reservations limit -->
-            <div class="govuk-form-group">
+            <div class="govuk-form-group" id="limit">
                 <label class="govuk-label" for="setupLimit">
                     Limit
                 </label>
@@ -96,7 +100,7 @@
                 </select>
             </div>
 
-        </fieldset>
+
 
         <p class="govuk-body" id="start-url" style="display:none">
             <a href="#" role="button" draggable="false" class="govuk-button">Start prototype</a>
@@ -128,10 +132,39 @@
 {% block pageScripts %}
 <script>
     $(document).ready(function(){
+
         var _startURL = $("#start-url a"),
             _startURLLabel = $("#start-url-label"),
-            _options = $("[data-option]")
+            _options = $("[data-option]"),
+            _entity = $("#entity"),
+            _limit = $("#limit")
+
         _options.change(function(){
+            setValues()
+        }).trigger("change");
+
+        //Type switcher
+        //SET UP FORM
+        $("#setupType").change(function(){
+            var _thisVal = $(this).val(),
+                _companyName = (_thisVal == "emp") ? {{_empAccountName|dump|safe}} : {{_proAccountName|dump|safe}},
+                _setupName = $("#setupName")
+
+            if(_thisVal == "emp") {
+                _entity.show()
+                _limit.show()
+            } else {
+                _entity.hide()
+                _limit.hide()
+            }
+            _setupName.val(_companyName)
+
+            setValues()
+
+        }).trigger("change");
+
+        //SET VALUES
+        function setValues(){
             //Base URL
             var _urlBase = "https://das-reserve-funding-prototype.herokuapp.com/" + {{myData.version|dump|safe}} + "/";
             //Queries
@@ -144,19 +177,23 @@
                 _urlLimit = "&limit=" + _options.filter("#setupLimit").val(),
                 _urlUpcoming = "&upcoming=" + _options.filter("#setupUpcoming").val();
             //Queries combined
-            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlEntityName + _urlCount + _urlLimit + _urlUpcoming;
+            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming;
+            if(_options.filter("#setupType").val() == "emp") {
+                var _urlPageQueries = _urlPageQueries + _urlEntityName;
+            }
             //URL text
             var _startURLText = _urlBase + _urlPageQueries,
                 _startURLHREF =  _urlPageQueries;
             // update label
             _startURLLabel
                 .text(_startURLText)
-                .hide().fadeIn()
+                .show()
             //update link
             _startURL
                 .attr("href", _startURLHREF)
                 .parent().show()
-        }).trigger("change");
+        }
+
     });
 </script>
 {% endblock %}

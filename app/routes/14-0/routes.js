@@ -14,7 +14,7 @@ module.exports = function (router,_myData) {
 
     function setVisibleReservations(req){
         req.session.myData.accounts[req.session.myData.account].reservations.forEach(function(_reservation, index) {
-            _reservation.visible = (index < req.session.myData.count) || req.session.myData.type == "pro"
+            _reservation.visible = (index < req.session.myData.count)
         });
     }
 
@@ -32,6 +32,22 @@ module.exports = function (router,_myData) {
             }); 
         }
         return _returnReservation
+    }
+
+    function setAccountInfo(req, _type){
+        // Accounts
+        req.session.myData.emp = req.query.emp || req.session.myData.emp
+        req.session.myData.pro = req.query.pro || req.session.myData.pro
+        req.session.myData.account = (req.session.myData.type == "emp") ? req.session.myData.emp : req.session.myData.pro
+        //Account name
+        var _account = req.session.myData.accounts[req.session.myData.account]
+        req.session.myData.name = req.query.name || (req.session.myData.name || _account.name)
+        _account.name = req.session.myData.name
+        //Entity name
+        if(req.session.myData.type == "emp"){
+            req.session.myData.ename = req.query.ename || (req.session.myData.ename || _account.entities[0].name)
+            _account.entities[0].name = req.session.myData.ename
+        }
     }
 
     function reset(req){
@@ -53,27 +69,16 @@ module.exports = function (router,_myData) {
         req.session.myData.validationError = "false"
         req.session.myData.includeValidation =  req.query.includeValidation || req.session.myData.includeValidation
 
-        // Query string values
-        //
-        // Accounts
+        //Account info
         req.session.myData.type = req.query.type || req.session.myData.type
-        req.session.myData.emp = req.query.emp || req.session.myData.emp
-        req.session.myData.pro = req.query.pro || req.session.myData.pro
-        req.session.myData.account = (req.session.myData.type == "emp") ? req.session.myData.emp : req.session.myData.pro
-        //Account name
-        var _account = req.session.myData.accounts[req.session.myData.account]
-        req.session.myData.name = req.query.name || (req.session.myData.name || _account.name)
-        _account.name = req.session.myData.name
-        //Entity name
-        if(req.session.myData.type == "emp"){
-            req.session.myData.ename = req.query.ename || (req.session.myData.ename || _account.entities[0].name)
-            _account.entities[0].name = req.session.myData.ename
-        }
+        setAccountInfo(req,req.session.myData.type)
+
         //Visible reservations
         req.session.myData.count = Number(req.query.count || req.session.myData.count)
         if(req.query.count){
             setVisibleReservations(req)
         }
+
         //Restrictions
         req.session.myData.limit = req.query.limit || req.session.myData.limit
         req.session.myData.upcoming = req.query.upcoming || req.session.myData.upcoming
@@ -91,6 +96,7 @@ module.exports = function (router,_myData) {
 
     // Employer home
     router.get('/' + version + '/employer-home', function (req, res) {
+        setAccountInfo(req, "emp")
         res.render(version + '/employer-home', {
             myData:req.session.myData
         });
@@ -98,6 +104,7 @@ module.exports = function (router,_myData) {
 
     // Provider home
     router.get('/' + version + '/provider-home', function (req, res) {
+        setAccountInfo(req, "pro")
         res.render(version + '/provider-home', {
             myData:req.session.myData
         });
@@ -105,6 +112,7 @@ module.exports = function (router,_myData) {
 
     // Your reservations
     router.get('/' + version + '/reserve-reservations', function (req, res) {
+        setAccountInfo(req, "emp")
         res.render(version + '/reserve-reservations', {
             myData:req.session.myData
         });
@@ -112,6 +120,7 @@ module.exports = function (router,_myData) {
 
     // Your reservations - Provider
     router.get('/' + version + '/reserve-reservations-pro', function (req, res) {
+        setAccountInfo(req, "pro")
         res.render(version + '/reserve-reservations-pro', {
             myData:req.session.myData
         });
@@ -126,6 +135,7 @@ module.exports = function (router,_myData) {
 
     // Choose organisation
     router.get('/' + version + '/reserve-choose-org', function (req, res) {
+        setAccountInfo(req, "emp")
         res.render(version + '/reserve-choose-org', {
             myData:req.session.myData
         });
@@ -160,6 +170,7 @@ module.exports = function (router,_myData) {
 
     // Choose organisation - pro
     router.get('/' + version + '/reserve-choose-org-pro', function (req, res) {
+        setAccountInfo(req, "pro")
         res.render(version + '/reserve-choose-org-pro', {
             myData:req.session.myData
         });
@@ -167,6 +178,7 @@ module.exports = function (router,_myData) {
 
     // Confirm organisation
     router.get('/' + version + '/reserve-confirm-org', function (req, res) {
+        setAccountInfo(req, "pro")
         req.session.myData.selectedEmployer = req.query.employer || req.session.myData.accounts[req.session.myData.account].employers[0].id
         res.render(version + '/reserve-confirm-org', {
             myData:req.session.myData
@@ -205,6 +217,7 @@ module.exports = function (router,_myData) {
 
     // Choose course
     router.get('/' + version + '/reserve-choose-course', function (req, res) {
+        setAccountInfo(req, "emp")
         res.render(version + '/reserve-choose-course', {
             myData:req.session.myData
         });
@@ -238,6 +251,7 @@ module.exports = function (router,_myData) {
 
     // Choose start date
     router.get('/' + version + '/reserve-choose-start-date', function (req, res) {
+        setAccountInfo(req, "emp")
         res.render(version + '/reserve-choose-start-date', {
             myData:req.session.myData
         });
@@ -269,8 +283,56 @@ module.exports = function (router,_myData) {
         }
     });
 
+    // Choose training (provider)
+    router.get('/' + version + '/reserve-choose-training', function (req, res) {
+        setAccountInfo(req, "pro")
+        res.render(version + '/reserve-choose-training', {
+            myData:req.session.myData
+        });
+    });
+    router.post('/' + version + '/reserve-choose-training', function (req, res) {
+        // Answers
+        req.session.myData.whichTrainingCourseAnswerTemp = req.body.whichTrainingCourseAnswer
+        req.session.myData.whichTrainingStartDateAnswerTemp = req.body.whichTrainingStartDateAnswer
+
+        //Set default answer if includeValidation is false and no answer given
+        if(req.session.myData.includeValidation == "false"){
+            req.session.myData.whichTrainingCourseAnswerTemp = req.session.myData.whichTrainingCourseAnswerTemp || req.session.myData.courses.list[0].value
+            req.session.myData.whichTrainingStartDateAnswerTemp = req.session.myData.whichTrainingStartDateAnswerTemp || req.session.myData.startDates[0].id
+        }
+        // Validation - course
+        if(!req.session.myData.whichTrainingCourseAnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.whichTrainingCourseAnswer = {
+                "anchor": "whichTrainingCourse-1",
+                "message": "Select a course"
+            }
+        }
+        // Validation - start date
+        if(!req.session.myData.whichTrainingStartDateAnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.whichTrainingStartDateAnswer = {
+                "anchor": "whichTrainingStartDate-1",
+                "message": "Select a start date"
+            }
+        }
+        // Next action
+        if(req.session.myData.validationError == "true") {
+            res.render(version + '/reserve-choose-training', {
+                myData: req.session.myData
+            });
+        } else {
+            req.session.myData.whichTrainingCourseAnswer = req.session.myData.whichTrainingCourseAnswerTemp
+            req.session.myData.whichTrainingStartDateAnswer = req.session.myData.whichTrainingStartDateAnswerTemp
+            req.session.myData.whichTrainingCourseAnswerTemp = ""
+            req.session.myData.whichTrainingStartDateAnswerTemp = ""
+            res.redirect(301, '/' + version + '/reserve-check-answers-pro');
+        }
+    });
+
     // Check answers
     router.get('/' + version + '/reserve-check-answers', function (req, res) {
+        setAccountInfo(req, "emp")
         res.render(version + '/reserve-check-answers', {
             myData:req.session.myData
         });
@@ -321,8 +383,39 @@ module.exports = function (router,_myData) {
         }
     });
 
+    // Check answers (pro)
+    router.get('/' + version + '/reserve-check-answers-pro', function (req, res) {
+        setAccountInfo(req, "pro")
+        res.render(version + '/reserve-check-answers-pro', {
+            myData:req.session.myData
+        });
+    });
+    router.post('/' + version + '/reserve-check-answers-pro', function (req, res) {
+        var _account = req.session.myData.accounts[req.session.myData.account],
+            _selectedEmployerName = ""
+        _account.employers.forEach(function(_employer, index) {
+            if(req.session.myData.selectedEmployer == _employer.id) {
+                _selectedEmployerName = _employer.name
+            }
+        });
+        
+        _account.reservations.unshift(
+            {
+                "id": randomStr(10),
+                "startDate": req.session.myData.whichTrainingStartDateAnswer,
+                "course": req.session.myData.whichTrainingCourseAnswer,
+                "entity": _selectedEmployerName,
+                "status": "available",
+                "visible": true,
+                "owned": true
+            }
+        )
+        res.redirect(301, '/' + version + '/reserve-confirmation-pro');
+    });
+
     // Confirmation
     router.get('/' + version + '/reserve-confirmation', function (req, res) {
+        setAccountInfo(req, "emp")
         res.render(version + '/reserve-confirmation', {
             myData:req.session.myData
         });
@@ -351,11 +444,42 @@ module.exports = function (router,_myData) {
             req.session.myData.whatNextAnswer = req.session.myData.whatNextAnswerTemp
             req.session.myData.whatNextAnswerTemp = ""
             // TODO multiple exit routes
-            if(req.session.myData.type == "pro"){
-                res.redirect(301, '/' + version + '/provider-home');
-            } else {
-                res.redirect(301, '/' + version + '/employer-home');
+            res.redirect(301, '/' + version + '/employer-home');
+        }
+    });
+
+    // Confirmation (pro)
+    router.get('/' + version + '/reserve-confirmation-pro', function (req, res) {
+        setAccountInfo(req, "pro")
+        res.render(version + '/reserve-confirmation-pro', {
+            myData:req.session.myData
+        });
+    });
+    router.post('/' + version + '/reserve-confirmation-pro', function (req, res) {
+        // Answer
+        req.session.myData.whatNextAnswerTemp = req.body.whatNextAnswer
+        //Set default answer if includeValidation is false and no answer given
+        if(req.session.myData.includeValidation == "false"){
+            req.session.myData.whatNextAnswerTemp = req.session.myData.whatNextAnswerTemp || 'home'
+        }
+        // Validation
+        if(!req.session.myData.whatNextAnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.whatNextAnswer = {
+                "anchor": "whatNext-1",
+                "message": "Select what you would like to do next"
             }
+        }
+        // Next action
+        if(req.session.myData.validationError == "true") {
+            res.render(version + '/reserve-confirmation-pro', {
+                myData: req.session.myData
+            });
+        } else {
+            req.session.myData.whatNextAnswer = req.session.myData.whatNextAnswerTemp
+            req.session.myData.whatNextAnswerTemp = ""
+            // TODO multiple exit routes
+            res.redirect(301, '/' + version + '/provider-home');
         }
     });
 
@@ -439,13 +563,18 @@ module.exports = function (router,_myData) {
                     res.redirect(301, '/' + version + '/employer-home');
                 }
             } else {
-                res.redirect(301, '/' + version + '/reserve-reservations');
+                if(req.session.myData.type == "pro"){
+                    res.redirect(301, '/' + version + '/reserve-reservations-pro');
+                } else {
+                    res.redirect(301, '/' + version + '/reserve-reservations');
+                }
             }
         }
     });
 
     // Limit reached
     router.get('/' + version + '/reserve-limit-reached', function (req, res) {
+        setAccountInfo(req, "emp")
         res.render(version + '/reserve-limit-reached', {
             myData:req.session.myData
         });
@@ -453,6 +582,7 @@ module.exports = function (router,_myData) {
 
     // Upcoming
     router.get('/' + version + '/reserve-upcoming', function (req, res) {
+        setAccountInfo(req, "emp")
         res.render(version + '/reserve-upcoming', {
             myData:req.session.myData
         });

@@ -60,8 +60,8 @@
                 <span class="govuk-hint">
                     This information can be changed later. If you want to find the correct training, you can check <a href="#" target="_blank" class="govuk-link">Find apprenticeship training</a> or ask your training provider.
                 </span>
-                <div class="autocomplete-wrapper">
-                    <select class="govuk-select autocomplete-element" id="whichCourseAnswer" name="whichCourseAnswer">
+                <div class="autocomplete-wrapper" >
+                    <select class="govuk-select autocomplete-element" id="whichCourse-1" name="whichCourseAnswer">
                         <option value="">Select one</option>
                         {% for _course in myData.courses.list %}
                         <option {%if _course.value == myData.whichCourseAnswerTemp %}selected{% endif %} value="{{_course.value}}">{{_course.name}} - Level {{_course.level}}</option>

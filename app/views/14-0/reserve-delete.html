@@ -58,11 +58,15 @@
                     Employer
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    {% for _entity in _account.entities %}
-                        {% if _reservation.entity == _entity.id %}
-                            {{_entity.name}}
-                        {% endif %}
-                    {% endfor %}
+                    {% if myData.type == "pro" %}
+                        {{_reservation.entity}}
+                    {% else %}
+                        {% for _entity in _account.entities %}
+                            {% if _reservation.entity == _entity.id %}
+                                {{_entity.name}}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
                 </dd>
             </div>
             <div class="govuk-summary-list__row">

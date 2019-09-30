@@ -29,6 +29,26 @@ var _myData = {
             "id": "oct2019",
             "name": "October 2019",
             "range": "Oct 2019 to Dec 2019"
+        },
+        {
+            "id": "nov2019",
+            "name": "November 2019",
+            "range": "Nov 2019 to Jan 2020"
+        },
+        {
+            "id": "dec2019",
+            "name": "December 2019",
+            "range": "Dec 2019 to Feb 2020"
+        },
+        {
+            "id": "jan2020",
+            "name": "January 2020",
+            "range": "Jan 2020 to Mar 2020"
+        },
+        {
+            "id": "feb2020",
+            "name": "February 2020",
+            "range": "Feb 2020 to Apr 2020"
         }
     ]
 }
