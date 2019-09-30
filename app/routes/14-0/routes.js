@@ -54,6 +54,7 @@ module.exports = function (router,_myData) {
         req.session.myData = JSON.parse(JSON.stringify(_myData))
         req.session.myData.count = 8
         req.session.myData.limit = 10
+        req.session.myData.emplimit = "no"
         req.session.myData.upcoming = "false"
         setVisibleReservations(req)
     }
@@ -82,6 +83,7 @@ module.exports = function (router,_myData) {
         //Restrictions
         req.session.myData.limit = req.query.limit || req.session.myData.limit
         req.session.myData.upcoming = req.query.upcoming || req.session.myData.upcoming
+        req.session.myData.emplimit = req.query.emplimit || req.session.myData.emplimit
         
         next()
     });
@@ -128,6 +130,7 @@ module.exports = function (router,_myData) {
 
     // Start
     router.get('/' + version + '/reserve-start', function (req, res) {
+        setAccountInfo(req, req.session.myData.type)
         res.render(version + '/reserve-start', {
             myData:req.session.myData
         });
@@ -207,10 +210,14 @@ module.exports = function (router,_myData) {
         } else {
             req.session.myData.confirmOrgAnswer = req.session.myData.confirmOrgAnswerTemp
             req.session.myData.confirmOrgAnswerTemp = ""
-            if(req.session.myData.confirmOrgAnswer == "yes") {
-                res.redirect(301, '/' + version + '/reserve-choose-training');
+            if(req.session.myData.emplimit == "no") {
+                if(req.session.myData.confirmOrgAnswer == "yes") {
+                    res.redirect(301, '/' + version + '/reserve-choose-training');
+                } else {
+                    res.redirect(301, '/' + version + '/reserve-choose-org-pro');
+                }
             } else {
-                res.redirect(301, '/' + version + '/reserve-choose-org-pro');
+                res.redirect(301, '/' + version + '/reserve-limit-reached');
             }
         }
     });
@@ -485,6 +492,7 @@ module.exports = function (router,_myData) {
 
     // Delete
     router.get('/' + version + '/reserve-delete', function (req, res) {
+        setAccountInfo(req, req.session.myData.type)
         req.session.myData.selectedReservation = req.query.delete || req.session.myData.accounts[req.session.myData.account].reservations[0].id
         res.render(version + '/reserve-delete', {
             myData:req.session.myData
@@ -529,6 +537,7 @@ module.exports = function (router,_myData) {
 
     // Delete Confirmation
     router.get('/' + version + '/reserve-delete-confirmation', function (req, res) {
+        setAccountInfo(req, req.session.myData.type)
         res.render(version + '/reserve-delete-confirmation', {
             myData:req.session.myData
         });
@@ -574,7 +583,7 @@ module.exports = function (router,_myData) {
 
     // Limit reached
     router.get('/' + version + '/reserve-limit-reached', function (req, res) {
-        setAccountInfo(req, "emp")
+        setAccountInfo(req, req.session.myData.type)
         res.render(version + '/reserve-limit-reached', {
             myData:req.session.myData
         });
@@ -582,7 +591,7 @@ module.exports = function (router,_myData) {
 
     // Upcoming
     router.get('/' + version + '/reserve-upcoming', function (req, res) {
-        setAccountInfo(req, "emp")
+        setAccountInfo(req, req.session.myData.type)
         res.render(version + '/reserve-upcoming', {
             myData:req.session.myData
         });

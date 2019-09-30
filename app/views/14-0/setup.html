@@ -1,6 +1,7 @@
 {% set _account = myData.accounts[myData.account] %}
 
-{% set _empAccountName = myData.accounts[myData.emp].name %}
+{% set _empAccount = myData.accounts[myData.emp] %}
+{% set _empAccountName = _empAccount.name %}
 {% set _proAccountName = myData.accounts[myData.pro].name %}
 
 {% extends "layout.html" %}
@@ -55,7 +56,7 @@
                 <label class="govuk-label" for="setupEntity">
                     Company Name
                 </label>
-                <input class="govuk-input" id="setupEntity" name="setupEntity" data-option="setupEntity" type="text" value="{{_account.entities[0].name}}" onkeyup="this.value = this.value.toUpperCase();">
+                <input class="govuk-input" id="setupEntity" name="setupEntity" data-option="setupEntity" type="text" value="{{_empAccount.entities[0].name}}" onkeyup="this.value = this.value.toUpperCase();">
             </div>
 
             <!-- Reservations -->
@@ -84,8 +85,19 @@
                     Limit
                 </label>
                 <select class="govuk-select" id="setupLimit" name="setupLimit" data-option="setupLimit">
-                    <option {% if myData.limit == 'no' %}selected{% endif %} value="no">No limit</option>
+                    <option {% if myData.limit == 'no' %}selected{% endif %} value="no">No</option>
                     <option {% if myData.limit == '10' %}selected{% endif %} value="10">10 limit</option>
+                </select>
+            </div>
+
+            <!-- Employer limit (pro) -->
+            <div class="govuk-form-group" id="empLimit">
+                <label class="govuk-label" for="setupEmpLimit">
+                    Employer reached limit
+                </label>
+                <select class="govuk-select" id="setupEmpLimit" name="setupEmpLimit" data-option="setupEmpLimit">
+                    <option {% if myData.emplimit == 'no' %}selected{% endif %} value="no">No</option>
+                    <option {% if myData.emplimit == 'yes' %}selected{% endif %} value="yes">Yes</option>
                 </select>
             </div>
 
@@ -137,7 +149,8 @@
             _startURLLabel = $("#start-url-label"),
             _options = $("[data-option]"),
             _entity = $("#entity"),
-            _limit = $("#limit")
+            _limit = $("#limit"),
+            _empLimit = $("#empLimit")
 
         _options.change(function(){
             setValues()
@@ -153,9 +166,11 @@
             if(_thisVal == "emp") {
                 _entity.show()
                 _limit.show()
+                _empLimit.hide()
             } else {
                 _entity.hide()
                 _limit.hide()
+                _empLimit.show()
             }
             _setupName.val(_companyName)
 
@@ -175,11 +190,17 @@
                 _urlEntityName = "&ename=" + _options.filter("#setupEntity").val(),
                 _urlCount = "&count=" + _options.filter("#setupCount").val(),
                 _urlLimit = "&limit=" + _options.filter("#setupLimit").val(),
+                _urlEmpLimit = "&emplimit=" + _options.filter("#setupEmpLimit").val(),
                 _urlUpcoming = "&upcoming=" + _options.filter("#setupUpcoming").val();
+           
             //Queries combined
+            //Base
             var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming;
+            //Base + type specific
             if(_options.filter("#setupType").val() == "emp") {
                 var _urlPageQueries = _urlPageQueries + _urlEntityName;
+            } else {
+                var _urlPageQueries = _urlPageQueries + _urlEmpLimit
             }
             //URL text
             var _startURLText = _urlBase + _urlPageQueries,
