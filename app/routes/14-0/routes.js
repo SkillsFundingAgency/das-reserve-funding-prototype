@@ -90,6 +90,26 @@ module.exports = function (router,_myData) {
     }
 
     function setAccountInfo(req, _type){
+
+        //Set type based on pages
+        req.session.myData.type = req.query.type || req.session.myData.type
+        var _type = req.session.myData.type
+            _pathname = req._parsedUrl.pathname,
+            _page = _pathname.substring(_pathname.lastIndexOf("/") + 1, _pathname.length),
+            _providerPages = [
+                "provider-home",
+                "reserve-check-answers-pro",
+                "reserve-choose-org-pro",
+                "reserve-choose-training",
+                "reserve-confirm-org",
+                "reserve-confirmation-pro",
+                "reserve-reservations-pro"
+            ]
+        if(_providerPages.indexOf(_page) > -1){
+            _type = "pro"
+        }
+        req.session.myData.type = _type
+        
         // Accounts
         req.session.myData.emp = req.query.emp || req.session.myData.emp
         req.session.myData.pro = req.query.pro || req.session.myData.pro
@@ -125,15 +145,17 @@ module.exports = function (router,_myData) {
         req.session.myData.includeValidation =  req.query.includeValidation || req.session.myData.includeValidation
 
         //Account info
-        req.session.myData.type = req.query.type || req.session.myData.type
-        setAccountInfo(req,req.session.myData.type)
+        setAccountInfo(req)
 
         //Sort reservations
         sortReservations(req)
 
         //Visible reservations
         req.session.myData.count = Number(req.query.count || req.session.myData.count)
-        setVisibleReservations(req)
+        if(req.query.count || !req.session.myData.visibleSet){
+            req.session.myData.visibleSet = true
+            setVisibleReservations(req)
+        }
 
         //Restrictions
         req.session.myData.limit = req.query.limit || req.session.myData.limit
@@ -153,7 +175,7 @@ module.exports = function (router,_myData) {
 
     // Employer home
     router.get('/' + version + '/employer-home', function (req, res) {
-        setAccountInfo(req, "emp")
+        
         res.render(version + '/employer-home', {
             myData:req.session.myData
         });
@@ -161,7 +183,7 @@ module.exports = function (router,_myData) {
 
     // Provider home
     router.get('/' + version + '/provider-home', function (req, res) {
-        setAccountInfo(req, "pro")
+        
         res.render(version + '/provider-home', {
             myData:req.session.myData
         });
@@ -169,8 +191,8 @@ module.exports = function (router,_myData) {
 
     // Your reservations
     router.get('/' + version + '/reserve-reservations', function (req, res) {
-        setAccountInfo(req, "emp")
-        setVisibleReservations(req)
+        
+        // setVisibleReservations(req)
         sortReservations(req)
         res.render(version + '/reserve-reservations', {
             myData:req.session.myData
@@ -179,8 +201,8 @@ module.exports = function (router,_myData) {
 
     // Your reservations - Provider
     router.get('/' + version + '/reserve-reservations-pro', function (req, res) {
-        setAccountInfo(req, "pro")
-        setVisibleReservations(req)
+        
+        // setVisibleReservations(req)
         sortReservations(req)
         res.render(version + '/reserve-reservations-pro', {
             myData:req.session.myData
@@ -189,7 +211,7 @@ module.exports = function (router,_myData) {
 
     // Start
     router.get('/' + version + '/reserve-start', function (req, res) {
-        setAccountInfo(req, req.session.myData.type)
+        
         res.render(version + '/reserve-start', {
             myData:req.session.myData
         });
@@ -197,7 +219,7 @@ module.exports = function (router,_myData) {
 
     // Choose organisation
     router.get('/' + version + '/reserve-choose-org', function (req, res) {
-        setAccountInfo(req, "emp")
+        
         res.render(version + '/reserve-choose-org', {
             myData:req.session.myData
         });
@@ -232,7 +254,7 @@ module.exports = function (router,_myData) {
 
     // Choose organisation - pro
     router.get('/' + version + '/reserve-choose-org-pro', function (req, res) {
-        setAccountInfo(req, "pro")
+        
         res.render(version + '/reserve-choose-org-pro', {
             myData:req.session.myData
         });
@@ -240,7 +262,7 @@ module.exports = function (router,_myData) {
 
     // Confirm organisation
     router.get('/' + version + '/reserve-confirm-org', function (req, res) {
-        setAccountInfo(req, "pro")
+        
         req.session.myData.selectedEmployer = req.query.employer || req.session.myData.accounts[req.session.myData.account].employers[0].id
         res.render(version + '/reserve-confirm-org', {
             myData:req.session.myData
@@ -283,7 +305,7 @@ module.exports = function (router,_myData) {
 
     // Choose course
     router.get('/' + version + '/reserve-choose-course', function (req, res) {
-        setAccountInfo(req, "emp")
+        
         res.render(version + '/reserve-choose-course', {
             myData:req.session.myData
         });
@@ -317,7 +339,7 @@ module.exports = function (router,_myData) {
 
     // Choose start date
     router.get('/' + version + '/reserve-choose-start-date', function (req, res) {
-        setAccountInfo(req, "emp")
+        
         res.render(version + '/reserve-choose-start-date', {
             myData:req.session.myData
         });
@@ -351,7 +373,7 @@ module.exports = function (router,_myData) {
 
     // Choose training (provider)
     router.get('/' + version + '/reserve-choose-training', function (req, res) {
-        setAccountInfo(req, "pro")
+        
         res.render(version + '/reserve-choose-training', {
             myData:req.session.myData
         });
@@ -398,7 +420,7 @@ module.exports = function (router,_myData) {
 
     // Check answers
     router.get('/' + version + '/reserve-check-answers', function (req, res) {
-        setAccountInfo(req, "emp")
+        
         res.render(version + '/reserve-check-answers', {
             myData:req.session.myData
         });
@@ -452,7 +474,7 @@ module.exports = function (router,_myData) {
 
     // Check answers (pro)
     router.get('/' + version + '/reserve-check-answers-pro', function (req, res) {
-        setAccountInfo(req, "pro")
+        
         res.render(version + '/reserve-check-answers-pro', {
             myData:req.session.myData
         });
@@ -483,7 +505,7 @@ module.exports = function (router,_myData) {
 
     // Confirmation
     router.get('/' + version + '/reserve-confirmation', function (req, res) {
-        setAccountInfo(req, "emp")
+        
         res.render(version + '/reserve-confirmation', {
             myData:req.session.myData
         });
@@ -518,7 +540,7 @@ module.exports = function (router,_myData) {
 
     // Confirmation (pro)
     router.get('/' + version + '/reserve-confirmation-pro', function (req, res) {
-        setAccountInfo(req, "pro")
+        
         res.render(version + '/reserve-confirmation-pro', {
             myData:req.session.myData
         });
@@ -553,7 +575,7 @@ module.exports = function (router,_myData) {
 
     // Delete
     router.get('/' + version + '/reserve-delete', function (req, res) {
-        setAccountInfo(req, req.session.myData.type)
+        
         req.session.myData.selectedReservation = req.query.delete || req.session.myData.accounts[req.session.myData.account].reservations[0].id
         res.render(version + '/reserve-delete', {
             myData:req.session.myData
@@ -598,7 +620,7 @@ module.exports = function (router,_myData) {
 
     // Delete Confirmation
     router.get('/' + version + '/reserve-delete-confirmation', function (req, res) {
-        setAccountInfo(req, req.session.myData.type)
+        
         res.render(version + '/reserve-delete-confirmation', {
             myData:req.session.myData
         });
@@ -644,7 +666,7 @@ module.exports = function (router,_myData) {
 
     // Limit reached
     router.get('/' + version + '/reserve-limit-reached', function (req, res) {
-        setAccountInfo(req, req.session.myData.type)
+        
         res.render(version + '/reserve-limit-reached', {
             myData:req.session.myData
         });
@@ -652,7 +674,6 @@ module.exports = function (router,_myData) {
 
     // Upcoming
     router.get('/' + version + '/reserve-upcoming', function (req, res) {
-        setAccountInfo(req, req.session.myData.type)
         res.render(version + '/reserve-upcoming', {
             myData:req.session.myData
         });
