@@ -34,17 +34,72 @@ module.exports = function (router,_myData) {
         return _returnReservation
     }
 
+    function sortReservations(req){
+        var _reservations = req.session.myData.accounts[req.session.myData.account].reservations
+        _reservations.sort(function(a,b){
+
+            //Course Name
+            var _a_courseName = "",
+                _b_courseName = ""
+            req.session.myData.courses.list.forEach(function(_course, index) {
+                if(_course.value == a.course) {
+                    _a_courseName = _course.name
+                } else if(_course.value == b.course) {
+                    _b_courseName = _course.name
+                }
+            });
+
+            //Date index
+            var _a_dateIndex = 0,
+                _b_dateIndex = 0;
+            req.session.myData.startDates.forEach(function(_startDate, index) {
+                if(_startDate.id == a.startDate) {
+                    _a_dateIndex = index
+                } else if (_startDate.id == b.startDate) {
+                    _b_dateIndex = index
+                }
+            });
+            
+            //Sort start
+            if (a.entity === b.entity){
+                if (_a_courseName === _b_courseName){
+                    //Sort on start date THIRD
+                    if(_a_dateIndex < _b_dateIndex) {
+                        return -1
+                    } else if (_a_dateIndex > _b_dateIndex) {
+                        return 1;
+                    }
+                } else {
+                    //Sort on course name SECOND
+                    if(_a_courseName.toUpperCase() < _b_courseName.toUpperCase()) {
+                        return -1
+                    } else if (_a_courseName.toUpperCase() > _b_courseName.toUpperCase()) {
+                        return 1
+                    }
+                }
+            } else {
+                //Sort on employer name FIRST
+                if (a.entity.toUpperCase() < b.entity.toUpperCase()){
+                    return -1
+                } else if(a.entity.toUpperCase() > b.entity.toUpperCase()){
+                    return 1
+                }
+            }
+            return 0;
+        })
+    }
+
     function setAccountInfo(req, _type){
         // Accounts
         req.session.myData.emp = req.query.emp || req.session.myData.emp
         req.session.myData.pro = req.query.pro || req.session.myData.pro
-        req.session.myData.account = (req.session.myData.type == "emp") ? req.session.myData.emp : req.session.myData.pro
+        req.session.myData.account = (_type == "emp") ? req.session.myData.emp : req.session.myData.pro
         //Account name
         var _account = req.session.myData.accounts[req.session.myData.account]
         req.session.myData.name = req.query.name || (req.session.myData.name || _account.name)
         _account.name = req.session.myData.name
         //Entity name
-        if(req.session.myData.type == "emp"){
+        if(_type == "emp"){
             req.session.myData.ename = req.query.ename || (req.session.myData.ename || _account.entities[0].name)
             _account.entities[0].name = req.session.myData.ename
         }
@@ -52,11 +107,10 @@ module.exports = function (router,_myData) {
 
     function reset(req){
         req.session.myData = JSON.parse(JSON.stringify(_myData))
-        req.session.myData.count = 8
+        req.session.myData.count = 10
         req.session.myData.limit = 10
         req.session.myData.emplimit = "no"
         req.session.myData.upcoming = "false"
-        setVisibleReservations(req)
     }
 
     router.all('/' + version + '/*', function (req, res, next) {
@@ -74,11 +128,12 @@ module.exports = function (router,_myData) {
         req.session.myData.type = req.query.type || req.session.myData.type
         setAccountInfo(req,req.session.myData.type)
 
+        //Sort reservations
+        sortReservations(req)
+
         //Visible reservations
         req.session.myData.count = Number(req.query.count || req.session.myData.count)
-        if(req.query.count){
-            setVisibleReservations(req)
-        }
+        setVisibleReservations(req)
 
         //Restrictions
         req.session.myData.limit = req.query.limit || req.session.myData.limit
@@ -115,6 +170,8 @@ module.exports = function (router,_myData) {
     // Your reservations
     router.get('/' + version + '/reserve-reservations', function (req, res) {
         setAccountInfo(req, "emp")
+        setVisibleReservations(req)
+        sortReservations(req)
         res.render(version + '/reserve-reservations', {
             myData:req.session.myData
         });
@@ -123,6 +180,8 @@ module.exports = function (router,_myData) {
     // Your reservations - Provider
     router.get('/' + version + '/reserve-reservations-pro', function (req, res) {
         setAccountInfo(req, "pro")
+        setVisibleReservations(req)
+        sortReservations(req)
         res.render(version + '/reserve-reservations-pro', {
             myData:req.session.myData
         });
@@ -379,6 +438,7 @@ module.exports = function (router,_myData) {
                         "visible": true
                     }
                 )
+                sortReservations(req)
                 res.redirect(301, '/' + version + '/reserve-confirmation');
             } else {
                 if(req.session.myData.type == "pro"){
@@ -417,6 +477,7 @@ module.exports = function (router,_myData) {
                 "owned": true
             }
         )
+        sortReservations(req)
         res.redirect(301, '/' + version + '/reserve-confirmation-pro');
     });
 

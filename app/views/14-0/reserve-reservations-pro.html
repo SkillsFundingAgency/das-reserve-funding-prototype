@@ -19,7 +19,7 @@
 {% endif %}
 
 {% set _reserveStartURL = "reserve-start" %}
-{% if myData.limit != "no" and _reservationstotal >= myData.limit %}
+{% if myData.emplimit != "no" and _reservationstotal >= myData.emplimit %}
   {% set _reserveStartURL = "reserve-limit-reached" %}
 {% elif myData.upcoming != "false" %}
   {% set _reserveStartURL = "reserve-upcoming" %}
