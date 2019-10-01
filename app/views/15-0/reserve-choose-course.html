@@ -1,0 +1,106 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% set _inError = myData.validationError %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% if _inError == "true" %}
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1"
+            data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    {% for name, item in myData.validationErrors %}
+                    <li>
+                        <a href="#{{item.anchor}}">{{item.message}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <h1 class="govuk-heading-xl">
+            Which apprenticeship training will the apprentice take?
+        </h1>
+
+        <form method="POST">
+
+            <div class="govuk-form-group {% if myData.validationErrors.whichCourseAnswer %}govuk-form-group--error{% endif %}">
+                <label class="govuk-label" for="whichCourseAnswer">
+                    Search for a course
+                </label>
+                {% if myData.validationErrors.whichCourseAnswer %}
+                <span id="whichCourseAnswer-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>
+                    {{myData.validationErrors.whichCourseAnswer.message}} from the list
+                </span>
+                {% endif %}
+                <span class="govuk-hint">
+                    This information can be changed later. If you want to find the correct training, you can check <a href="#" target="_blank" class="govuk-link">Find apprenticeship training</a> or ask your training provider.
+                </span>
+                <div class="autocomplete-wrapper" >
+                    <select class="govuk-select autocomplete-element" id="whichCourse-1" name="whichCourseAnswer">
+                        <option value="">Select one</option>
+                        {% for _course in myData.courses.list %}
+                        <option {%if _course.value == myData.whichCourseAnswerTemp %}selected{% endif %} value="{{_course.value}}">{{_course.name}} - Level {{_course.level}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Button -->
+            {% from "govuk/components/button/macro.njk" import govukButton %}
+            {{ govukButton({
+              text: "Save and continue"
+            }) }}
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block pageScripts %}
+<!-- <script src="/public/javascripts/jquery-1.11.3.js"></script> -->
+<script src="/public/javascripts/accessible-autocomplete.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.autocomplete-element').each(function() {
+    //   var _defaultValue = '{{_defaultValue}}';
+      var selectEl = document.querySelector('#' + $(this).attr('id') )
+      accessibleAutocomplete.enhanceSelectElement({
+        autoselect: false,
+        defaultValue: '',
+        minLength: 3,
+        selectElement: selectEl,
+        placeholder: 'Start typing to search apprenticeships',
+        showAllValues: false,
+        displayMenu: "overlay"
+      })
+    })
+  })
+</script>
+{% endblock %}

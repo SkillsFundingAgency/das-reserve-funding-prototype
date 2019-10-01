@@ -1,0 +1,227 @@
+{% set _account = myData.accounts[myData.account] %}
+
+{% set _empAccount = myData.accounts[myData.emp] %}
+{% set _empAccountName = _empAccount.name %}
+{% set _proAccountName = myData.accounts[myData.pro].name %}
+
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-m">Prototype setup</h1>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <!-- Employer or Provider -->
+        <div class="govuk-form-group">
+            <!-- <label class="govuk-label govuk-!-font-size-24" for="setupType" >
+                Employer or provider
+            </label> -->
+            <select class="govuk-select govuk-!-font-size-27" style="height: 50px" id="setupType" name="setupType" data-option="setupType">
+                <option {% if myData.type == 'emp' %}selected{% endif %} value="emp">Employer</option>
+                <option {% if myData.type == 'pro' %}selected{% endif %} value="pro">Provider</option>
+            </select>
+        </div>
+
+        <!-- Employer dataset -->
+        <!-- <div class="govuk-form-group" >
+            <label class="govuk-label" for="setupEmpAccount">
+                Employer account
+            </label>
+            <select class="govuk-select" id="setupEmpAccount" name="setupEmpAccount" data-option="setupEmpAccount">
+                {% for key, _account in myData.accounts %}
+                    {% if _thisAccount.type == "emp" %}
+                        <option {% if myData.emp == key %}selected{% endif %} value="{{key}}">{{_thisAccount.name}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div> -->
+
+
+
+            <!-- Employer account name -->
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="setupName">
+                    DAS Account name
+                </label>
+                <input class="govuk-input" id="setupName" name="setupName" data-option="setupName" type="text" value="{{_account.name}}">
+            </div>
+
+            <!-- Employer account name -->
+            <div class="govuk-form-group" id="entity">
+                <label class="govuk-label" for="setupEntity">
+                    Company Name
+                </label>
+                <input class="govuk-input" id="setupEntity" name="setupEntity" data-option="setupEntity" type="text" value="{{_empAccount.entities[0].name}}" onkeyup="this.value = this.value.toUpperCase();">
+            </div>
+
+            <!-- Reservations -->
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="setupCount">
+                    Preload
+                </label>
+                <select class="govuk-select" id="setupCount" name="setupCount" data-option="setupCount">
+                    <option {% if myData.count == '0' %}selected{% endif %} value="0">0 reservations</option>
+                    <option {% if myData.count == '1' %}selected{% endif %} value="1">1 reservation</option>
+                    <option {% if myData.count == '2' %}selected{% endif %} value="2">2 reservations</option>
+                    <option {% if myData.count == '3' %}selected{% endif %} value="3">3 reservations</option>
+                    <option {% if myData.count == '4' %}selected{% endif %} value="4">4 reservations</option>
+                    <option {% if myData.count == '5' %}selected{% endif %} value="5">5 reservations</option>
+                    <option {% if myData.count == '6' %}selected{% endif %} value="6">6 reservations</option>
+                    <option {% if myData.count == '7' %}selected{% endif %} value="7">7 reservations</option>
+                    <option {% if myData.count == '8' %}selected{% endif %} value="8">8 reservations</option>
+                    <option {% if myData.count == '9' %}selected{% endif %} value="9">9 reservations</option>
+                    <option {% if myData.count == '10' %}selected{% endif %} value="10">10 reservations</option>
+                    <option {% if myData.count == '999999' %}selected{% endif %} value="999999">All available</option>
+                </select>
+            </div>
+
+            <!-- Reservations limit -->
+            <div class="govuk-form-group" id="limit">
+                <label class="govuk-label" for="setupLimit">
+                    Limit
+                </label>
+                <select class="govuk-select" id="setupLimit" name="setupLimit" data-option="setupLimit">
+                    <option {% if myData.limit == 'no' %}selected{% endif %} value="no">No</option>
+                    <option {% if myData.limit == '10' %}selected{% endif %} value="10">10 limit</option>
+                </select>
+            </div>
+
+            <!-- Employer limit (pro) -->
+            <div class="govuk-form-group" id="empLimit">
+                <label class="govuk-label" for="setupEmpLimit">
+                    Employer reached limit
+                </label>
+                <select class="govuk-select" id="setupEmpLimit" name="setupEmpLimit" data-option="setupEmpLimit">
+                    <option {% if myData.emplimit == 'no' %}selected{% endif %} value="no">No</option>
+                    <option {% if myData.emplimit == 'yes' %}selected{% endif %} value="yes">Yes</option>
+                </select>
+            </div>
+
+            <!--Upcoming change -->
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="setupUpcoming">
+                    Upcoming change
+                </label>
+                <select class="govuk-select" id="setupUpcoming" name="setupUpcoming" data-option="setupUpcoming">
+                    <option {% if myData.upcoming == "false" %}selected{% endif %} value="false">No</option>
+                    <option {% if myData.upcoming == "true" %}selected{% endif %} value="true">Yes</option>
+                </select>
+            </div>
+
+
+
+        <p class="govuk-body" id="start-url" style="display:none">
+            <a href="#" role="button" draggable="false" class="govuk-button">Start prototype</a>
+        </p>
+
+    </div>
+</div>
+<div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+        <p class="govuk-body" >
+            <span class="govuk-!-font-weight-bold">Shareable link:</span><br>
+            <span class="govuk-body" id="start-url-label" style="display:none"></span>
+        </p>
+
+        <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+        <p class="govuk-body" >
+            <a href="setup?reset=true" class="govuk-link">Reset</a>
+        </p>   
+
+    </div>
+    <!-- <div class="govuk-grid-column-one-third">
+        &nbsp;
+    </div> -->
+</div>
+
+<!-- <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <p class="govuk-body" >{{myData.generatedReservations|dump|safe}}</p>
+    </div>
+</div> -->
+
+{% endblock %}
+
+{% block pageScripts %}
+<script>
+    $(document).ready(function(){
+
+        var _startURL = $("#start-url a"),
+            _startURLLabel = $("#start-url-label"),
+            _options = $("[data-option]"),
+            _entity = $("#entity"),
+            _limit = $("#limit"),
+            _empLimit = $("#empLimit")
+
+        _options.change(function(){
+            setValues()
+        }).trigger("change");
+
+        //Type switcher
+        //SET UP FORM
+        $("#setupType").change(function(){
+            var _thisVal = $(this).val(),
+                _companyName = (_thisVal == "emp") ? {{_empAccountName|dump|safe}} : {{_proAccountName|dump|safe}},
+                _setupName = $("#setupName")
+
+            if(_thisVal == "emp") {
+                _entity.show()
+                _limit.show()
+                _empLimit.hide()
+            } else {
+                _entity.hide()
+                _limit.hide()
+                _empLimit.show()
+            }
+            _setupName.val(_companyName)
+
+            setValues()
+
+        }).trigger("change");
+
+        //SET VALUES
+        function setValues(){
+            //Base URL
+            var _urlBase = "https://das-reserve-funding-prototype.herokuapp.com/" + {{myData.version|dump|safe}} + "/";
+            //Queries
+            var _urlPage = (_options.filter("#setupType").val() == "pro") ? "provider-home?" : "employer-home?",
+                _urlReset = "reset=true",
+                _urlType = "&type=" + _options.filter("#setupType").val(),
+                _urlName = "&name=" + _options.filter("#setupName").val(),
+                _urlEntityName = "&ename=" + _options.filter("#setupEntity").val(),
+                _urlCount = "&count=" + _options.filter("#setupCount").val(),
+                _urlLimit = "&limit=" + _options.filter("#setupLimit").val(),
+                _urlEmpLimit = "&emplimit=" + _options.filter("#setupEmpLimit").val(),
+                _urlUpcoming = "&upcoming=" + _options.filter("#setupUpcoming").val();
+           
+            //Queries combined
+            //Base
+            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming;
+            //Base + type specific
+            if(_options.filter("#setupType").val() == "emp") {
+                var _urlPageQueries = _urlPageQueries + _urlEntityName;
+            } else {
+                var _urlPageQueries = _urlPageQueries + _urlEmpLimit
+            }
+            //URL text
+            var _startURLText = _urlBase + _urlPageQueries,
+                _startURLHREF =  _urlPageQueries;
+            // update label
+            _startURLLabel
+                .text(_startURLText)
+                .show()
+            //update link
+            _startURL
+                .attr("href", _startURLHREF)
+                .parent().show()
+        }
+
+    });
+</script>
+{% endblock %}
