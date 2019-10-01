@@ -2,7 +2,6 @@ module.exports = function (router,_myData) {
 
     var version = "14-0";
 
-    //Random function
     function randomStr(len) { 
         var ans = ''
             arr = 'abcdefghijklimnopqrstuvwxyz'; 
@@ -10,6 +9,14 @@ module.exports = function (router,_myData) {
             ans += arr[Math.floor(Math.random() * arr.length)]; 
         } 
         return ans;
+    }
+
+    function randomItem(_items){
+        return _items[Math.floor(Math.random()*_items.length)];
+    }
+
+    function randomBoolean(_chance){
+        return Math.random() < _chance
     }
 
     function setVisibleReservations(req){
@@ -125,14 +132,107 @@ module.exports = function (router,_myData) {
         }
     }
 
+    function createProviderData(req, _count){
+
+        req.session.myData.generatedReservations = []
+
+        for (i = 0; i < _count; i++) {
+
+            var _reservation = {
+                "id": randomStr(10),
+                "startDate": "",
+                "course": "",
+                "entity": "",
+                "status": "available",
+                "visible": false,
+                "owned": true
+            }
+
+            //Start date
+            _reservation.startDate = randomItem(req.session.myData.startDates).id
+
+            //Course
+            _reservation.course = randomItem(req.session.myData.accounts["pro-1"].courses)
+
+            //Entity
+            _reservation.entity = randomItem(req.session.myData.accounts["pro-1"].employers).name
+
+            // Status
+            if(_reservation.startDate == "aug2019" || _reservation.startDate == "sep2019"){
+                // Previous months - set to either "expired" or "used"
+                if(randomBoolean(0.7)){
+                    _reservation.status = "used"
+                } else {
+                    _reservation.status = "expired"
+                }
+            } else if(randomBoolean(0.1)){
+                // Current and future months - set some to used
+                _reservation.status = "used"
+            }
+
+            // Owned
+            _reservation.owned = randomBoolean(0.3)
+
+            //Add to list
+            req.session.myData.generatedReservations.push(_reservation)
+            
+        }
+
+    }
+
     function reset(req){
         req.session.myData = JSON.parse(JSON.stringify(_myData))
+        req.session.myData.startDates = [
+            {
+                "id": "aug2019",
+                "name": "August 2019",
+                "range": "Aug 2019 to Oct 2019",
+                "empmvs": true
+            },
+            {
+                "id": "sep2019",
+                "name": "September 2019",
+                "range": "Sep 2019 to Nov 2019",
+                "empmvs": true
+            },
+            {
+                "id": "oct2019",
+                "name": "October 2019",
+                "range": "Oct 2019 to Dec 2019",
+                "empmvs": true
+            },
+            {
+                "id": "nov2019",
+                "name": "November 2019",
+                "range": "Nov 2019 to Jan 2020"
+            },
+            {
+                "id": "dec2019",
+                "name": "December 2019",
+                "range": "Dec 2019 to Feb 2020"
+            },
+            {
+                "id": "jan2020",
+                "name": "January 2020",
+                "range": "Jan 2020 to Mar 2020"
+            },
+            {
+                "id": "feb2020",
+                "name": "February 2020",
+                "range": "Feb 2020 to Apr 2020"
+            }
+        ]
         req.session.myData.count = 10
         req.session.myData.limit = 10
         req.session.myData.emplimit = "no"
         req.session.myData.upcoming = "false"
+
+        //Create fake data - only used when new json data files need to be generated
+        // createProviderData(req,452)
+
     }
 
+    // Every GET amd POST
     router.all('/' + version + '/*', function (req, res, next) {
 
         if(!req.session.myData || req.query.reset) {
@@ -147,15 +247,15 @@ module.exports = function (router,_myData) {
         //Account info
         setAccountInfo(req)
 
-        //Sort reservations
-        sortReservations(req)
-
         //Visible reservations
         req.session.myData.count = Number(req.query.count || req.session.myData.count)
         if(req.query.count || !req.session.myData.visibleSet){
             req.session.myData.visibleSet = true
             setVisibleReservations(req)
         }
+
+        //Sort reservations
+        sortReservations(req)
 
         //Restrictions
         req.session.myData.limit = req.query.limit || req.session.myData.limit
@@ -191,7 +291,7 @@ module.exports = function (router,_myData) {
 
     // Your reservations
     router.get('/' + version + '/reserve-reservations', function (req, res) {
-        
+    
         // setVisibleReservations(req)
         sortReservations(req)
         res.render(version + '/reserve-reservations', {

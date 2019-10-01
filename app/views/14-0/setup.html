@@ -76,6 +76,7 @@
                     <option {% if myData.count == '8' %}selected{% endif %} value="8">8 reservations</option>
                     <option {% if myData.count == '9' %}selected{% endif %} value="9">9 reservations</option>
                     <option {% if myData.count == '10' %}selected{% endif %} value="10">10 reservations</option>
+                    <option {% if myData.count == '999999' %}selected{% endif %} value="999999">All available</option>
                 </select>
             </div>
 
@@ -138,6 +139,12 @@
         &nbsp;
     </div> -->
 </div>
+
+<!-- <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <p class="govuk-body" >{{myData.generatedReservations|dump|safe}}</p>
+    </div>
+</div> -->
 
 {% endblock %}
 
