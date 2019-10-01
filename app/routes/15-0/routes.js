@@ -41,6 +41,25 @@ module.exports = function (router,_myData) {
         return _returnReservation
     }
 
+    function setReservationData(req){
+        req.session.myData.accounts[req.session.myData.account].reservations.forEach(function(_reservation, index) {
+            // Employer
+            // _reservation.searchstring = _reservation.entity
+            //Course
+            req.session.myData.courses.list.forEach(function(_course, index) {
+                if(_course.value == _reservation.course){
+                    _reservation.courselabel = _course.name + " - Level " + _course.level
+                }
+            });
+            //Start date label
+            req.session.myData.startDates.forEach(function(_startDate, index) {
+                if(_startDate.id == _reservation.startDate){
+                    _reservation.startDatelabel = _startDate.range
+                }
+            });
+        });
+    }
+
     function sortReservations(req){
         var _reservations = req.session.myData.accounts[req.session.myData.account].reservations
         _reservations.sort(function(a,b){
@@ -184,42 +203,59 @@ module.exports = function (router,_myData) {
         req.session.myData = JSON.parse(JSON.stringify(_myData))
         req.session.myData.startDates = [
             {
+                "id": "jun2019",
+                "name": "June 2019",
+                "range": "Jun 2019 to Aug 2019"
+            },
+            {
+                "id": "jul2019",
+                "name": "July 2019",
+                "range": "Jul 2019 to Sep 2019"
+            },
+            {
                 "id": "aug2019",
                 "name": "August 2019",
                 "range": "Aug 2019 to Oct 2019",
-                "empmvs": true
+                "empmvs": true,
+                "promvs": true
             },
             {
                 "id": "sep2019",
                 "name": "September 2019",
                 "range": "Sep 2019 to Nov 2019",
-                "empmvs": true
+                "empmvs": true,
+                "promvs": true
             },
             {
                 "id": "oct2019",
                 "name": "October 2019",
                 "range": "Oct 2019 to Dec 2019",
-                "empmvs": true
+                "empmvs": true,
+                "promvs": true
             },
             {
                 "id": "nov2019",
                 "name": "November 2019",
-                "range": "Nov 2019 to Jan 2020"
+                "range": "Nov 2019 to Jan 2020",
+                "promvs": true
             },
             {
                 "id": "dec2019",
                 "name": "December 2019",
-                "range": "Dec 2019 to Feb 2020"
+                "range": "Dec 2019 to Feb 2020",
+                "promvs": true
             },
             {
                 "id": "jan2020",
                 "name": "January 2020",
-                "range": "Jan 2020 to Mar 2020"
+                "range": "Jan 2020 to Mar 2020",
+                "promvs": true
             },
             {
                 "id": "feb2020",
                 "name": "February 2020",
-                "range": "Feb 2020 to Apr 2020"
+                "range": "Feb 2020 to Apr 2020",
+                "promvs": true
             }
         ]
         req.session.myData.count = 999999
@@ -228,7 +264,7 @@ module.exports = function (router,_myData) {
         req.session.myData.upcoming = "false"
 
         //Create fake data - only used when new json data files need to be generated
-        // createProviderData(req,452)
+        createProviderData(req,2000)
 
     }
 
@@ -304,6 +340,40 @@ module.exports = function (router,_myData) {
         
         // setVisibleReservations(req)
         sortReservations(req)
+        setReservationData(req)
+
+        //Search
+        _reservations = req.session.myData.accounts[req.session.myData.account].reservations
+        //Clear search
+        req.session.myData.searchapplied = false
+
+        var _searchQ = req.query.q
+        if(_searchQ || _searchQ == ""){
+            _searchQ = _searchQ.trim()
+            if(_searchQ != ""){
+
+                //Defaults
+                req.session.myData.searchTerm = _searchQ
+                req.session.myData.searchapplied = true
+                _reservations.forEach(function(_reservation, index) {
+                    _reservation.search = true
+                })
+
+                // Check for matches
+                var _searchQParts = _searchQ.split(" ");
+                _reservations.forEach(function(_reservation, index) {
+                    _reservation.search = false
+                    var _searchWithin = _reservation.entity + " " + _reservation.courselabel
+                    _searchQParts.forEach(function(_searchQPart, index) {
+                        if(_searchWithin.toUpperCase().indexOf(_searchQPart.toUpperCase()) != -1) {
+                            _reservation.search = true
+                        }
+                    });
+                });
+                
+            }
+        }
+
         res.render(version + '/reserve-reservations-pro', {
             myData:req.session.myData
         });

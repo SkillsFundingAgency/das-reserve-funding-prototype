@@ -9,6 +9,15 @@
 {% endfor %}
 {% set _reservationstotal = _reservations | length %}
 
+<!-- Visible reservations WITHOUT expired -->
+{% set _reservationsExclExpired = [] %}
+{% for _reservation in _reservations %}
+  {% if _reservation.status != "expired" %}
+    {% set _reservationsExclExpired = (_reservationsExclExpired.push(_reservation), _reservationsExclExpired) %}
+  {% endif %}
+{% endfor %}
+{% set _reservationsExclExpiredTotal = _reservationsExclExpired | length %}
+
 <!-- Layout type -->
 {% if _account.type == "emp" %}
   {% extends "layout-as-emp.html" %}
@@ -19,7 +28,7 @@
 {% endif %}
 
 {% set _reserveStartURL = "reserve-start" %}
-{% if myData.emplimit != "no" and _reservationstotal >= myData.emplimit %}
+{% if myData.emplimit != "no" and _reservationsExclExpiredTotal >= myData.emplimit %}
   {% set _reserveStartURL = "reserve-limit-reached" %}
 {% elif myData.upcoming != "false" %}
   {% set _reserveStartURL = "reserve-upcoming" %}
@@ -28,7 +37,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% block beforeContent %}
-{% if _reservationstotal > 0 %}
+{% if _reservationsExclExpiredTotal > 0 %}
   {{ govukBackLink({
       text: "Back",
       href: "javascript: window.history.go(-1)"
@@ -39,67 +48,119 @@
 {% block content %}
 
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
+    <div class="govuk-grid-column-two-thirds">
 
-        {% if _reservationstotal == 0 %}
-          {{ govukBackLink({
-              text: "Back",
-              href: "javascript: window.history.go(-1)"
-          }) }}
-        {% endif %}
+          {% if _reservationsExclExpiredTotal == 0 %}
+            {{ govukBackLink({
+                text: "Back",
+                href: "javascript: window.history.go(-1)"
+            }) }}
+          {% endif %}
 
-        <h1 class="govuk-heading-xl" style="margin-bottom: 90px">
-            Funding for non-levy employers
-        </h1>
+          <h1 class="govuk-heading-xl" >
+              Manage your funding reserved for non-levy employers
+          </h1>
 
-        <p class="govuk-body">This feature is currently only available to employers and training providers taking part in testing.</p>
+          {% if _reservationsExclExpiredTotal > 0 %}
+            <a class="govuk-button" href="{{_reserveStartURL}}">Reserve more funding</a>
+            <!-- <p class="govuk-body">{{_reservationsExclExpiredTotal}} {% if _reservationsExclExpiredTotal == 1 %}reservation{% else %}reservations{% endif %}</p> -->
+          {% endif %}
 
-        {% if _reservationstotal > 0 %}
-          <p class="govuk-heading-m"><a class="govuk-link" href="{{_reserveStartURL}}">Reserve more funding</a></p>
-          <p class="govuk-body">{{_reservationstotal}} {% if _reservationstotal == 1 %}reservation{% else %}reservations{% endif %}</p>
+          {% if _reservationsExclExpiredTotal > 15 %}
+            <!-- Search box -->
+            <form method="GET" >
+              <div class="search-wrapper govuk-form-group" >
+                <label for="search-reservations" class="govuk-label" style="display:none">
+                    Search label
+                </label>
+                <span class="govuk-hint">
+                  Search for the employer name or course
+                </span>
+                <div class="search-input-wrapper">
+                  <input type="search" value="{% if myData.searchapplied == true %}{{myData.searchTerm}}{% endif %}" id="search-reservations" name="q" title="Search" class="govuk-input">
+                  <div class="search-input-submit-wrapper">
+                    <button type="submit" class="search-submit">Search</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!-- Clear search -->
+            {% if myData.searchapplied == true %}
+            <p class="govuk-body"><a href="reserve-reservations-pro" class="govuk-link govuk-link--no-visited-state">Clear search</a></p>
+            {% endif %}
+          {% endif %}
+
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+        {% if _reservationsExclExpiredTotal > 0 %}
           <table class="govuk-table">
               <!-- <caption class="govuk-table__caption">Dates and amounts</caption> -->
-              <thead class="govuk-table__head">
+              <thead class="govuk-table__head" >
                 <tr class="govuk-table__row">
                   <th scope="col" class="govuk-table__header">Employer</th>
-                  <th scope="col" class="govuk-table__header">Apprenticeship training</th>
-                  <th scope="col" class="govuk-table__header">Apprenticeship start date</th>
+                  <th scope="col" class="govuk-table__header">Course</th>
+                  <th scope="col" class="govuk-table__header">Start date</th>
+                  <th scope="col" class="govuk-table__header"></th>
                   <th scope="col" class="govuk-table__header"></th>
                 </tr>
               </thead>
               <tbody class="govuk-table__body">
-              {% for _reservation in _reservations %}
-                {% set _entityLabel = _reservation.entity | upper %}
-                {% set _courseLabel = "" %}
-                {% for _course in myData.courses.list %}
-                  {% if _course.value == _reservation.course %}
-                    {% set _courseLabel = _course.name + " - Level " + _course.level %}
-                  {% endif %}
-                {% endfor %}
-                {% set _startDateLabel = "" %}
-                {% for _startDate in myData.startDates %}
-                  {% if _startDate.id == _reservation.startDate %}
-                    {% set _startDateLabel = _startDate.range %}
-                  {% endif %}
-                {% endfor %}
-                
-                  <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">{{_entityLabel}}</th>
-                    <td class="govuk-table__cell">{{_courseLabel}}</td>
-                    <td class="govuk-table__cell">{{_startDateLabel}}</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" >
-                      {% if _reservation.status == "available" %}
-                      <a href="#add" class="govuk-link">Add apprentice</a>{% if _reservation.owned == true %}<br><a href="reserve-delete?delete={{_reservation.id}}" class="govuk-link">Delete</a>{% endif %}
-                      {% elif _reservation.status == "expired" %}
-                      <strong class="govuk-tag govuk-tag--inactive">expired</strong>
-                      {% elif _reservation.status == "used" %}
-                      <strong class="govuk-tag govuk-tag--inactive">used</strong>
+              {% for _reservation in _reservationsExclExpired %}
+                {% if myData.searchapplied == false or (myData.searchapplied == true and _reservation.search == true) %}
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell" style="white-space: nowrap;">
+                    {{_reservation.entity | upper}}
+                    {% if _reservation.status == "used" %}
+                      <!-- <br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Apprentice added</strong> -->
+                    {% endif %}
+                  </td>
+                  <td class="govuk-table__cell">{{_reservation.courselabel}}</td>
+                  <td class="govuk-table__cell" style="white-space: nowrap;">
+                    {{_reservation.startDatelabel}}
+                    {% if _reservation.status == "expired" %}
+                      <br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">expired</strong>
+                    {% elif _reservation.status == "used" %}
+                      <!-- <br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Apprentice added</strong> -->
+                    {% endif %}
+                  </td>
+                  <td class="govuk-table__cell" >
+                    {% if _reservation.status == "available" %}
+                      <a href="#add2" class="govuk-link govuk-link--no-visited-state">Add&nbsp;apprentice</a>
+                    {% else %}
+                      &nbsp;
+                    {% endif %}
+                  </td>
+                  <td class="govuk-table__cell" >
+                      {% if _reservation.status == "available" and _reservation.owned == true %}
+                        <a href="reserve-delete?delete={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Delete</a>
+                      {% else %}
+                        &nbsp;
                       {% endif %}
                     </td>
-                  </tr>
-                {% endfor %}
+                </tr>
+                {% endif %}
+              {% endfor %}
             </tbody>
           </table>
+
+          {% if _reservationsExclExpiredTotal > 50 %}
+          <!-- Pagination -->
+          <nav role="navigation" aria-label="Pagination">
+            <p class="pagination__summary">Showing 101 &ndash; 150 of 747 reservations</p>
+            <ul class="pagination govuk-list">
+              <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state" href="#0" aria-label="Previous page">Previous</a></li>
+              <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state " href="#0" aria-label="Page 1">1</a></li>
+              <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state current" href="#0" aria-label="Page 2">2</a></li>
+              <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state" href="#0" aria-current="true" aria-label="Page 3, current page">3</a></li>
+              <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state" href="#0" aria-label="Page 4">4</a></li>
+              <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state" href="#0" aria-label="Page 5">5</a></li>
+              <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state" href="#0" aria-label="Next page">Next</a></li>
+            </ul>
+            {% endif %}
+          </nav>
+
         {% else %}
           <h2 class="govuk-heading-m ">There are no funding reservations to use</h2>
           <p class="govuk-body ">You need to reserve funding in order to add a new apprentice.</p>
