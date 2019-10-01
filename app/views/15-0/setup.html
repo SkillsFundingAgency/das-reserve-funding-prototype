@@ -68,14 +68,11 @@
                     <option {% if myData.count == '0' %}selected{% endif %} value="0">0 reservations</option>
                     <option {% if myData.count == '1' %}selected{% endif %} value="1">1 reservation</option>
                     <option {% if myData.count == '2' %}selected{% endif %} value="2">2 reservations</option>
-                    <option {% if myData.count == '3' %}selected{% endif %} value="3">3 reservations</option>
-                    <option {% if myData.count == '4' %}selected{% endif %} value="4">4 reservations</option>
-                    <option {% if myData.count == '5' %}selected{% endif %} value="5">5 reservations</option>
-                    <option {% if myData.count == '6' %}selected{% endif %} value="6">6 reservations</option>
-                    <option {% if myData.count == '7' %}selected{% endif %} value="7">7 reservations</option>
                     <option {% if myData.count == '8' %}selected{% endif %} value="8">8 reservations</option>
                     <option {% if myData.count == '9' %}selected{% endif %} value="9">9 reservations</option>
                     <option {% if myData.count == '10' %}selected{% endif %} value="10">10 reservations</option>
+                    <option {% if myData.count == '25' %}selected{% endif %} value="25" data-preload="pro">25 reservations</option>
+                    <option {% if myData.count == '100' %}selected{% endif %} value="100" data-preload="pro">100 reservations</option>
                     <option {% if myData.count == '999999' %}selected{% endif %} value="999999">All available</option>
                 </select>
             </div>
@@ -174,10 +171,12 @@
                 _entity.show()
                 _limit.show()
                 _empLimit.hide()
+                $("[data-preload]").hide()
             } else {
                 _entity.hide()
                 _limit.hide()
                 _empLimit.show()
+                $("[data-preload]").show()
             }
             _setupName.val(_companyName)
 

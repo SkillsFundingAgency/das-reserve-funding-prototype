@@ -222,7 +222,7 @@ module.exports = function (router,_myData) {
                 "range": "Feb 2020 to Apr 2020"
             }
         ]
-        req.session.myData.count = 10
+        req.session.myData.count = 999999
         req.session.myData.limit = 10
         req.session.myData.emplimit = "no"
         req.session.myData.upcoming = "false"
