@@ -59,6 +59,9 @@
 .search-wrapper input[type="search"] {
   border-right-width: 0;
 }
+.search-wrapper-no-icon input[type="search"]{
+  border-right-width: 2px;
+}
 .search-wrapper input[type="search"]:focus {
   border-right-width: 2px;
 }

@@ -359,18 +359,34 @@ module.exports = function (router,_myData) {
                     _reservation.search = true
                 })
 
-                // Check for matches
-                var _searchQParts = _searchQ.split(" ");
-                _reservations.forEach(function(_reservation, index) {
-                    _reservation.search = false
-                    var _searchWithin = _reservation.entity + " " + _reservation.courselabel
-                    _searchQParts.forEach(function(_searchQPart, index) {
-                        if(_searchWithin.toUpperCase().indexOf(_searchQPart.toUpperCase()) != -1) {
-                            _reservation.search = true
-                        }
-                    });
-                });
-                
+                function doSearch(_v){
+                    if(_v == "version1"){
+                        // Version 1: check for matches on whole search query
+                        _reservations.forEach(function(_reservation, index) {
+                            _reservation.search = false
+                            var _searchWithin = _reservation.entity + " " + _reservation.courselabel
+                            if(_searchWithin.toUpperCase().indexOf(_searchQ.toUpperCase()) != -1) {
+                                _reservation.search = true
+                                _reservation.searchorder
+                            }
+                        });
+                    } else if(_v == "version1"){
+                        // Version 2: Check for matches - ON EACH PART OF SEARCH QUERY
+                        var _searchQParts = _searchQ.split(" ");
+                        _reservations.forEach(function(_reservation, index) {
+                            _reservation.search = false
+                            var _searchWithin = _reservation.entity + " " + _reservation.courselabel
+                            _searchQParts.forEach(function(_searchQPart, index) {
+                                if(_searchWithin.toUpperCase().indexOf(_searchQPart.toUpperCase()) != -1) {
+                                    _reservation.search = true
+                                    _reservation.searchorder
+                                }
+                            });
+                        });
+                    }
+                }
+
+                doSearch("version1")
             }
         }
 
