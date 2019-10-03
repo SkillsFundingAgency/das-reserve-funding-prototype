@@ -108,16 +108,8 @@
               </label>
               <select class="govuk-select" id="course-filter" name="course-filter" style="min-width: 100%">
                 <option value="all">All</option>
-                {% for _course in myData.courses.list %}
-                  {% set _display = false %}
-                  {% for _reservation in _account.reservations %}
-                    {% if (_course.value == _reservation.course) and _reservation.visible == true %}
-                      {% set _display = true %}
-                    {% endif %}
-                  {% endfor %}
-                  {% if _display == true %}
-                  <option value="{{_course.value}}">{{_course.name}} - Level {{_course.level}}</option>
-                  {% endif %}
+                {% for _courselabel in _account.courselabels %}
+                  <option value="{{_courselabel}}">{{_courselabel}}</option>
                 {% endfor %}
               </select>
             </div>
@@ -214,7 +206,7 @@
 {% endif %}
 
 {% if _reservationsTotal > 50 %}
-<!-- <div class="govuk-grid-row">
+<div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <nav role="navigation" aria-label="Pagination">
         <p class="pagination__summary">Showing 101 &ndash; 150 of 747 reservations</p>
@@ -229,7 +221,7 @@
         </ul>
       </nav>
   </div>
-</div> -->
+</div>
 {% endif %}
 
 {% if _reservationsTotal == 0 %}

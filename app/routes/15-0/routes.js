@@ -42,7 +42,9 @@ module.exports = function (router,_myData) {
     }
 
     function setReservationData(req){
-        req.session.myData.accounts[req.session.myData.account].reservations.forEach(function(_reservation, index) {
+        var _account = req.session.myData.accounts[req.session.myData.account]
+        _account.courselabels = []
+        _account.reservations.forEach(function(_reservation, index) {
             // Employer
             // _reservation.searchstring = _reservation.entity
             //Course
@@ -50,6 +52,19 @@ module.exports = function (router,_myData) {
                 if(_course.value == _reservation.course){
                     _reservation.courselabel = _course.name + " - Level " + _course.level
                 }
+            });
+            //Course labels
+            if (_account.courselabels.indexOf(_reservation.courselabel) == -1) {
+                // console.log(_account.courselabels)
+                _account.courselabels.push(_reservation.courselabel)
+            }
+            _account.courselabels.sort(function(a,b){
+                if (a.toUpperCase() < b.toUpperCase()){
+                    return -1
+                } else if(a.toUpperCase() > b.toUpperCase()){
+                    return 1
+                }
+                return 0;
             });
             //Start date label
             req.session.myData.startDates.forEach(function(_startDate, index) {
@@ -264,7 +279,7 @@ module.exports = function (router,_myData) {
         req.session.myData.upcoming = "false"
 
         //Create fake data - only used when new json data files need to be generated
-        createProviderData(req,2000)
+        // createProviderData(req,2000)
 
     }
 
