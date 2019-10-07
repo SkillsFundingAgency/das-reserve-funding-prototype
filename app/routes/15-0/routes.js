@@ -145,9 +145,20 @@ module.exports = function (router,_myData) {
                 "reserve-confirm-org",
                 "reserve-confirmation-pro",
                 "reserve-reservations-pro"
+            ],
+            _employerPages = [
+                "employer-home",
+                "reserve-check-answers",
+                "reserve-choose-org",
+                "reserve-choose-course",
+                "reserve-choose-start-date",
+                "reserve-confirmation",
+                "reserve-reservations"
             ]
         if(_providerPages.indexOf(_page) > -1){
             _type = "pro"
+        } else if(_employerPages.indexOf(_page) > -1){
+            _type = "emp"
         }
         req.session.myData.type = _type
         
@@ -273,6 +284,7 @@ module.exports = function (router,_myData) {
                 "promvs": true
             }
         ]
+        req.session.myData.type = "pro"
         req.session.myData.count = 999999
         req.session.myData.limit = 10
         req.session.myData.emplimit = "no"
