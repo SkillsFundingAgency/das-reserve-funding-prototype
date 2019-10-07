@@ -315,8 +315,9 @@ module.exports = function (router,_myData) {
 
         //Visible reservations
         req.session.myData.count = Number(req.query.c || req.session.myData.count)
-        if(req.query.c || !req.session.myData.visibleSet){
-            req.session.myData.visibleSet = true
+        var _account = req.session.myData.accounts[req.session.myData.account]
+        if(req.query.c || !_account.visibleSet){
+            _account.visibleSet = true
             setVisibleReservations(req)
         }
 
@@ -365,9 +366,11 @@ module.exports = function (router,_myData) {
     
         // setVisibleReservations(req)
         sortReservations(req)
+
         res.render(version + '/reserve-reservations', {
             myData:req.session.myData
         });
+
     });
 
     // Your reservations - Provider

@@ -1,6 +1,11 @@
 {% set _account = myData.accounts[myData.account] %}
 {% set _currentPage = 'provider-home' %}
 
+{% set _reserveStartURL = "reserve-start" %}
+{% if myData.upcoming != "false" %}
+  {% set _reserveStartURL = "reserve-upcoming" %}
+{% endif %}
+
 {% extends "layout-as-pro.html" %}
 
 {% block pageTitle %}
@@ -31,7 +36,7 @@
 
                     <div class="das-card das-card__pro">
                         <h2 class="govuk-heading-m">
-                            <a class="govuk-link govuk-link--no-visited-state" href="reserve-start">Get funding for non-levy employers</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="{{_reserveStartURL}}">Get funding for non-levy employers</a>
                         </h2>
                         <p class="govuk-body">Secure funding for a non-levy employer to train an apprentice.</p>
                     </div>

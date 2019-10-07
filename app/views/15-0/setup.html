@@ -12,7 +12,7 @@
         <h1 class="govuk-heading-m">Prototype setup</h1>
 
         <p class="govuk-body" >
-                <a href="setup?reset=true" class="govuk-link govuk-link--no-visited-state">Reset</a>
+                <a href="setup?r=true" class="govuk-link govuk-link--no-visited-state">Reset</a>
             </p>  
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     </div>
@@ -27,7 +27,7 @@
             <!-- <label class="govuk-label govuk-!-font-size-24" for="setupType" >
                 Employer or provider
             </label> -->
-            <select class="govuk-select govuk-!-font-size-27 govuk-!-font-weight-bold" style="height: 50px" id="setupType" name="setupType" data-option="setupType">
+            <select class="govuk-select govuk-!-font-size-27 govuk-!-font-weight-bold" style="height: 50px; min-width: 100%" id="setupType" name="setupType" data-option="setupType">
                 <option {% if myData.type == 'emp' %}selected{% endif %} value="emp">Employer</option>
                 <option {% if myData.type == 'pro' %}selected{% endif %} value="pro">Provider</option>
             </select>
@@ -69,7 +69,7 @@
                 <label class="govuk-label" for="setupCount">
                     Preload reservations
                 </label>
-                <select class="govuk-select" id="setupCount" name="setupCount" data-option="setupCount">
+                <select class="govuk-select" id="setupCount" name="setupCount" data-option="setupCount" style="min-width: 100%">
                     <option {% if myData.count == '0' %}selected{% endif %} value="0">0</option>
                     <option {% if myData.count == '1' %}selected{% endif %} value="1">1</option>
                     <option {% if myData.count == '2' %}selected{% endif %} value="2">2</option>
@@ -108,7 +108,7 @@
             </div>
 
             <!-- Upcoming change -->
-            <div class="govuk-form-group"  id="empLimit">
+            <div class="govuk-form-group" >
                 <div class="govuk-checkboxes">
                 <div class="govuk-checkboxes__item">
                     <input class="govuk-checkboxes__input" id="setupUpcoming" name="setupUpcoming" type="checkbox" value="setupUpcoming" data-option="setupUpcoming" {% if myData.upcoming == "true" %}checked{% endif %}>
@@ -241,7 +241,7 @@
             var _urlBase = "https://das-reserve-funding-prototype.herokuapp.com/" + {{myData.version|dump|safe}} + "/";
             //Queries
             var _urlPage = (_options.filter("#setupType").val() == "pro") ? "provider-home?" : "employer-home?",
-                _urlReset = "rs=true",
+                _urlReset = "r=true",
 
                 _urlType = "&t=" + _options.filter("#setupType").val(),
                 _urlName = "&n=" + _options.filter("#setupName").val(),
@@ -249,7 +249,7 @@
                 _urlCount = "&c=" + _options.filter("#setupCount").val(),
                 _urlLimit = "&l=" + _options.filter("#setupLimit").val(),
 
-                _urlEmpLimit = (_options.filter("#setupEmpLimit").is(":checked")) ? ("&el=true") : ("&el=false"),
+                _urlEmpLimit = (_options.filter("#setupEmpLimit").is(":checked")) ? ("&el=10") : ("&el=no"),
                 _urlUpcoming = (_options.filter("#setupUpcoming").is(":checked")) ? ("&up=true") : ("&up=false"),
 
                 _urlPaging = (_options.filter("#setupPaging").is(":checked")) ? ("&c_pg=true") : ("&c_pg=false"),
