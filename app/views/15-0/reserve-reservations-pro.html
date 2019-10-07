@@ -141,7 +141,13 @@
 
       <!-- Clear search -->
       {% if myData.searchapplied == true %}
-        <p class="govuk-body"><a href="reserve-reservations-pro" class="govuk-link govuk-link--no-visited-state">Clear filter</a></p>
+        <p class="govuk-body"><a href="reserve-reservations-pro" class="govuk-link govuk-link--no-visited-state">
+          {% if myData.filters == "false" %}
+          Clear search
+          {% else %}
+          Clear filter
+          {% endif %}
+        </a></p>
       {% endif %}
     
     <!-- Count -->
