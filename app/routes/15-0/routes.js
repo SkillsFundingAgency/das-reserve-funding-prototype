@@ -133,7 +133,7 @@ module.exports = function (router,_myData) {
     function setAccountInfo(req, _type){
 
         //Set type based on pages
-        req.session.myData.type = req.query.type || req.session.myData.type
+        req.session.myData.type = req.query.t || req.session.myData.type
         var _type = req.session.myData.type
             _pathname = req._parsedUrl.pathname,
             _page = _pathname.substring(_pathname.lastIndexOf("/") + 1, _pathname.length),
@@ -157,11 +157,11 @@ module.exports = function (router,_myData) {
         req.session.myData.account = (_type == "emp") ? req.session.myData.emp : req.session.myData.pro
         //Account name
         var _account = req.session.myData.accounts[req.session.myData.account]
-        req.session.myData.name = req.query.name || (req.session.myData.name || _account.name)
+        req.session.myData.name = req.query.n || (req.session.myData.name || _account.name)
         _account.name = req.session.myData.name
         //Entity name
         if(_type == "emp"){
-            req.session.myData.ename = req.query.ename || (req.session.myData.ename || _account.entities[0].name)
+            req.session.myData.ename = req.query.en || (req.session.myData.ename || _account.entities[0].name)
             _account.entities[0].name = req.session.myData.ename
         }
     }
@@ -277,6 +277,9 @@ module.exports = function (router,_myData) {
         req.session.myData.limit = 10
         req.session.myData.emplimit = "no"
         req.session.myData.upcoming = "false"
+        req.session.myData.paging = "false"
+        req.session.myData.search = "true"
+        req.session.myData.filters = "true"
 
         //Create fake data - only used when new json data files need to be generated
         // createProviderData(req,2000)
@@ -286,21 +289,21 @@ module.exports = function (router,_myData) {
     // Every GET amd POST
     router.all('/' + version + '/*', function (req, res, next) {
 
-        if(!req.session.myData || req.query.reset) {
+        if(!req.session.myData || req.query.r) {
             reset(req)
         }
         
         // Reset page validation to false by default. Will only be set to true, if applicable, on a POST of a page
         req.session.myData.validationErrors = {}
         req.session.myData.validationError = "false"
-        req.session.myData.includeValidation =  req.query.includeValidation || req.session.myData.includeValidation
+        req.session.myData.includeValidation =  req.query.iv || req.session.myData.includeValidation
 
         //Account info
         setAccountInfo(req)
 
         //Visible reservations
-        req.session.myData.count = Number(req.query.count || req.session.myData.count)
-        if(req.query.count || !req.session.myData.visibleSet){
+        req.session.myData.count = Number(req.query.c || req.session.myData.count)
+        if(req.query.c || !req.session.myData.visibleSet){
             req.session.myData.visibleSet = true
             setVisibleReservations(req)
         }
@@ -309,9 +312,14 @@ module.exports = function (router,_myData) {
         sortReservations(req)
 
         //Restrictions
-        req.session.myData.limit = req.query.limit || req.session.myData.limit
-        req.session.myData.upcoming = req.query.upcoming || req.session.myData.upcoming
-        req.session.myData.emplimit = req.query.emplimit || req.session.myData.emplimit
+        req.session.myData.limit = req.query.l || req.session.myData.limit
+        req.session.myData.upcoming = req.query.up || req.session.myData.upcoming
+        req.session.myData.emplimit = req.query.el || req.session.myData.emplimit
+
+        // Components
+        req.session.myData.paging = req.query.c_pg || req.session.myData.paging
+        req.session.myData.search = req.query.c_sr || req.session.myData.search
+        req.session.myData.filters = req.query.c_ft || req.session.myData.filters
         
         next()
     });

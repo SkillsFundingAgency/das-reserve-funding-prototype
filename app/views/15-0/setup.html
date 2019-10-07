@@ -14,14 +14,16 @@
     </div>
 </div>
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-one-half">
+
+            <h1 class="govuk-heading-s">Account type</h1>
 
         <!-- Employer or Provider -->
         <div class="govuk-form-group">
             <!-- <label class="govuk-label govuk-!-font-size-24" for="setupType" >
                 Employer or provider
             </label> -->
-            <select class="govuk-select govuk-!-font-size-27" style="height: 50px" id="setupType" name="setupType" data-option="setupType">
+            <select class="govuk-select govuk-!-font-size-27 govuk-!-font-weight-bold" style="height: 50px" id="setupType" name="setupType" data-option="setupType">
                 <option {% if myData.type == 'emp' %}selected{% endif %} value="emp">Employer</option>
                 <option {% if myData.type == 'pro' %}selected{% endif %} value="pro">Provider</option>
             </select>
@@ -40,7 +42,6 @@
                 {% endfor %}
             </select>
         </div> -->
-
 
 
             <!-- Employer account name -->
@@ -110,14 +111,55 @@
                 </select>
             </div>
 
+    </div>
+
+    <div class="govuk-grid-column-one-half" data-pro-components="true">
+
+            <h1 class="govuk-heading-s">Provider components</h1>
+
+            <!-- Paging -->
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="setupPaging">
+                    Pagination
+                </label>
+                <select class="govuk-select" id="setupPaging" name="setupPaging" data-option="setupPaging">
+                    <option {% if myData.paging == "false" %}selected{% endif %} value="false">No</option>
+                    <option {% if myData.paging == "true" %}selected{% endif %} value="true">Yes</option>
+                </select>
+            </div>
+
+             <!-- Search -->
+             <div class="govuk-form-group">
+                <label class="govuk-label" for="setupSearch">
+                    Search
+                </label>
+                <select class="govuk-select" id="setupSearch" name="setupSearch" data-option="setupSearch">
+                    <option {% if myData.search == "false" %}selected{% endif %} value="false">No</option>
+                    <option {% if myData.search == "true" %}selected{% endif %} value="true">Yes</option>
+                </select>
+            </div>
+
+            <!-- Filters -->
+            <div class="govuk-form-group">
+               <label class="govuk-label" for="setupFilters">
+                   Filters
+               </label>
+               <select class="govuk-select" id="setupFilters" name="setupFilters" data-option="setupFilters">
+                   <option {% if myData.filters == "false" %}selected{% endif %} value="false">No</option>
+                   <option {% if myData.filters == "true" %}selected{% endif %} value="true">Yes</option>
+               </select>
+           </div>
+
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
         <p class="govuk-body" id="start-url" style="display:none">
             <a href="#" role="button" draggable="false" class="govuk-button">Start prototype</a>
         </p>
 
-    </div>
-</div>
-<div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
         <p class="govuk-body" >
             <span class="govuk-!-font-weight-bold">Shareable link:</span><br>
             <span class="govuk-body" id="start-url-label" style="display:none"></span>
@@ -170,11 +212,13 @@
                 _limit.show()
                 _empLimit.hide()
                 $("[data-preload]").hide()
+                $("[data-pro-components]").hide()
             } else {
                 _entity.hide()
                 _limit.hide()
                 _empLimit.show()
                 $("[data-preload]").show()
+                $("[data-pro-components]").show()
             }
             _setupName.val(_companyName)
 
@@ -188,18 +232,23 @@
             var _urlBase = "https://das-reserve-funding-prototype.herokuapp.com/" + {{myData.version|dump|safe}} + "/";
             //Queries
             var _urlPage = (_options.filter("#setupType").val() == "pro") ? "provider-home?" : "employer-home?",
-                _urlReset = "reset=true",
-                _urlType = "&type=" + _options.filter("#setupType").val(),
-                _urlName = "&name=" + _options.filter("#setupName").val(),
-                _urlEntityName = "&ename=" + _options.filter("#setupEntity").val(),
-                _urlCount = "&count=" + _options.filter("#setupCount").val(),
-                _urlLimit = "&limit=" + _options.filter("#setupLimit").val(),
-                _urlEmpLimit = "&emplimit=" + _options.filter("#setupEmpLimit").val(),
-                _urlUpcoming = "&upcoming=" + _options.filter("#setupUpcoming").val();
+                _urlReset = "rs=true",
+
+                _urlType = "&t=" + _options.filter("#setupType").val(),
+                _urlName = "&n=" + _options.filter("#setupName").val(),
+                _urlEntityName = "&en=" + _options.filter("#setupEntity").val(),
+                _urlCount = "&c=" + _options.filter("#setupCount").val(),
+                _urlLimit = "&l=" + _options.filter("#setupLimit").val(),
+                _urlEmpLimit = "&el=" + _options.filter("#setupEmpLimit").val(),
+                _urlUpcoming = "&up=" + _options.filter("#setupUpcoming").val(),
+
+                _urlPaging = "&c_pg=" + _options.filter("#setupPaging").val(),
+                _urlSearch = "&c_sr=" + _options.filter("#setupSearch").val(),
+                _urlFilters = "&c_ft=" + _options.filter("#setupFilters").val();
            
             //Queries combined
             //Base
-            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming;
+            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming + _urlPaging + _urlSearch + _urlFilters;
             //Base + type specific
             if(_options.filter("#setupType").val() == "emp") {
                 var _urlPageQueries = _urlPageQueries + _urlEntityName;

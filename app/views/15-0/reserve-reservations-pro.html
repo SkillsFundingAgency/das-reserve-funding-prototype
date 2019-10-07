@@ -55,7 +55,7 @@
 {% endif %}
 
 <!-- Search -->
-{% if _reservationsTotal > 10 %}
+{% if _reservationsTotal > 10 and myData.search == "true" %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <!-- Search box -->
@@ -77,7 +77,7 @@
 {% endif %}
 
 <!-- Filters -->
-{% if _reservationsTotal > 10 %}
+{% if _reservationsTotal > 10 and myData.filters == "true" %}
 <div class="govuk-grid-row" style=" background: #DEE0E2; margin-left:0; margin-right:0; margin-bottom: 20px">
         <div class="govuk-grid-column-one-third" style=" padding: 20px 20px 0 20px;">
 
@@ -206,7 +206,7 @@
 {% endif %}
 
 <!-- Pagination -->
-{% if _reservationsTotal > 50 %}
+{% if _reservationsTotal > 50 and myData.paging == "true" %}
 {% set _currentPage = 1 %}
 {% set _firstPage = "true" %}
 {% set _lastPage = "false" %}
