@@ -10,6 +10,9 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-m">Prototype setup</h1>
+        <p class="govuk-body" >
+            <a href="setup?reset=true" class="govuk-link">Reset</a>
+        </p>   
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     </div>
 </div>
@@ -130,14 +133,175 @@
 
         <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
 
-        <p class="govuk-body" >
-            <a href="setup?reset=true" class="govuk-link">Reset</a>
-        </p>   
 
     </div>
-    <!-- <div class="govuk-grid-column-one-third">
-        &nbsp;
-    </div> -->
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">Full page list</h2>
+
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header"></th>
+                <th scope="col" class="govuk-table__header">Employer</th>
+                <th scope="col" class="govuk-table__header">Provider</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">  
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Home</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="employer-home">/employer-home</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="provider-home">/provider-home</a></td>
+                </tr> 
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Manage reservations</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-reservations?type=emp">/reserve-reservations?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-reservations-pro">/reserve-reservations-pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Start</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-start?type=emp">/reserve-start?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-start?type=pro">/reserve-start?type=pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Choose org/employer</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-org?type=emp">/reserve-choose-org?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-org-pro">/reserve-choose-org-pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Confirm employer</th>
+                    <td class="govuk-table__cell" >-</td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-confirm-org">/reserve-confirm-org</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Choose course</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-course?type=emp">/reserve-choose-course?type=emp</a></td>
+                    <td class="govuk-table__cell">-</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Choose start date</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-start-date?type=emp">/reserve-choose-start-date?type=emp</a></td>
+                    <td class="govuk-table__cell" >-</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Choose course & start date</th>
+                    <td class="govuk-table__cell" >-</td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-training">/reserve-choose-training</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Check answers</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-check-answers">/reserve-check-answers</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-check-answers-pro">/reserve-check-answers-pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Confirmation</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-confirmation">/reserve-confirmation</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-confirmation-pro">/reserve-confirmation-pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Delete</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete?type=emp">/reserve-delete?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete?type=pro">/reserve-delete?type=pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Delete - confirmation</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete-confirmation?type=emp">/reserve-delete-confirmation?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete-confirmation?type=pro">/reserve-delete-confirmation?type=pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell" colspan="3"><h2 class="govuk-heading-m" style="margin-top:20px">Spend controls</h2></th>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Upcoming change</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-upcoming?type=emp">/reserve-upcoming?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-upcoming?type=pro">/reserve-upcoming?type=pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Employer limit reached</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-limit-reached?type=emp">/reserve-limit-reached?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-limit-reached?type=pro">/reserve-limit-reached?type=pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Funding paused</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-funding-paused?type=emp" >/reserve-funding-paused?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-funding-paused?type=pro" >/reserve-funding-paused?type=pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell" colspan="3"><h2 class="govuk-heading-m" style="margin-top:20px">Errors</h2></th>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">No permission</th>
+                    <td class="govuk-table__cell" >-</td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-no-permission?type=pro" >/reserve-no-permission?type=pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Non EOI</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-non-eoi?type=emp" >/reserve-non-eoi?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-non-eoi?type=pro">/reserve-non-eoi?type=pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">403</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-403?type=emp" >/reserve-403?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-403?type=pro" >/reserve-403?type=pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">404</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-404?type=emp" >/reserve-404?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-404?type=pro" >/reserve-404?type=pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">500</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-500?type=emp" >/reserve-500?type=emp</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-500?type=pro" >/reserve-500?type=pro</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- <h2 class="govuk-heading-s">Employer account:</h2>
+        <ul class="govuk-list govuk-list--bullet">
+            <li><a class="govuk-link govuk-link--no-visited-state" href="employer-home">Home</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-reservations">Manage reservations</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-start?type=emp">Reserve - start</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-org">Reserve - choose organisation</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-course">Reserve - choose course</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-start-date">Reserve - choose start date</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-check-answers">Reserve - check answers</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-confirmation">Reserve - confirmation</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete?type=emp">Delete reservation</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete-confirmation?type=emp">Delete reservation - confirmation</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-upcoming?type=emp">Upcoming change</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-limit-reached?type=emp">Employer limit reached</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-funding-paused" >Funding paused</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-non-eoi?type=emp" >Non EOI</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-403?type=emp" >403</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-404?type=emp" >404</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-500?type=emp" >500</a></li>
+        </ul>
+
+        <h2 class="govuk-heading-s">Provider account:</h2>
+        <ul class="govuk-list govuk-list--bullet">
+            <li><a class="govuk-link govuk-link--no-visited-state" href="provider-home">Home</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-reservations-pro">Manage reservations</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-start?type=pro">Reserve - start</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-org-pro">Reserve - choose employer</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-confirm-org">Reserve - confirm employer</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-training">Reserve - choose training</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-check-answers-pro">Reserve - check answers</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-confirmation-pro">Reserve - confirmation</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete?type=pro">Delete reservation</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete-confirmation?type=pro">Delete reservation - confirmation</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-upcoming?type=pro">Upcoming change</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-limit-reached?type=pro">Employer limit reached</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-funding-paused-pro" >Funding paused</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-non-eoi?type=pro" >Non EOI</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-403?type=pro" >403</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-404?type=pro" >404</a></li>
+            <li><a class="govuk-link govuk-link--no-visited-state" href="reserve-500?type=pro" >500</a></li>
+        </ul> -->
+
+    </div>
 </div>
 
 <!-- <div class="govuk-grid-row">

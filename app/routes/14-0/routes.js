@@ -275,7 +275,6 @@ module.exports = function (router,_myData) {
 
     // Employer home
     router.get('/' + version + '/employer-home', function (req, res) {
-        
         res.render(version + '/employer-home', {
             myData:req.session.myData
         });
@@ -766,7 +765,6 @@ module.exports = function (router,_myData) {
 
     // Limit reached
     router.get('/' + version + '/reserve-limit-reached', function (req, res) {
-        
         res.render(version + '/reserve-limit-reached', {
             myData:req.session.myData
         });
@@ -783,6 +781,47 @@ module.exports = function (router,_myData) {
             req.session.myData.upcoming = "false"
         }
         res.redirect(301, '/' + version + '/reserve-start');
+    });
+
+    // Funding paused
+    router.get('/' + version + '/reserve-funding-paused', function (req, res) {
+        res.render(version + '/reserve-funding-paused', {
+            myData:req.session.myData
+        });
+    });
+
+    //No permission
+    router.get('/' + version + '/reserve-no-permission', function (req, res) {
+        res.render(version + '/reserve-no-permission', {
+            myData:req.session.myData
+        });
+    });
+
+    //Non EOI
+    router.get('/' + version + '/reserve-non-eoi', function (req, res) {
+        res.render(version + '/reserve-non-eoi', {
+            myData:req.session.myData
+        });
+    });
+
+    //  Errors 
+    // 403
+    router.get('/' + version + '/reserve-403', function (req, res) {
+        res.render(version + '/reserve-403', {
+            myData:req.session.myData
+        });
+    });
+    // 404
+    router.get('/' + version + '/reserve-404', function (req, res) {
+        res.render(version + '/reserve-404', {
+            myData:req.session.myData
+        });
+    });
+    // 500
+    router.get('/' + version + '/reserve-500', function (req, res) {
+        res.render(version + '/reserve-500', {
+            myData:req.session.myData
+        });
     });
 
  };

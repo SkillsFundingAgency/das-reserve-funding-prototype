@@ -288,6 +288,7 @@ module.exports = function (router,_myData) {
         req.session.myData.count = 999999
         req.session.myData.limit = 10
         req.session.myData.emplimit = "no"
+        req.session.myData.reservationsadded = 0
         req.session.myData.upcoming = "false"
         req.session.myData.paging = "false"
         req.session.myData.search = "true"
@@ -515,7 +516,7 @@ module.exports = function (router,_myData) {
         } else {
             req.session.myData.confirmOrgAnswer = req.session.myData.confirmOrgAnswerTemp
             req.session.myData.confirmOrgAnswerTemp = ""
-            if(req.session.myData.emplimit == "no") {
+            if(req.session.myData.emplimit == "no" || req.session.myData.reservationsadded < req.session.myData.emplimit) {
                 if(req.session.myData.confirmOrgAnswer == "yes") {
                     res.redirect(301, '/' + version + '/reserve-choose-training');
                 } else {
@@ -724,6 +725,7 @@ module.exports = function (router,_myData) {
             }
         )
         sortReservations(req)
+        req.session.myData.reservationsadded = req.session.myData.reservationsadded + 1
         res.redirect(301, '/' + version + '/reserve-confirmation-pro');
     });
 
@@ -907,6 +909,47 @@ module.exports = function (router,_myData) {
             req.session.myData.upcoming = "false"
         }
         res.redirect(301, '/' + version + '/reserve-start');
+    });
+
+    // Funding paused
+    router.get('/' + version + '/reserve-funding-paused', function (req, res) {
+        res.render(version + '/reserve-funding-paused', {
+            myData:req.session.myData
+        });
+    });
+
+    //No permission
+    router.get('/' + version + '/reserve-no-permission', function (req, res) {
+        res.render(version + '/reserve-no-permission', {
+            myData:req.session.myData
+        });
+    });
+
+    //Non EOI
+    router.get('/' + version + '/reserve-non-eoi', function (req, res) {
+        res.render(version + '/reserve-non-eoi', {
+            myData:req.session.myData
+        });
+    });
+
+    //  Errors 
+    // 403
+    router.get('/' + version + '/reserve-403', function (req, res) {
+        res.render(version + '/reserve-403', {
+            myData:req.session.myData
+        });
+    });
+    // 404
+    router.get('/' + version + '/reserve-404', function (req, res) {
+        res.render(version + '/reserve-404', {
+            myData:req.session.myData
+        });
+    });
+    // 500
+    router.get('/' + version + '/reserve-500', function (req, res) {
+        res.render(version + '/reserve-500', {
+            myData:req.session.myData
+        });
     });
 
  };

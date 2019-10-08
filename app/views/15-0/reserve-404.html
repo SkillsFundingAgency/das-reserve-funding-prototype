@@ -1,0 +1,35 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% set _homepageURL = "employer-home" %}
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% set _homepageURL = "provider-home" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl">
+            Page not found
+        </h1>
+
+        <p>If you entered a web address, check that it's correct. Or you can <a href="{{_homepageURL}}" class="govuk-link" >return to the home page</a>.</p>
+
+    </div>
+</div>
+
+{% endblock %}
