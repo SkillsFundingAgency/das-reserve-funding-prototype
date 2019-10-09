@@ -120,11 +120,13 @@
                     <option {% if myData.limit == 'no' %}selected{% endif %} value="no">No limit</option>
                     <option {% if myData.limit == '5' %}selected{% endif %} value="5">5</option>
                     <option {% if myData.limit == '10' %}selected{% endif %} value="10">10</option>
+                    <option {% if myData.limit == '11' %}selected{% endif %} value="11">11</option>
+                    <option {% if myData.limit == '15' %}selected{% endif %} value="15">15</option>
                 </select>
             </div>
 
             <!-- Employer limit (pro) -->
-            <div class="govuk-form-group"  id="empLimit">
+            <div class="govuk-form-group" style="margin-bottom: 10px" id="empLimit">
                 <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
                         <input class="govuk-checkboxes__input" id="setupEmpLimit" name="setupEmpLimit" type="checkbox" value="setupEmpLimit" data-option="setupEmpLimit" {% if myData.emplimit == "true" %}checked{% endif %} data-aria-controls="conditional-setupEmpLimit">
@@ -138,6 +140,26 @@
                             After adding how many reservations?
                             </label>
                             <input class="govuk-input govuk-!-width-one-third" id="setupEmpLimitNumber" name="setupEmpLimitNumber" data-option="setupEmpLimitNumber" type="number" spellcheck="false" value="2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hide dates (pro) -->
+            <div class="govuk-form-group" >
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="setupDates" name="setupDates" type="checkbox" value="setupDates" data-option="setupDates" {% if myData.hidedates == "true" %}checked{% endif %} data-aria-controls="conditional-setupDates">
+                        <label class="govuk-label govuk-checkboxes__label" for="setupDates">
+                            Hide first date option
+                        </label>
+                    </div>
+                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-setupDates">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="setupDatesNumber">
+                            After adding how many reservations?
+                            </label>
+                            <input class="govuk-input govuk-!-width-one-third" id="setupDatesNumber" name="setupDatesNumber" data-option="setupDatesNumber" type="number" spellcheck="false" value="1">
                         </div>
                     </div>
                 </div>
@@ -404,6 +426,7 @@
                 _urlLimit = "&l=" + _options.filter("#setupLimit").val(),
 
                 _urlEmpLimit = (_options.filter("#setupEmpLimit").is(":checked")) ? ("&el=" + _options.filter("#setupEmpLimitNumber").val()) : ("&el=no"),
+                _urlDates = (_options.filter("#setupDates").is(":checked")) ? ("&d=" + _options.filter("#setupDatesNumber").val()) : ("&d=no"),
                 _urlUpcoming = (_options.filter("#setupUpcoming").is(":checked")) ? ("&up=true") : ("&up=false"),
                 _urlPaused = (_options.filter("#setupPaused").is(":checked")) ? ("&p=true") : ("&p=false"),
 
@@ -413,7 +436,7 @@
            
             //Queries combined
             //Base
-            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming + _urlPaused;
+            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming + _urlPaused + _urlDates;
             //Base + type specific
             if(_options.filter("#setupType").val() == "emp") {
                 var _urlPageQueries = _urlPageQueries + _urlEntityName;

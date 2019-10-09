@@ -290,8 +290,9 @@ module.exports = function (router,_myData) {
         ]
         req.session.myData.type = "pro"
         req.session.myData.count = 999999
-        req.session.myData.limit = 10
+        req.session.myData.limit = 15
         req.session.myData.emplimit = "no"
+        req.session.myData.hidedates = "no"
         req.session.myData.reservationsadded = 0
         req.session.myData.upcoming = "false"
         req.session.myData.paused = "false"
@@ -334,6 +335,7 @@ module.exports = function (router,_myData) {
         req.session.myData.limit = req.query.l || req.session.myData.limit
         req.session.myData.upcoming = req.query.up || req.session.myData.upcoming
         req.session.myData.emplimit = req.query.el || req.session.myData.emplimit
+        req.session.myData.hidedates = req.query.d || req.session.myData.hidedates
         req.session.myData.paused = req.query.p || req.session.myData.paused
 
         // Components

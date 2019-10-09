@@ -86,15 +86,32 @@
                     {% endif %}
                     <div class="govuk-radios" id="whichTrainingStartDateAnswer">
                         {% set _index = 1 %}
+                        {% set _show = true %}
+                        {% set _hiddenSet = false %}
                         {% for startDate in myData.startDates %}
                           {% if startDate.promvs == true %}
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="whichTrainingStartDate-{{_index}}" name="whichTrainingStartDateAnswer" type="radio" value="{{startDate.id}}" {% if myData.whichTrainingStartDateAnswerTemp == startDate.id %}checked{% endif %}>
-                                <label class="govuk-label govuk-radios__label" for="whichTrainingStartDate-{{_index}}">
-                                    {{startDate.name}}
-                                </label>
-                            </div>
-                            {% set _index = _index + 1 %}
+
+                            {% if myData.hidedates == "no" or myData.reservationsadded < myData.hidedates %}
+                              {% set _show = true %}
+                            {% else %}
+                              {% if _hiddenSet == false %}
+                                {% set _show = false %}
+                                {% set _hiddenSet = true %}
+                              {% else %}
+                                {% set _show = true %}
+                              {% endif %}
+                            {% endif %}
+
+                            {% if _show == true %}
+                              <div class="govuk-radios__item">
+                                  <input class="govuk-radios__input" id="whichTrainingStartDate-{{_index}}" name="whichTrainingStartDateAnswer" type="radio" value="{{startDate.id}}" {% if myData.whichTrainingStartDateAnswerTemp == startDate.id %}checked{% endif %}>
+                                  <label class="govuk-label govuk-radios__label" for="whichTrainingStartDate-{{_index}}">
+                                      {{startDate.name}}
+                                  </label>
+                              </div>
+                              {% set _index = _index + 1 %}
+                            {% endif %}
+
                           {% endif %}
                         {% endfor %}
                     </div>
