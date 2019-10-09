@@ -55,7 +55,7 @@
                 <dd class="govuk-summary-list__value">
                     {% for _entity in _account.entities %}
                         {% if myData.whichOrgAnswer == _entity.id %}
-                            {{_entity.name}}
+                            {{_entity.name|upper}}
                         {% endif %}
                     {% endfor %}
                 </dd>

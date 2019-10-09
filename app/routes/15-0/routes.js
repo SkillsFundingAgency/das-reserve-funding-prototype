@@ -126,6 +126,31 @@ module.exports = function (router,_myData) {
         })
     }
 
+    function setDefaultAnswers(req, _type){
+        // Employer 
+        var _empStartDate = req.session.myData.startDates[0].id,
+            _proStartDate = req.session.myData.startDates[0].id,
+            _empSet = false,
+            _proSet = false
+        req.session.myData.startDates.forEach(function(_startDate, index) {
+            if(_startDate.empmvs == true && !_empSet){
+                _empStartDate = _startDate.id
+                _empSet = true
+            }
+            if(_startDate.promvs == true && !_proSet){
+                _proStartDate = _startDate.id
+                _proSet = true
+            }
+        });
+        req.session.myData.whichOrgAnswer = req.session.myData.whichOrgAnswer || req.session.myData.accounts[req.session.myData.emp].entities[0].id
+        req.session.myData.whichCourseAnswer = req.session.myData.whichCourseAnswer || req.session.myData.courses.list[0].value
+        req.session.myData.whichStartDateAnswer = req.session.myData.whichStartDateAnswer || _empStartDate
+        // Provider
+        req.session.myData.selectedEmployer = req.session.myData.selectedEmployer || req.session.myData.accounts[req.session.myData.pro].employers[0].id
+        req.session.myData.whichTrainingCourseAnswer = req.session.myData.whichTrainingCourseAnswer || req.session.myData.courses.list[0].value
+        req.session.myData.whichTrainingStartDateAnswer = req.session.myData.whichTrainingStartDateAnswer || _proStartDate
+    }
+
     function setAccountInfo(req, _type){
 
         //Set type based on pages
@@ -338,6 +363,9 @@ module.exports = function (router,_myData) {
         req.session.myData.paging = req.query.c_pg || req.session.myData.paging
         req.session.myData.search = req.query.c_sr || req.session.myData.search
         req.session.myData.filters = req.query.c_ft || req.session.myData.filters
+
+        // Set default answers
+        setDefaultAnswers(req, "emp")
         
         next()
     });
@@ -448,7 +476,6 @@ module.exports = function (router,_myData) {
 
     // Choose organisation
     router.get('/' + version + '/reserve-choose-org', function (req, res) {
-        
         res.render(version + '/reserve-choose-org', {
             myData:req.session.myData
         });
@@ -568,7 +595,6 @@ module.exports = function (router,_myData) {
 
     // Choose start date
     router.get('/' + version + '/reserve-choose-start-date', function (req, res) {
-        
         res.render(version + '/reserve-choose-start-date', {
             myData:req.session.myData
         });
@@ -602,7 +628,6 @@ module.exports = function (router,_myData) {
 
     // Choose training (provider)
     router.get('/' + version + '/reserve-choose-training', function (req, res) {
-        
         res.render(version + '/reserve-choose-training', {
             myData:req.session.myData
         });
@@ -649,7 +674,6 @@ module.exports = function (router,_myData) {
 
     // Check answers
     router.get('/' + version + '/reserve-check-answers', function (req, res) {
-        
         res.render(version + '/reserve-check-answers', {
             myData:req.session.myData
         });
@@ -703,7 +727,6 @@ module.exports = function (router,_myData) {
 
     // Check answers (pro)
     router.get('/' + version + '/reserve-check-answers-pro', function (req, res) {
-        
         res.render(version + '/reserve-check-answers-pro', {
             myData:req.session.myData
         });
@@ -735,7 +758,7 @@ module.exports = function (router,_myData) {
 
     // Confirmation
     router.get('/' + version + '/reserve-confirmation', function (req, res) {
-        
+        req.session.myData.whichOrgAnswer = req.session.myData.whichOrgAnswer || req.session.myData.accounts[req.session.myData.account].entities[0].id
         res.render(version + '/reserve-confirmation', {
             myData:req.session.myData
         });
