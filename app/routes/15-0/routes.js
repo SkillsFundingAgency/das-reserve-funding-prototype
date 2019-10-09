@@ -242,15 +242,13 @@ module.exports = function (router,_myData) {
                 "id": "aug2019",
                 "name": "August 2019",
                 "range": "Aug 2019 to Oct 2019",
-                "empmvs": true,
-                "promvs": true
+                "empmvs": true
             },
             {
                 "id": "sep2019",
                 "name": "September 2019",
                 "range": "Sep 2019 to Nov 2019",
-                "empmvs": true,
-                "promvs": true
+                "empmvs": true
             },
             {
                 "id": "oct2019",
@@ -282,6 +280,12 @@ module.exports = function (router,_myData) {
                 "name": "February 2020",
                 "range": "Feb 2020 to Apr 2020",
                 "promvs": true
+            },
+            {
+                "id": "mar2020",
+                "name": "March 2020",
+                "range": "Mar 2020 to May 2020",
+                "promvs": true
             }
         ]
         req.session.myData.type = "pro"
@@ -290,6 +294,7 @@ module.exports = function (router,_myData) {
         req.session.myData.emplimit = "no"
         req.session.myData.reservationsadded = 0
         req.session.myData.upcoming = "false"
+        req.session.myData.paused = "false"
         req.session.myData.paging = "false"
         req.session.myData.search = "true"
         req.session.myData.filters = "true"
@@ -329,6 +334,7 @@ module.exports = function (router,_myData) {
         req.session.myData.limit = req.query.l || req.session.myData.limit
         req.session.myData.upcoming = req.query.up || req.session.myData.upcoming
         req.session.myData.emplimit = req.query.el || req.session.myData.emplimit
+        req.session.myData.paused = req.query.p || req.session.myData.paused
 
         // Components
         req.session.myData.paging = req.query.c_pg || req.session.myData.paging
