@@ -87,19 +87,44 @@
 
             <h1 class="govuk-heading-s">Spend controls</h1>
 
+            <!-- Funding is paused -->
+            <div class="govuk-form-group" style="margin-bottom: 10px" >
+                <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="setupPaused" name="setupPaused" type="checkbox" value="setupPaused" data-option="setupPaused" {% if myData.paused == "true" %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label" for="setupPaused">
+                        Funding is paused
+                    </label>
+                </div>
+                </div>
+            </div>
+
+            <!-- Upcoming change -->
+            <div class="govuk-form-group" style="margin-bottom: 10px" >
+                <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="setupUpcoming" name="setupUpcoming" type="checkbox" value="setupUpcoming" data-option="setupUpcoming" {% if myData.upcoming == "true" %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label" for="setupUpcoming">
+                        Upcoming change
+                    </label>
+                </div>
+                </div>
+            </div>
+
             <!-- Reservations limit -->
             <div class="govuk-form-group" id="limit">
                 <label class="govuk-label" for="setupLimit">
-                    Limit
+                    Employer limit
                 </label>
                 <select class="govuk-select" id="setupLimit" name="setupLimit" data-option="setupLimit">
-                    <option {% if myData.limit == 'no' %}selected{% endif %} value="no">No</option>
-                    <option {% if myData.limit == '10' %}selected{% endif %} value="10">10 limit</option>
+                    <option {% if myData.limit == 'no' %}selected{% endif %} value="no">No limit</option>
+                    <option {% if myData.limit == '5' %}selected{% endif %} value="5">5</option>
+                    <option {% if myData.limit == '10' %}selected{% endif %} value="10">10</option>
                 </select>
             </div>
 
             <!-- Employer limit (pro) -->
-            <div class="govuk-form-group" style="margin-bottom: 10px" id="empLimit">
+            <div class="govuk-form-group"  id="empLimit">
                 <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
                         <input class="govuk-checkboxes__input" id="setupEmpLimit" name="setupEmpLimit" type="checkbox" value="setupEmpLimit" data-option="setupEmpLimit" {% if myData.emplimit == "true" %}checked{% endif %} data-aria-controls="conditional-setupEmpLimit">
@@ -115,18 +140,6 @@
                             <input class="govuk-input govuk-!-width-one-third" id="setupEmpLimitNumber" name="setupEmpLimitNumber" data-option="setupEmpLimitNumber" type="number" spellcheck="false" value="2">
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Upcoming change -->
-            <div class="govuk-form-group" >
-                <div class="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="setupUpcoming" name="setupUpcoming" type="checkbox" value="setupUpcoming" data-option="setupUpcoming" {% if myData.upcoming == "true" %}checked{% endif %}>
-                    <label class="govuk-label govuk-checkboxes__label" for="setupUpcoming">
-                        Upcoming change
-                    </label>
-                </div>
                 </div>
             </div>
 
@@ -232,22 +245,22 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__cell">Confirm employer</th>
-                    <td class="govuk-table__cell" >-</td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
                     <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-confirm-org">/reserve-confirm-org</a></td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__cell">Choose course</th>
                     <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-course?t=emp">/reserve-choose-course?t=emp</a></td>
-                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell" style="color:grey">n/a</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__cell">Choose start date</th>
                     <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-start-date?t=emp">/reserve-choose-start-date?t=emp</a></td>
-                    <td class="govuk-table__cell" >-</td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__cell">Choose course & start date</th>
-                    <td class="govuk-table__cell" >-</td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
                     <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-training">/reserve-choose-training</a></td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -293,7 +306,7 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__cell">No permission</th>
-                    <td class="govuk-table__cell" >-</td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
                     <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-no-permission?t=pro" >/reserve-no-permission?t=pro</a></td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -392,6 +405,7 @@
 
                 _urlEmpLimit = (_options.filter("#setupEmpLimit").is(":checked")) ? ("&el=" + _options.filter("#setupEmpLimitNumber").val()) : ("&el=no"),
                 _urlUpcoming = (_options.filter("#setupUpcoming").is(":checked")) ? ("&up=true") : ("&up=false"),
+                _urlPaused = (_options.filter("#setupPaused").is(":checked")) ? ("&p=true") : ("&p=false"),
 
                 _urlPaging = (_options.filter("#setupPaging").is(":checked")) ? ("&c_pg=true") : ("&c_pg=false"),
                 _urlSearch = (_options.filter("#setupSearch").is(":checked")) ? ("&c_sr=true") : ("&c_sr=false"),
@@ -399,7 +413,7 @@
            
             //Queries combined
             //Base
-            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming;
+            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming + _urlPaused;
             //Base + type specific
             if(_options.filter("#setupType").val() == "emp") {
                 var _urlPageQueries = _urlPageQueries + _urlEntityName;
