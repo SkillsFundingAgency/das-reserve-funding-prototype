@@ -85,7 +85,8 @@ module.exports = function (router,_myData) {
             req.session.myData.courses.list.forEach(function(_course, index) {
                 if(_course.value == a.course) {
                     _a_courseName = _course.name
-                } else if(_course.value == b.course) {
+                }
+                if(_course.value == b.course) {
                     _b_courseName = _course.name
                 }
             });
@@ -93,37 +94,32 @@ module.exports = function (router,_myData) {
             //Date index
             var _a_dateIndex = 0,
                 _b_dateIndex = 0;
-            req.session.myData.startDates.forEach(function(_startDate, index) {
+            req.session.myData.startDates.forEach(function(_startDate, _dateIndex) {
                 if(_startDate.id == a.startDate) {
-                    _a_dateIndex = index
+                    _a_dateIndex = _dateIndex
                 } else if (_startDate.id == b.startDate) {
-                    _b_dateIndex = index
+                    _b_dateIndex = _dateIndex
                 }
             });
             
-            //Sort start
-            if (a.entity === b.entity){
-                if (_a_courseName === _b_courseName){
-                    //Sort on start date THIRD
-                    if(_a_dateIndex < _b_dateIndex) {
+            //Sort on employer name FIRST
+            if (a.entity.toUpperCase() < b.entity.toUpperCase()){
+                return -1
+            } else if(a.entity.toUpperCase() > b.entity.toUpperCase()){
+                return 1
+            } else {
+                //Sort on course name
+                if(_a_courseName.toUpperCase() < _b_courseName.toUpperCase()) {
+                    return -1
+                } else if (_a_courseName.toUpperCase() > _b_courseName.toUpperCase()) {
+                    return 1
+                } else {
+                    //Sort on start date
+                    if(_a_dateIndex > _b_dateIndex) {
                         return -1
-                    } else if (_a_dateIndex > _b_dateIndex) {
+                    } else if (_a_dateIndex < _b_dateIndex) {
                         return 1;
                     }
-                } else {
-                    //Sort on course name SECOND
-                    if(_a_courseName.toUpperCase() < _b_courseName.toUpperCase()) {
-                        return -1
-                    } else if (_a_courseName.toUpperCase() > _b_courseName.toUpperCase()) {
-                        return 1
-                    }
-                }
-            } else {
-                //Sort on employer name FIRST
-                if (a.entity.toUpperCase() < b.entity.toUpperCase()){
-                    return -1
-                } else if(a.entity.toUpperCase() > b.entity.toUpperCase()){
-                    return 1
                 }
             }
             return 0;
