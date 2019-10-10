@@ -47,15 +47,15 @@
                 <a class="das-navigation__link {% if _currentPage == 'employer-home' %}das-navigation__link--current{% endif %}" href="employer-home">Home</a>
             </li>
             <li class="das-navigation__list-item">
-                <a class="das-navigation__link" href="reserve-reservations">Finance</a>
+                <a class="das-navigation__link {% if _currentPage != 'employer-home' %}das-navigation__link--current{% endif %}" href="reserve-reservations">Finance</a>
             </li>
             <li class="das-navigation__list-item">
                 <a class="das-navigation__link" href="#">Recruitment</a>
             </li>
             {% if _currentPage != 'employer-home' %}
-            <li class="das-navigation__list-item">
+            <!-- <li class="das-navigation__list-item">
                 <a class="das-navigation__link {% if _currentPage != 'employer-home' %}das-navigation__link--current{% endif %}" href="reserve-reservations">Your funding reservations</a>
-            </li>
+            </li> -->
             {% endif %}
             <li class="das-navigation__list-item">
                 <a class="das-navigation__link" href="#">Apprentices</a>
@@ -63,11 +63,11 @@
             <li class="das-navigation__list-item">
                 <a class="das-navigation__link" href="#">Your team</a>
             </li>
-            {% if _currentPage == 'employer-home' %}
+
             <li class="das-navigation__list-item">
                 <a class="das-navigation__link" href="#">Your organisations and agreements</a>
             </li>
-            {% endif %}
+
 
 
             <li class="das-navigation__priority-list-item" id="priority-list-menu"><a

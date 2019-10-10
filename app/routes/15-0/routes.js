@@ -561,24 +561,32 @@ module.exports = function (router,_myData) {
 
     // Choose course
     router.get('/' + version + '/reserve-choose-course', function (req, res) {
-        
         res.render(version + '/reserve-choose-course', {
             myData:req.session.myData
         });
     });
     router.post('/' + version + '/reserve-choose-course', function (req, res) {
-        // Answer
+        // Answers
+        req.session.myData.knowCourseAnswerTemp = req.body.knowCourseAnswer
         req.session.myData.whichCourseAnswerTemp = req.body.whichCourseAnswer
         //Set default answer if includeValidation is false and no answer given
         if(req.session.myData.includeValidation == "false"){
+            req.session.myData.knowCourseAnswerTemp = req.session.myData.knowCourseAnswerTemp || "yes"
             req.session.myData.whichCourseAnswerTemp = req.session.myData.whichCourseAnswerTemp || req.session.myData.courses.list[0].value
         }
         // Validation
-        if(!req.session.myData.whichCourseAnswerTemp) {
+        if(!req.session.myData.knowCourseAnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.knowCourseAnswer = {
+                "anchor": "knowCourse-1",
+                "message": "Select whether you know which apprenticeship training your apprentice will take"
+            }
+        }
+        if(req.session.myData.knowCourseAnswerTemp == "yes" && !req.session.myData.whichCourseAnswerTemp) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.whichCourseAnswer = {
                 "anchor": "whichCourse-1",
-                "message": "Select a course"
+                "message": "Select which apprenticeship training your apprentice will take"
             }
         }
         // Next action
@@ -587,10 +595,23 @@ module.exports = function (router,_myData) {
                 myData: req.session.myData
             });
         } else {
+            req.session.myData.knowCourseAnswer = req.session.myData.knowCourseAnswerTemp
             req.session.myData.whichCourseAnswer = req.session.myData.whichCourseAnswerTemp
+            req.session.myData.knowCourseAnswerTemp = ""
             req.session.myData.whichCourseAnswerTemp = ""
-            res.redirect(301, '/' + version + '/reserve-choose-start-date');
+            if(req.session.myData.knowCourseAnswer == "no") {
+                res.redirect(301, '/' + version + '/reserve-dropout-course');
+            } else {
+                res.redirect(301, '/' + version + '/reserve-choose-start-date');
+            }
         }
+    });
+
+    // Drop out - course
+    router.get('/' + version + '/reserve-dropout-course', function (req, res) {
+        res.render(version + '/reserve-dropout-course', {
+            myData:req.session.myData
+        });
     });
 
     // Choose start date
