@@ -15,7 +15,8 @@
             "course": "196",
             "entity": "aston",
             "status": "available",
-            "visible": false
+            "visible": false,
+            "provider": "Training UK"
         },
         {
             "id": "ifczfwvohl",
@@ -31,7 +32,8 @@
             "course": "455-2-5",
             "entity": "aston",
             "status": "used",
-            "visible": false
+            "visible": false,
+            "provider": "Training UK"
         },
         {
             "id": "noovehpqwr",
@@ -47,7 +49,8 @@
             "course": "153",
             "entity": "aston",
             "status": "available",
-            "visible": false
+            "visible": false,
+            "provider": "Training UK"
         },
         {
             "id": "ipqoemekaj",
@@ -55,7 +58,8 @@
             "course": "153",
             "entity": "aston",
             "status": "expired",
-            "visible": false
+            "visible": false,
+            "provider": "Training UK"
         },
         {
             "id": "pcbectiwin",
@@ -79,7 +83,8 @@
             "course": "32",
             "entity": "aston",
             "status": "available",
-            "visible": false
+            "visible": false,
+            "provider": "Training UK"
         },
         {
             "id": "qhrlwyzfbg",
