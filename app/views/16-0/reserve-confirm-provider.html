@@ -1,0 +1,46 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% block content %}
+
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+
+<div class="govuk-grid-row" style="padding-top: 40px">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl" >
+            [Confirm the training provider that you want to add to this reservation]
+        </h1>
+
+        <p class="govuk-body"><span class="govuk-!-font-weight-bold">[Traning provider UKPRN</span><br>{{myData.selectedProvider.id}}]</p>
+        <p class="govuk-body"><span class="govuk-!-font-weight-bold">[Traning provider name</span><br>{{myData.selectedProvider.name}}</p>
+
+        {% set _changeLink = "reserve-choose-provider-2" %}
+        {% if myData.existingproviders > 1 %}
+            {% set _changeLink = "reserve-choose-provider-3" %}
+        {% endif %}
+
+        <p class="govuk-body">[If this is not the right training provider, <a href="{{_changeLink}}" class="govuk-link govuk-link--no-visited-state">try a different UKPRN</a>]</p>
+
+        <!-- Button -->
+        {% from "govuk/components/button/macro.njk" import govukButton %}
+        {{ govukButton({
+            text: "[Confirm and continue]",
+            href: "reserve-check-answers"
+        }) }}
+
+    </div>
+</div>
+
+{% endblock %}

@@ -776,9 +776,108 @@ module.exports = function (router,_myData) {
             if(req.session.myData.whichProvider2Answer == "no") {
                 res.redirect(301, '/' + version + '/reserve-check-answers');
             } else {
+                req.session.myData.selectedProvider = {
+                    "name": "TRAINING UK",
+                    "id": req.session.myData.ukprnAnswer 
+                }
                 res.redirect(301, '/' + version + '/reserve-confirm-provider');
             }
         }
+    });
+
+    // Choose provider 3
+    router.get('/' + version + '/reserve-choose-provider-3', function (req, res) {
+        res.render(version + '/reserve-choose-provider-3', {
+            myData:req.session.myData
+        });
+    });
+
+    router.post('/' + version + '/reserve-choose-provider-3', function (req, res) {
+        // Answers
+        req.session.myData.whichProvider3AnswerTemp = req.body.whichProvider3Answer
+        req.session.myData.ukprnAnswerTemp = req.body.ukprnAnswer.trim()
+        //Set default answer if includeValidation is false and no answer given
+        if(req.session.myData.includeValidation == "false"){
+            req.session.myData.whichProvider3AnswerTemp = req.session.myData.whichProvider3AnswerTemp || "TRAINING UK"
+            req.session.myData.ukprnAnswerTemp = req.session.myData.ukprnAnswerTemp || "12345678"
+        }
+        //
+        // Validation
+        //
+        // Neither radio button selected
+        if(!req.session.myData.whichProvider3AnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.whichProvider3Answer = {
+                "anchor": "whichProvider3-1",
+                "message": "[whichProvider3 to do]"
+            }
+        }
+        // Other selected
+        if(req.session.myData.whichProvider3AnswerTemp == "other") {
+            // No UKPRN entered
+            if(!req.session.myData.ukprnAnswerTemp) {
+                req.session.myData.validationError = "true"
+                req.session.myData.validationErrors.ukprnAnswer = {
+                    "anchor": "ukprn-1",
+                    "message": "[ukPRN not ENTERED to do]"
+                }
+            // if not valid (not a number, not 8 digits long)
+            } else if(isNaN(req.session.myData.ukprnAnswerTemp) || req.session.myData.ukprnAnswerTemp.length != 8) {
+                req.session.myData.validationError = "true"
+                req.session.myData.validationErrors.ukprnAnswer = {
+                    "anchor": "ukprn-1",
+                    "message": "[ukPRN not VALID to do]"
+                }
+            // if not a match
+            } else if(req.session.myData.ukprnAnswerTemp == "00000000"){
+                req.session.myData.validationError = "true"
+                req.session.myData.validationErrors.ukprnAnswer = {
+                    "anchor": "ukprn-1",
+                    "message": "[ukPRN not FOUND to do]"
+                }
+            }
+        }
+        // Next action
+        if(req.session.myData.validationError == "true") {
+            res.render(version + '/reserve-choose-provider-3', {
+                myData: req.session.myData
+            });
+        } else {
+
+            // Selected Provider data
+            var _selectedProviderName = "TRAINING UK",
+                _selectedProviderID = req.session.myData.ukprnAnswerTemp
+            if(req.session.myData.whichProvider3AnswerTemp != "other"){
+                _selectedProviderName = req.session.myData.whichProvider3AnswerTemp
+                req.session.myData.accounts[req.session.myData.account].providers.forEach(function(_provider, index) {
+                    if(req.session.myData.whichProvider3AnswerTemp == _provider.name) {
+                        _selectedProviderID = _provider.id
+                    }
+                });
+            }
+
+            req.session.myData.whichProvider3Answer = req.session.myData.whichProvider3AnswerTemp
+            req.session.myData.ukprnAnswer = req.session.myData.ukprnAnswerTemp
+            req.session.myData.whichProvider3AnswerTemp = ""
+            req.session.myData.ukprnAnswerTemp = ""
+
+            if(req.session.myData.whichProvider3Answer == "other") {
+                req.session.myData.selectedProvider = {
+                    "name": _selectedProviderName,
+                    "id": _selectedProviderID
+                }
+                res.redirect(301, '/' + version + '/reserve-confirm-provider');
+            } else {
+                res.redirect(301, '/' + version + '/reserve-check-answers');
+            }
+        }
+    });
+
+    // Confirm provider
+    router.get('/' + version + '/reserve-confirm-provider', function (req, res) {
+        res.render(version + '/reserve-confirm-provider', {
+            myData:req.session.myData
+        });
     });
 
     // Choose training (provider)
