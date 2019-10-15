@@ -332,6 +332,9 @@ module.exports = function (router,_myData) {
         if(!req.session.myData || req.query.r) {
             reset(req)
         }
+
+        //version
+        req.session.myData.version = version
         
         // Reset page validation to false by default. Will only be set to true, if applicable, on a POST of a page
         req.session.myData.validationErrors = {}

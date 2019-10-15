@@ -1,0 +1,127 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Visible reservations -->
+{% set _reservations = [] %}
+{% for _reservation in _account.reservations %}
+  {% if _reservation.visible == true %}
+    {% set _reservations = (_reservations.push(_reservation), _reservations) %}
+  {% endif %}
+{% endfor %}
+{% set _reservationstotal = _reservations | length %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% set _reserveStartURL = "reserve-start" %}
+{% if myData.paused != "false" %}
+  {% set _reserveStartURL = "reserve-funding-paused" %}
+{% elif myData.limit != "no" and _reservationstotal >= myData.limit %}
+  {% set _reserveStartURL = "reserve-limit-reached" %}
+{% elif myData.upcoming != "false" %}
+  {% set _reserveStartURL = "reserve-upcoming" %}
+{% endif %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block beforeContent %}
+{% if _reservationstotal > 0 %}
+  {{ govukBackLink({
+      text: "Back",
+      href: "javascript: window.history.go(-1)"
+  }) }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        {% if _reservationstotal == 0 %}
+          {{ govukBackLink({
+              text: "Back",
+              href: "javascript: window.history.go(-1)"
+          }) }}
+        {% endif %}
+
+        <h1 class="govuk-heading-xl" style="margin-bottom: 90px">
+            Your funding reservations
+        </h1>
+
+        {% if _reservationstotal > 0 %}
+          <p class="govuk-heading-m"><a class="govuk-link" href="{{_reserveStartURL}}">Reserve more funding</a></p>
+          <p class="govuk-body">{{_reservationstotal}} {% if _reservationstotal == 1 %}reservation{% else %}reservations{% endif %}</p>
+          <table class="govuk-table">
+              <!-- <caption class="govuk-table__caption">Dates and amounts</caption> -->
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  {% if _account.entities.length > 1 %}
+                  <th scope="col" class="govuk-table__header">Organisation</th>
+                  {% endif %}
+                  <th scope="col" class="govuk-table__header">Apprenticeship training</th>
+                  <th scope="col" class="govuk-table__header">Apprenticeship start date</th>
+                  <th scope="col" class="govuk-table__header"></th>
+                  <th scope="col" class="govuk-table__header"></th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+              {% for _reservation in _reservations %}
+                {% set _entityLabel = "" %}
+                {% for _entity in _account.entities %}
+                  {% if _entity.id == _reservation.entity %}
+                    {% set _entityLabel = _entity.name | upper %}
+                  {% endif %}
+                {% endfor %}
+                {% set _courseLabel = "" %}
+                {% for _course in myData.courses.list %}
+                  {% if _course.value == _reservation.course %}
+                    {% set _courseLabel = _course.name + " - Level " + _course.level %}
+                  {% endif %}
+                {% endfor %}
+                {% set _startDateLabel = "" %}
+                {% for _startDate in myData.startDates %}
+                  {% if _startDate.id == _reservation.startDate %}
+                    {% set _startDateLabel = _startDate.range %}
+                  {% endif %}
+                {% endfor %}
+                
+                  <tr class="govuk-table__row">
+                    {% if _account.entities.length > 1 %}
+                    <td class="govuk-table__cell">{{_entityLabel}}{% if _reservation.status == "used" %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">used</strong>{% endif %}</td>
+                    {% endif %}
+                    <td class="govuk-table__cell">{{_courseLabel}}{% if _reservation.status == "used" and _account.entities.length == 1 %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">used</strong>{% endif %}</td>
+                    <td class="govuk-table__cell" style="white-space: nowrap;">{{_startDateLabel}}{% if _reservation.status == "expired" %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">expired</strong>{% endif %}</td>
+                    <td class="govuk-table__cell" >
+                      {% if _reservation.status == "available" %}
+                      <a href="#add" class="govuk-link">Add&nbsp;apprentice</a>
+                      {% else %}
+                      &nbsp;
+                      {% endif %}
+                    </td>
+                    <td class="govuk-table__cell" >
+                        {% if _reservation.status == "available" %}
+                        <a href="reserve-delete?delete={{_reservation.id}}" class="govuk-link">Delete</a>
+                        {% else %}
+                        &nbsp;
+                        {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <h2 class="govuk-heading-m ">There are no funding reservations to use</h2>
+          <p class="govuk-body ">You need to reserve funding in order to add a new apprentice.</p>
+          <a role="button" tabindex="1" draggable="false" class="govuk-button" href="{{_reserveStartURL}}">Reserve funding</a>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

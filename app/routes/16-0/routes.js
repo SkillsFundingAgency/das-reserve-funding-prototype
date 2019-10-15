@@ -1,6 +1,6 @@
 module.exports = function (router,_myData) {
 
-    var version = "14-0";
+    var version = "16-0";
 
     function randomStr(len) { 
         var ans = ''
@@ -41,6 +41,40 @@ module.exports = function (router,_myData) {
         return _returnReservation
     }
 
+    function setReservationData(req){
+        var _account = req.session.myData.accounts[req.session.myData.account]
+        _account.courselabels = []
+        _account.reservations.forEach(function(_reservation, index) {
+            // Employer
+            // _reservation.searchstring = _reservation.entity
+            //Course
+            req.session.myData.courses.list.forEach(function(_course, index) {
+                if(_course.value == _reservation.course){
+                    _reservation.courselabel = _course.name + " - Level " + _course.level
+                }
+            });
+            //Course labels
+            if (_account.courselabels.indexOf(_reservation.courselabel) == -1) {
+                // console.log(_account.courselabels)
+                _account.courselabels.push(_reservation.courselabel)
+            }
+            _account.courselabels.sort(function(a,b){
+                if (a.toUpperCase() < b.toUpperCase()){
+                    return -1
+                } else if(a.toUpperCase() > b.toUpperCase()){
+                    return 1
+                }
+                return 0;
+            });
+            //Start date label
+            req.session.myData.startDates.forEach(function(_startDate, index) {
+                if(_startDate.id == _reservation.startDate){
+                    _reservation.startDatelabel = _startDate.range
+                }
+            });
+        });
+    }
+
     function sortReservations(req){
         var _reservations = req.session.myData.accounts[req.session.myData.account].reservations
         _reservations.sort(function(a,b){
@@ -51,7 +85,8 @@ module.exports = function (router,_myData) {
             req.session.myData.courses.list.forEach(function(_course, index) {
                 if(_course.value == a.course) {
                     _a_courseName = _course.name
-                } else if(_course.value == b.course) {
+                }
+                if(_course.value == b.course) {
                     _b_courseName = _course.name
                 }
             });
@@ -59,47 +94,70 @@ module.exports = function (router,_myData) {
             //Date index
             var _a_dateIndex = 0,
                 _b_dateIndex = 0;
-            req.session.myData.startDates.forEach(function(_startDate, index) {
+            req.session.myData.startDates.forEach(function(_startDate, _dateIndex) {
                 if(_startDate.id == a.startDate) {
-                    _a_dateIndex = index
+                    _a_dateIndex = _dateIndex
                 } else if (_startDate.id == b.startDate) {
-                    _b_dateIndex = index
+                    _b_dateIndex = _dateIndex
                 }
             });
             
-            //Sort start
-            if (a.entity === b.entity){
-                if (_a_courseName === _b_courseName){
-                    //Sort on start date THIRD
-                    if(_a_dateIndex < _b_dateIndex) {
+            //Sort on employer name FIRST
+            if (a.entity.toUpperCase() < b.entity.toUpperCase()){
+                return -1
+            } else if(a.entity.toUpperCase() > b.entity.toUpperCase()){
+                return 1
+            } else {
+                //Sort on course name
+                if(_a_courseName.toUpperCase() < _b_courseName.toUpperCase()) {
+                    return -1
+                } else if (_a_courseName.toUpperCase() > _b_courseName.toUpperCase()) {
+                    return 1
+                } else {
+                    //Sort on start date
+                    if(_a_dateIndex > _b_dateIndex) {
                         return -1
-                    } else if (_a_dateIndex > _b_dateIndex) {
+                    } else if (_a_dateIndex < _b_dateIndex) {
                         return 1;
                     }
-                } else {
-                    //Sort on course name SECOND
-                    if(_a_courseName.toUpperCase() < _b_courseName.toUpperCase()) {
-                        return -1
-                    } else if (_a_courseName.toUpperCase() > _b_courseName.toUpperCase()) {
-                        return 1
-                    }
-                }
-            } else {
-                //Sort on employer name FIRST
-                if (a.entity.toUpperCase() < b.entity.toUpperCase()){
-                    return -1
-                } else if(a.entity.toUpperCase() > b.entity.toUpperCase()){
-                    return 1
                 }
             }
             return 0;
         })
     }
 
+    function setDefaultAnswers(req, _type){
+        // Employer 
+        var _empStartDate = req.session.myData.startDates[0].id,
+            _proStartDate = req.session.myData.startDates[0].id,
+            _empSet = false,
+            _proSet = false
+        req.session.myData.startDates.forEach(function(_startDate, index) {
+            if(_startDate.empmvs == true && !_empSet){
+                _empStartDate = _startDate.id
+                _empSet = true
+            }
+            if(_startDate.promvs == true && !_proSet){
+                _proStartDate = _startDate.id
+                _proSet = true
+            }
+        });
+        req.session.myData.whichOrgAnswer = req.session.myData.whichOrgAnswer || req.session.myData.accounts[req.session.myData.emp].entities[0].id
+        req.session.myData.whichCourseAnswer = req.session.myData.whichCourseAnswer || req.session.myData.courses.list[0].value
+        req.session.myData.whichStartDateAnswer = req.session.myData.whichStartDateAnswer || _empStartDate
+
+        // TODO adding provider pages answers
+
+        // Provider
+        req.session.myData.selectedEmployer = req.session.myData.selectedEmployer || req.session.myData.accounts[req.session.myData.pro].employers[0].id
+        req.session.myData.whichTrainingCourseAnswer = req.session.myData.whichTrainingCourseAnswer || req.session.myData.courses.list[0].value
+        req.session.myData.whichTrainingStartDateAnswer = req.session.myData.whichTrainingStartDateAnswer || _proStartDate
+    }
+
     function setAccountInfo(req, _type){
 
         //Set type based on pages
-        req.session.myData.type = req.query.type || req.session.myData.type
+        req.session.myData.type = req.query.t || req.session.myData.type
         var _type = req.session.myData.type
             _pathname = req._parsedUrl.pathname,
             _page = _pathname.substring(_pathname.lastIndexOf("/") + 1, _pathname.length),
@@ -111,9 +169,24 @@ module.exports = function (router,_myData) {
                 "reserve-confirm-org",
                 "reserve-confirmation-pro",
                 "reserve-reservations-pro"
+            ],
+            _employerPages = [
+                "employer-home",
+                "reserve-check-answers",
+                "reserve-choose-org",
+                "reserve-choose-course",
+                "reserve-choose-start-date",
+                "reserve-confirmation",
+                "reserve-reservations",
+                "reserve-choose-provider",
+                "reserve-choose-provider-2",
+                "reserve-choose-provider-3",
+                "reserve-confirm-provider"
             ]
         if(_providerPages.indexOf(_page) > -1){
             _type = "pro"
+        } else if(_employerPages.indexOf(_page) > -1){
+            _type = "emp"
         }
         req.session.myData.type = _type
         
@@ -123,11 +196,11 @@ module.exports = function (router,_myData) {
         req.session.myData.account = (_type == "emp") ? req.session.myData.emp : req.session.myData.pro
         //Account name
         var _account = req.session.myData.accounts[req.session.myData.account]
-        req.session.myData.name = req.query.name || (req.session.myData.name || _account.name)
+        req.session.myData.name = req.query.n || (req.session.myData.name || _account.name)
         _account.name = req.session.myData.name
         //Entity name
         if(_type == "emp"){
-            req.session.myData.ename = req.query.ename || (req.session.myData.ename || _account.entities[0].name)
+            req.session.myData.ename = req.query.en || (req.session.myData.ename || _account.entities[0].name)
             _account.entities[0].name = req.session.myData.ename
         }
     }
@@ -184,6 +257,16 @@ module.exports = function (router,_myData) {
         req.session.myData = JSON.parse(JSON.stringify(_myData))
         req.session.myData.startDates = [
             {
+                "id": "jun2019",
+                "name": "June 2019",
+                "range": "Jun 2019 to Aug 2019"
+            },
+            {
+                "id": "jul2019",
+                "name": "July 2019",
+                "range": "Jul 2019 to Sep 2019"
+            },
+            {
                 "id": "aug2019",
                 "name": "August 2019",
                 "range": "Aug 2019 to Oct 2019",
@@ -233,20 +316,28 @@ module.exports = function (router,_myData) {
                 "promvs": true
             }
         ]
-        req.session.myData.count = 10
-        req.session.myData.limit = 10
+        req.session.myData.type = "pro"
+        req.session.myData.count = 999999
+        req.session.myData.limit = 15
         req.session.myData.emplimit = "no"
+        req.session.myData.existingproviders = 0
+        req.session.myData.hidedates = "no"
+        req.session.myData.reservationsadded = 0
         req.session.myData.upcoming = "false"
+        req.session.myData.paused = "false"
+        req.session.myData.paging = "false"
+        req.session.myData.search = "true"
+        req.session.myData.filters = "true"
 
         //Create fake data - only used when new json data files need to be generated
-        // createProviderData(req,452)
+        // createProviderData(req,2000)
 
     }
 
     // Every GET amd POST
     router.all('/' + version + '/*', function (req, res, next) {
 
-        if(!req.session.myData || req.query.reset) {
+        if(!req.session.myData || req.query.r) {
             reset(req)
         }
 
@@ -256,15 +347,16 @@ module.exports = function (router,_myData) {
         // Reset page validation to false by default. Will only be set to true, if applicable, on a POST of a page
         req.session.myData.validationErrors = {}
         req.session.myData.validationError = "false"
-        req.session.myData.includeValidation =  req.query.includeValidation || req.session.myData.includeValidation
+        req.session.myData.includeValidation =  req.query.iv || req.session.myData.includeValidation
 
         //Account info
         setAccountInfo(req)
 
         //Visible reservations
-        req.session.myData.count = Number(req.query.count || req.session.myData.count)
-        if(req.query.count || !req.session.myData.visibleSet){
-            req.session.myData.visibleSet = true
+        req.session.myData.count = Number(req.query.c || req.session.myData.count)
+        var _account = req.session.myData.accounts[req.session.myData.account]
+        if(req.query.c || !_account.visibleSet){
+            _account.visibleSet = true
             setVisibleReservations(req)
         }
 
@@ -272,9 +364,22 @@ module.exports = function (router,_myData) {
         sortReservations(req)
 
         //Restrictions
-        req.session.myData.limit = req.query.limit || req.session.myData.limit
-        req.session.myData.upcoming = req.query.upcoming || req.session.myData.upcoming
-        req.session.myData.emplimit = req.query.emplimit || req.session.myData.emplimit
+        req.session.myData.limit = req.query.l || req.session.myData.limit
+        req.session.myData.upcoming = req.query.up || req.session.myData.upcoming
+        req.session.myData.emplimit = req.query.el || req.session.myData.emplimit
+        req.session.myData.hidedates = req.query.d || req.session.myData.hidedates
+        req.session.myData.paused = req.query.p || req.session.myData.paused
+
+        //Existing provider relationships
+        req.session.myData.existingproviders = req.query.ep || req.session.myData.existingproviders
+
+        // Components
+        req.session.myData.paging = req.query.c_pg || req.session.myData.paging
+        req.session.myData.search = req.query.c_sr || req.session.myData.search
+        req.session.myData.filters = req.query.c_ft || req.session.myData.filters
+
+        // Set default answers
+        setDefaultAnswers(req, "emp")
         
         next()
     });
@@ -289,6 +394,7 @@ module.exports = function (router,_myData) {
 
     // Employer home
     router.get('/' + version + '/employer-home', function (req, res) {
+        
         res.render(version + '/employer-home', {
             myData:req.session.myData
         });
@@ -307,9 +413,11 @@ module.exports = function (router,_myData) {
     
         // setVisibleReservations(req)
         sortReservations(req)
+
         res.render(version + '/reserve-reservations', {
             myData:req.session.myData
         });
+
     });
 
     // Your reservations - Provider
@@ -317,6 +425,56 @@ module.exports = function (router,_myData) {
         
         // setVisibleReservations(req)
         sortReservations(req)
+        setReservationData(req)
+
+        //Search
+        _reservations = req.session.myData.accounts[req.session.myData.account].reservations
+        //Clear search
+        req.session.myData.searchapplied = false
+
+        var _searchQ = req.query.q
+        if(_searchQ || _searchQ == ""){
+            _searchQ = _searchQ.trim()
+            if(_searchQ != ""){
+
+                //Defaults
+                req.session.myData.searchTerm = _searchQ
+                req.session.myData.searchapplied = true
+                _reservations.forEach(function(_reservation, index) {
+                    _reservation.search = true
+                })
+
+                function doSearch(_v){
+                    if(_v == "version1"){
+                        // Version 1: check for matches on whole search query
+                        _reservations.forEach(function(_reservation, index) {
+                            _reservation.search = false
+                            var _searchWithin = _reservation.entity + " " + _reservation.courselabel
+                            if(_searchWithin.toUpperCase().indexOf(_searchQ.toUpperCase()) != -1) {
+                                _reservation.search = true
+                                _reservation.searchorder
+                            }
+                        });
+                    } else if(_v == "version1"){
+                        // Version 2: Check for matches - ON EACH PART OF SEARCH QUERY
+                        var _searchQParts = _searchQ.split(" ");
+                        _reservations.forEach(function(_reservation, index) {
+                            _reservation.search = false
+                            var _searchWithin = _reservation.entity + " " + _reservation.courselabel
+                            _searchQParts.forEach(function(_searchQPart, index) {
+                                if(_searchWithin.toUpperCase().indexOf(_searchQPart.toUpperCase()) != -1) {
+                                    _reservation.search = true
+                                    _reservation.searchorder
+                                }
+                            });
+                        });
+                    }
+                }
+
+                doSearch("version1")
+            }
+        }
+
         res.render(version + '/reserve-reservations-pro', {
             myData:req.session.myData
         });
@@ -332,7 +490,6 @@ module.exports = function (router,_myData) {
 
     // Choose organisation
     router.get('/' + version + '/reserve-choose-org', function (req, res) {
-        
         res.render(version + '/reserve-choose-org', {
             myData:req.session.myData
         });
@@ -404,7 +561,7 @@ module.exports = function (router,_myData) {
         } else {
             req.session.myData.confirmOrgAnswer = req.session.myData.confirmOrgAnswerTemp
             req.session.myData.confirmOrgAnswerTemp = ""
-            if(req.session.myData.emplimit == "no") {
+            if(req.session.myData.emplimit == "no" || req.session.myData.reservationsadded < req.session.myData.emplimit) {
                 if(req.session.myData.confirmOrgAnswer == "yes") {
                     res.redirect(301, '/' + version + '/reserve-choose-training');
                 } else {
@@ -418,24 +575,32 @@ module.exports = function (router,_myData) {
 
     // Choose course
     router.get('/' + version + '/reserve-choose-course', function (req, res) {
-        
         res.render(version + '/reserve-choose-course', {
             myData:req.session.myData
         });
     });
     router.post('/' + version + '/reserve-choose-course', function (req, res) {
-        // Answer
+        // Answers
+        req.session.myData.knowCourseAnswerTemp = req.body.knowCourseAnswer
         req.session.myData.whichCourseAnswerTemp = req.body.whichCourseAnswer
         //Set default answer if includeValidation is false and no answer given
         if(req.session.myData.includeValidation == "false"){
+            req.session.myData.knowCourseAnswerTemp = req.session.myData.knowCourseAnswerTemp || "yes"
             req.session.myData.whichCourseAnswerTemp = req.session.myData.whichCourseAnswerTemp || req.session.myData.courses.list[0].value
         }
         // Validation
-        if(!req.session.myData.whichCourseAnswerTemp) {
+        if(!req.session.myData.knowCourseAnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.knowCourseAnswer = {
+                "anchor": "knowCourse-1",
+                "message": "Select whether you know which apprenticeship training your apprentice will take"
+            }
+        }
+        if(req.session.myData.knowCourseAnswerTemp == "yes" && !req.session.myData.whichCourseAnswerTemp) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.whichCourseAnswer = {
                 "anchor": "whichCourse-1",
-                "message": "Select a course"
+                "message": "Select which apprenticeship training your apprentice will take"
             }
         }
         // Next action
@@ -444,15 +609,27 @@ module.exports = function (router,_myData) {
                 myData: req.session.myData
             });
         } else {
+            req.session.myData.knowCourseAnswer = req.session.myData.knowCourseAnswerTemp
             req.session.myData.whichCourseAnswer = req.session.myData.whichCourseAnswerTemp
+            req.session.myData.knowCourseAnswerTemp = ""
             req.session.myData.whichCourseAnswerTemp = ""
-            res.redirect(301, '/' + version + '/reserve-choose-start-date');
+            if(req.session.myData.knowCourseAnswer == "no") {
+                res.redirect(301, '/' + version + '/reserve-dropout-course');
+            } else {
+                res.redirect(301, '/' + version + '/reserve-choose-start-date');
+            }
         }
+    });
+
+    // Drop out - course
+    router.get('/' + version + '/reserve-dropout-course', function (req, res) {
+        res.render(version + '/reserve-dropout-course', {
+            myData:req.session.myData
+        });
     });
 
     // Choose start date
     router.get('/' + version + '/reserve-choose-start-date', function (req, res) {
-        
         res.render(version + '/reserve-choose-start-date', {
             myData:req.session.myData
         });
@@ -480,13 +657,132 @@ module.exports = function (router,_myData) {
         } else {
             req.session.myData.whichStartDateAnswer = req.session.myData.whichStartDateAnswerTemp
             req.session.myData.whichStartDateAnswerTemp = ""
-            res.redirect(301, '/' + version + '/reserve-check-answers');
+            res.redirect(301, '/' + version + '/reserve-choose-provider');
+        }
+    });
+
+    // Choose provider
+    router.get('/' + version + '/reserve-choose-provider', function (req, res) {
+        res.render(version + '/reserve-choose-provider', {
+            myData:req.session.myData
+        });
+    });
+    router.post('/' + version + '/reserve-choose-provider', function (req, res) {
+        // Answer
+        req.session.myData.whichProviderAnswerTemp = req.body.whichProviderAnswer
+        //Set default answer if includeValidation is false and no answer given
+        if(req.session.myData.includeValidation == "false"){
+            req.session.myData.whichProviderAnswerTemp = req.session.myData.whichProviderAnswerTemp || "yes"
+        }
+        // Validation
+        if(!req.session.myData.whichProviderAnswerTemp) {
+            req.session.myData.validationError = "true"
+            var _message = "[to do]"
+            if(req.session.myData.existingproviders == 1){
+                _message = "[to do 2]"
+            }
+            req.session.myData.validationErrors.whichProviderAnswer = {
+                "anchor": "whichProvider-1",
+                "message": _message
+            }
+        }
+        // Next action
+        if(req.session.myData.validationError == "true") {
+            res.render(version + '/reserve-choose-provider', {
+                myData: req.session.myData
+            });
+        } else {
+            req.session.myData.whichProviderAnswer = req.session.myData.whichProviderAnswerTemp
+            req.session.myData.whichProviderAnswerTemp = ""
+            if(req.session.myData.existingproviders == 1){
+                if(req.session.myData.whichProviderAnswer == "yes") {
+                    res.redirect(301, '/' + version + '/reserve-check-answers');
+                } else {
+                    res.redirect(301, '/' + version + '/reserve-choose-provider-2');
+                }
+            } else {
+                if(req.session.myData.whichProviderAnswer == "yes") {
+                    res.redirect(301, '/' + version + '/reserve-choose-provider-3');
+                } else {
+                    res.redirect(301, '/' + version + '/reserve-check-answers');
+                }
+            }
+        }
+    });
+
+    // Choose provider 2
+    router.get('/' + version + '/reserve-choose-provider-2', function (req, res) {
+        res.render(version + '/reserve-choose-provider-2', {
+            myData:req.session.myData
+        });
+    });
+
+    router.post('/' + version + '/reserve-choose-provider-2', function (req, res) {
+        // Answers
+        req.session.myData.whichProvider2AnswerTemp = req.body.whichProvider2Answer
+        req.session.myData.ukprnAnswerTemp = req.body.ukprnAnswer.trim()
+        //Set default answer if includeValidation is false and no answer given
+        if(req.session.myData.includeValidation == "false"){
+            req.session.myData.whichProvider2AnswerTemp = req.session.myData.whichProvider2AnswerTemp || "yes"
+            req.session.myData.ukprnAnswerTemp = req.session.myData.ukprnAnswerTemp || "12345678"
+        }
+        //
+        // Validation
+        //
+        // Neither radio button selected
+        if(!req.session.myData.whichProvider2AnswerTemp) {
+            req.session.myData.validationError = "true"
+            req.session.myData.validationErrors.whichProvider2Answer = {
+                "anchor": "whichProvider2-1",
+                "message": "[whichProvider2 to do]"
+            }
+        }
+        // Yes selected
+        if(req.session.myData.whichProvider2AnswerTemp == "yes") {
+            // No UKPRN entered
+            if(!req.session.myData.ukprnAnswerTemp) {
+                req.session.myData.validationError = "true"
+                req.session.myData.validationErrors.ukprnAnswer = {
+                    "anchor": "ukprn-1",
+                    "message": "[ukPRN not ENTERED to do]"
+                }
+            // if not valid (not a number, not 8 digits long)
+            } else if(isNaN(req.session.myData.ukprnAnswerTemp) || req.session.myData.ukprnAnswerTemp.length != 8) {
+                req.session.myData.validationError = "true"
+                req.session.myData.validationErrors.ukprnAnswer = {
+                    "anchor": "ukprn-1",
+                    "message": "[ukPRN not VALID to do]"
+                }
+            // if not a match
+            } else if(req.session.myData.ukprnAnswerTemp == "00000000"){
+                req.session.myData.validationError = "true"
+                req.session.myData.validationErrors.ukprnAnswer = {
+                    "anchor": "ukprn-1",
+                    "message": "[ukPRN not FOUND to do]"
+                }
+            }
+        }
+        // Next action
+        if(req.session.myData.validationError == "true") {
+            res.render(version + '/reserve-choose-provider-2', {
+                myData: req.session.myData
+            });
+        } else {
+            req.session.myData.whichProvider2Answer = req.session.myData.whichProvider2AnswerTemp
+            req.session.myData.ukprnAnswer = req.session.myData.ukprnAnswerTemp
+            req.session.myData.whichProvider2AnswerTemp = ""
+            req.session.myData.ukprnAnswerTemp = ""
+
+            if(req.session.myData.whichProvider2Answer == "no") {
+                res.redirect(301, '/' + version + '/reserve-check-answers');
+            } else {
+                res.redirect(301, '/' + version + '/reserve-confirm-provider');
+            }
         }
     });
 
     // Choose training (provider)
     router.get('/' + version + '/reserve-choose-training', function (req, res) {
-        
         res.render(version + '/reserve-choose-training', {
             myData:req.session.myData
         });
@@ -533,7 +829,6 @@ module.exports = function (router,_myData) {
 
     // Check answers
     router.get('/' + version + '/reserve-check-answers', function (req, res) {
-        
         res.render(version + '/reserve-check-answers', {
             myData:req.session.myData
         });
@@ -587,7 +882,6 @@ module.exports = function (router,_myData) {
 
     // Check answers (pro)
     router.get('/' + version + '/reserve-check-answers-pro', function (req, res) {
-        
         res.render(version + '/reserve-check-answers-pro', {
             myData:req.session.myData
         });
@@ -613,12 +907,13 @@ module.exports = function (router,_myData) {
             }
         )
         sortReservations(req)
+        req.session.myData.reservationsadded = req.session.myData.reservationsadded + 1
         res.redirect(301, '/' + version + '/reserve-confirmation-pro');
     });
 
     // Confirmation
     router.get('/' + version + '/reserve-confirmation', function (req, res) {
-        
+        req.session.myData.whichOrgAnswer = req.session.myData.whichOrgAnswer || req.session.myData.accounts[req.session.myData.account].entities[0].id
         res.render(version + '/reserve-confirmation', {
             myData:req.session.myData
         });
@@ -779,6 +1074,7 @@ module.exports = function (router,_myData) {
 
     // Limit reached
     router.get('/' + version + '/reserve-limit-reached', function (req, res) {
+        
         res.render(version + '/reserve-limit-reached', {
             myData:req.session.myData
         });

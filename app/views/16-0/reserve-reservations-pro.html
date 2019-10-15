@@ -1,0 +1,252 @@
+{% set _account = myData.accounts[myData.pro] %}
+
+<!-- Visible reservations -->
+{% set _reservations = [] %}
+{% set _reservationsTotal = 0 %}
+{% set _reservationsFilteredTotal = 0 %}
+{% for _reservation in _account.reservations %}
+  {% if _reservation.visible == true %}
+      {% set _reservationsTotal = _reservationsTotal + 1 %}
+      {% if myData.searchapplied == false or (myData.searchapplied == true and _reservation.search == true) %}
+        {% set _reservationsFilteredTotal = _reservationsFilteredTotal + 1 %}
+        {% set _reservations = (_reservations.push(_reservation), _reservations) %}
+      {% endif %}
+  {% endif %}
+{% endfor %}
+
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% set _reserveStartURL = "reserve-start" %}
+{% if myData.paused != "false" %}
+    {% set _reserveStartURL = "reserve-funding-paused" %}
+{% elif myData.upcoming != "false" %}
+    {% set _reserveStartURL = "reserve-upcoming" %}
+{% endif %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+      text: "Back",
+      href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+<!-- Heading -->
+{% if _reservationsTotal > 0 %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl" >
+            Manage your funding reserved for non-levy employers
+        </h1>
+        <p class="govuk-body-l govuk-!-font-weight-bold"><a class="govuk-link govuk-link--no-visited-state" href="{{_reserveStartURL}}">Reserve more funding</a></p>
+  </div>
+</div>
+{% endif %}
+
+<!-- Search -->
+{% if _reservationsTotal > 10 and myData.search == "true" %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <!-- Search box -->
+    <form method="GET" >
+      <div class="search-wrapper govuk-form-group" >
+        <label for="search-reservations" class="govuk-label" >
+            Search employer name or course
+        </label>
+        <div class="search-input-wrapper">
+          <input type="search" value="{% if myData.searchapplied == true %}{{myData.searchTerm}}{% endif %}" id="search-reservations" name="q" title="Search" class="govuk-input">
+          <div class="search-input-submit-wrapper">
+            <button type="submit" class="search-submit">Search</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+<!-- Filters -->
+{% if _reservationsTotal > 10 and myData.filters == "true" %}
+<div class="govuk-grid-row" style=" background: #DEE0E2; margin-left:0; margin-right:0; margin-bottom: 20px">
+        <div class="govuk-grid-column-one-third" style=" padding: 20px 20px 0 20px;">
+
+            <!-- <p class="govuk-body govuk-!-font-weight-bold">Filter reservations</p> -->
+
+            <!-- Employer filter -->
+            <div class="govuk-form-group" style="margin-bottom: 20px">
+              <label class="govuk-label" for="employer-filter" >
+                Employer
+              </label>
+              <select class="govuk-select" id="employer-filter" name="employer-filter" style="min-width: 100%">
+                <option value="all">All</option>
+                {% for _employer in _account.employers %}
+                <option value="{{_employer.name}}">{{_employer.name|upper}}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <a class="govuk-button" href="#" style="margin-bottom: 20px">Filter</a>
+
+        </div>
+        <div class="govuk-grid-column-one-third" style=" padding: 20px;">
+
+            <!-- Course filter -->
+            <div class="govuk-form-group" style="margin-bottom: 20px">
+              <label class="govuk-label" for="course-filter" >
+                Course
+              </label>
+              <select class="govuk-select" id="course-filter" name="course-filter" style="min-width: 100%">
+                <option value="all">All</option>
+                {% for _courselabel in _account.courselabels %}
+                  <option value="{{_courselabel}}">{{_courselabel}}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+        </div>
+        <div class="govuk-grid-column-one-third" style=" padding: 20px;">
+
+            <!-- Start dates filter -->
+            <div class="govuk-form-group" style="margin-bottom: 20px">
+              <label class="govuk-label" for="startdate-filter">
+                Start date
+              </label>
+              <select class="govuk-select" id="startdate-filter" name="startdate-filter" style="min-width: 100%">
+                <option value="all">All</option>
+                {% for _startDate in myData.startDates %}
+                <option value="{{_startDate.id}}">{{_startDate.range}}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+        </div>
+</div>
+{% endif %}
+
+<!-- Table -->
+{% if _reservationsTotal > 0 %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+      <!-- Clear search -->
+      {% if myData.searchapplied == true %}
+        <p class="govuk-body"><a href="reserve-reservations-pro" class="govuk-link govuk-link--no-visited-state">
+          {% if myData.filters == "false" %}
+          Clear search
+          {% else %}
+          Clear filter
+          {% endif %}
+        </a></p>
+      {% endif %}
+    
+    <!-- Count -->
+    <p class="govuk-body">
+      {{_reservationsFilteredTotal}} {% if _reservationsFilteredTotal == 1 %}reservation{% else %}reservations{% endif %}{% if myData.searchapplied == true %} matching <strong>‘{{myData.searchTerm}}’</strong>{% endif %}
+    </p> 
+
+    {% if _reservationsFilteredTotal > 0 %}
+    <table class="govuk-table">
+        <!-- <caption class="govuk-table__caption">Dates and amounts</caption> -->
+        <thead class="govuk-table__head" >
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Employer</th>
+            <th scope="col" class="govuk-table__header">Course</th>
+            <th scope="col" class="govuk-table__header">Start date</th>
+            <th scope="col" class="govuk-table__header"></th>
+            <th scope="col" class="govuk-table__header"></th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        {% for _reservation in _reservations %}
+          {% if myData.searchapplied == false or (myData.searchapplied == true and _reservation.search == true) %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell" style="white-space: nowrap;">
+              {{_reservation.entity | upper}}
+              {% if _reservation.status == "used" %}
+              <br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Allocated</strong>
+              {% endif %}
+            </td>
+            <td class="govuk-table__cell">{{_reservation.courselabel}}</td>
+            <td class="govuk-table__cell" style="white-space: nowrap;">
+              {{_reservation.startDatelabel}}
+              {% if _reservation.status == "expired" %}
+                <br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Expired</strong>
+              {% elif _reservation.status == "used" %}
+                <!-- <br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Apprentice added</strong> -->
+              {% endif %}
+            </td>
+            <td class="govuk-table__cell" >
+              {% if _reservation.status == "available" %}
+                <a href="#add2" class="govuk-link govuk-link--no-visited-state">Add&nbsp;apprentice</a>
+              {% else %}
+                &nbsp;
+              {% endif %}
+            </td>
+            <td class="govuk-table__cell" >
+                {% if _reservation.status == "available" and _reservation.owned == true %}
+                  <a href="reserve-delete?delete={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Delete</a>
+                {% else %}
+                  &nbsp;
+                {% endif %}
+              </td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+  </div>
+</div>
+{% endif %}
+
+<!-- Pagination -->
+{% if _reservationsTotal > 50 and myData.paging == "true" %}
+{% set _currentPage = 1 %}
+{% set _firstPage = "true" %}
+{% set _lastPage = "false" %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <nav role="navigation" aria-label="Pagination">
+        <p class="pagination__summary">Showing 1 &ndash; 50 of {{_reservationsFilteredTotal}} reservations</p>
+        <ul class="pagination govuk-list">
+          {% if _firstPage != "true" %}
+          <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state" href="#0" aria-label="Previous page">Previous</a></li>
+          {% endif %}
+          <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state {% if _currentPage == 1 %}current{% endif %}" href="#0" aria-label="Page 1">1</a></li>
+          <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state {% if _currentPage == 2 %}current{% endif %}" href="#0" aria-label="Page 2">2</a></li>
+          <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state {% if _currentPage == 3 %}current{% endif %}" href="#0" aria-current="true" aria-label="Page 3, current page">3</a></li>
+          <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state {% if _currentPage == 4 %}current{% endif %}" href="#0" aria-label="Page 4">4</a></li>
+          <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state {% if _currentPage == 5 %}current{% endif %}" href="#0" aria-label="Page 5">5</a></li>
+          {% if _lastPage != "true" %}
+          <li class="pagination__item"><a class="pagination__link govuk-link govuk-link--no-visited-state" href="#0" aria-label="Next page">Next</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+  </div>
+</div>
+{% endif %}
+
+<!-- Zero reservations -->
+{% if _reservationsTotal == 0 %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl ">There are no funding reservations to use</h1>
+      <p class="govuk-body ">You need to reserve funding in order to add a new apprentice.</p>
+      <a role="button" tabindex="1" draggable="false" class="govuk-button" href="{{_reserveStartURL}}">Reserve funding</a>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -8,6 +8,16 @@
             "name": "ASTON MARTIN LIMITED"
         }
     ],
+    "providers": [
+        {
+            "id": "12345678",
+            "name": "TRAINING UK"
+        },
+        {
+            "id": "00001234",
+            "name": "COLLEGE UK"
+        }
+    ],
     "reservations": [
         {
             "id": "fjdcxvnfsa",
@@ -16,7 +26,7 @@
             "entity": "aston",
             "status": "available",
             "visible": false,
-            "provider": "Training UK"
+            "provider": "TRAINING UK"
         },
         {
             "id": "ifczfwvohl",
@@ -33,7 +43,7 @@
             "entity": "aston",
             "status": "used",
             "visible": false,
-            "provider": "Training UK"
+            "provider": "TRAINING UK"
         },
         {
             "id": "noovehpqwr",
@@ -50,7 +60,7 @@
             "entity": "aston",
             "status": "available",
             "visible": false,
-            "provider": "Training UK"
+            "provider": "TRAINING UK"
         },
         {
             "id": "ipqoemekaj",
@@ -59,7 +69,7 @@
             "entity": "aston",
             "status": "expired",
             "visible": false,
-            "provider": "Training UK"
+            "provider": "COLLEGE UK"
         },
         {
             "id": "pcbectiwin",
@@ -84,7 +94,7 @@
             "entity": "aston",
             "status": "available",
             "visible": false,
-            "provider": "Training UK"
+            "provider": "TRAINING UK"
         },
         {
             "id": "qhrlwyzfbg",

@@ -1,0 +1,155 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% set _inError = myData.validationError %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% if _inError == "true" %}
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1"
+            data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    {% for name, item in myData.validationErrors %}
+                    <li>
+                        <a href="#{{item.anchor}}">{{item.message}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- <h1 class="govuk-heading-xl">
+            Which apprenticeship training will the apprentice take?
+        </h1> -->
+
+        <form method="POST">
+
+
+
+            <div class="govuk-form-group {% if myData.validationErrors.knowCourseAnswer or myData.validationErrors.whichCourseAnswer %}govuk-form-group--error{% endif %}">
+              <fieldset class="govuk-fieldset" aria-describedby="courses-conditional-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                  <h1 class="govuk-fieldset__heading">
+                    Do you know which apprenticeship training your apprentice will take?
+                  </h1>
+                </legend>
+                
+                {% if myData.validationErrors.knowCourseAnswer %}
+                <span id="whatNextAnswer-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>
+                    {{myData.validationErrors.knowCourseAnswer.message}}
+                </span>
+                {% endif %}
+                <div class="govuk-radios" data-module="govuk-radios">
+
+
+
+                  <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="knowCourse-1" name="knowCourseAnswer" type="radio" value="yes" data-aria-controls="conditional-courses-conditional" {% if myData.knowCourseAnswerTemp == 'yes' %}checked{% endif %}>
+                    <label class="govuk-label govuk-radios__label" for="knowCourse-1">
+                      Yes
+                    </label>
+                  </div>
+
+                  <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-courses-conditional" >
+                    <!-- course search -->
+                    <div class="govuk-form-group ">
+                      <label class="govuk-label" for="whichCourseAnswer">
+                          Search for a course
+                      </label>
+                      {% if myData.validationErrors.whichCourseAnswer %}
+                      <span id="whichCourseAnswer-error" class="govuk-error-message">
+                          <span class="govuk-visually-hidden">Error:</span>
+                          {{myData.validationErrors.whichCourseAnswer.message}}
+                      </span>
+                      {% endif %}
+                      <div class="autocomplete-wrapper" >
+                          <select class="govuk-select autocomplete-element {% if myData.validationErrors.whichCourseAnswer %}govuk-input--error{% endif %}" id="whichCourse-1" name="whichCourseAnswer">
+                              <option value="">Select one</option>
+                              {% for _course in myData.courses.list %}
+                              <option {%if _course.value == myData.whichCourseAnswerTemp %}selected{% endif %} value="{{_course.value}}">{{_course.name}} - Level {{_course.level}}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="knowCourse-2" name="knowCourseAnswer" type="radio" value="no" {% if myData.knowCourseAnswerTemp == 'no' %}checked{% endif %}>
+                    <label class="govuk-label govuk-radios__label" for="knowCourse-2">
+                      No
+                    </label>
+                  </div>
+
+                </div>
+              </fieldset>
+            </div>
+
+            <details class="govuk-details" data-module="govuk-details">
+              <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    Can I change the course?
+                </span>
+              </summary>
+              <div class="govuk-details__text">
+                  You can change the course when you add an apprentice's details.
+              </div>
+            </details>
+
+            <!-- Button -->
+            {% from "govuk/components/button/macro.njk" import govukButton %}
+            {{ govukButton({
+              text: "Save and continue"
+            }) }}
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block pageScripts %}
+<!-- <script src="/public/javascripts/jquery-1.11.3.js"></script> -->
+<script src="/public/javascripts/accessible-autocomplete.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.autocomplete-element').each(function() {
+    //   var _defaultValue = '{{_defaultValue}}';
+      var selectEl = document.querySelector('#' + $(this).attr('id') )
+      accessibleAutocomplete.enhanceSelectElement({
+        autoselect: false,
+        defaultValue: '',
+        minLength: 3,
+        selectElement: selectEl,
+        placeholder: 'Start typing to search apprenticeships',
+        showAllValues: false,
+        displayMenu: "overlay"
+      })
+    })
+  })
+</script>
+{% endblock %}

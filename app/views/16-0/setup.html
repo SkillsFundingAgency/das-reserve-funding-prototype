@@ -59,12 +59,24 @@
                 <input class="govuk-input" id="setupName" name="setupName" data-option="setupName" type="text" value="{{_account.name}}">
             </div>
 
-            <!-- Employer account name -->
+            <!-- Entity name -->
             <div class="govuk-form-group" id="entity">
                 <label class="govuk-label" for="setupEntity">
                     Company Name
                 </label>
                 <input class="govuk-input" id="setupEntity" name="setupEntity" data-option="setupEntity" type="text" value="{{_empAccount.entities[0].name}}" onkeyup="this.value = this.value.toUpperCase();">
+            </div>
+
+            <!-- Existing providers -->
+            <div class="govuk-form-group" id="existingproviders">
+                <label class="govuk-label" for="setupExistingProviders">
+                    Existing providers
+                </label>
+                <select class="govuk-select" id="setupExistingProviders" name="setupExistingProviders" data-option="setupExistingProviders">
+                    {% for i in range(0, _empAccount.providers.length + 1) -%}
+                    <option {% if myData.existingproviders == i %}selected{% endif %} value="{{i}}">{{i}}</option>
+                    {%- endfor %}
+                </select>
             </div>
 
             <!-- Reservations -->
@@ -374,7 +386,8 @@
             _entity = $("#entity"),
             _limit = $("#limit"),
             _empLimit = $("#empLimit"),
-            _resTotalCount = $("#resTotalCount")
+            _resTotalCount = $("#resTotalCount"),
+            _existingproviders = $("#existingproviders")
 
         console.log(_resTotalCount)
         _resTotalCount.text("test")
@@ -393,6 +406,7 @@
             if(_thisVal == "emp") {
                 _entity.show()
                 _limit.show()
+                _existingproviders.show()
                 _empLimit.hide()
                 _resTotalCount.text("All available (" + {{_empResCount|dump|safe}} + ")")
                 $("[data-preload]").hide()
@@ -400,6 +414,7 @@
             } else {
                 _entity.hide()
                 _limit.hide()
+                _existingproviders.hide()
                 _empLimit.show()
                 _resTotalCount.text("All available (" + {{_proResCount|dump|safe}} + ")")
                 $("[data-preload]").show()
@@ -422,6 +437,7 @@
                 _urlType = "&t=" + _options.filter("#setupType").val(),
                 _urlName = "&n=" + _options.filter("#setupName").val(),
                 _urlEntityName = "&en=" + _options.filter("#setupEntity").val(),
+                _urlExistingProviders = "&ep=" + _options.filter("#setupExistingProviders").val(),
                 _urlCount = "&c=" + _options.filter("#setupCount").val(),
                 _urlLimit = "&l=" + _options.filter("#setupLimit").val(),
 
@@ -439,7 +455,7 @@
             var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming + _urlPaused + _urlDates;
             //Base + type specific
             if(_options.filter("#setupType").val() == "emp") {
-                var _urlPageQueries = _urlPageQueries + _urlEntityName;
+                var _urlPageQueries = _urlPageQueries + _urlEntityName + _urlExistingProviders;
             } else {
                 var _urlPageQueries = _urlPageQueries + _urlEmpLimit + _urlPaging + _urlSearch + _urlFilters
             }
