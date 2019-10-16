@@ -93,9 +93,9 @@
                 
                   <tr class="govuk-table__row">
                     {% if _account.entities.length > 1 %}
-                    <td class="govuk-table__cell">{{_entityLabel}}{% if _reservation.status == "used" %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">used</strong>{% endif %}</td>
+                    <td class="govuk-table__cell">{{_entityLabel}}{% if _reservation.status == "used" %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Allocated</strong>{% endif %}</td>
                     {% endif %}
-                    <td class="govuk-table__cell">{{_courseLabel}}{% if _reservation.status == "used" and _account.entities.length == 1 %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">used</strong>{% endif %}</td>
+                    <td class="govuk-table__cell">{{_courseLabel}}{% if _reservation.status == "used" and _account.entities.length == 1 %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Allocated</strong>{% endif %}</td>
                     <td class="govuk-table__cell" style="white-space: nowrap;">{{_startDateLabel}}{% if _reservation.status == "expired" %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">expired</strong>{% endif %}</td>
                     <td class="govuk-table__cell" >
                       {% if _reservation.status == "available" %}
