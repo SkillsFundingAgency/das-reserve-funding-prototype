@@ -67,18 +67,6 @@
                 <input class="govuk-input" id="setupEntity" name="setupEntity" data-option="setupEntity" type="text" value="{{_empAccount.entities[0].name}}" onkeyup="this.value = this.value.toUpperCase();">
             </div>
 
-            <!-- Existing providers -->
-            <div class="govuk-form-group" id="existingproviders">
-                <label class="govuk-label" for="setupExistingProviders">
-                    Existing providers
-                </label>
-                <select class="govuk-select" id="setupExistingProviders" name="setupExistingProviders" data-option="setupExistingProviders">
-                    {% for i in range(0, _empAccount.providers.length + 1) -%}
-                    <option {% if myData.existingproviders == i %}selected{% endif %} value="{{i}}">{{i}}</option>
-                    {%- endfor %}
-                </select>
-            </div>
-
             <!-- Reservations -->
             <div class="govuk-form-group">
                 <label class="govuk-label" for="setupCount">
@@ -97,6 +85,63 @@
                 </select>
             </div>
 
+            <!-- Existing providers -->
+            <div class="govuk-form-group" id="existingproviders">
+                <label class="govuk-label" for="setupExistingProviders">
+                    Known/linked providers
+                </label>
+                <select class="govuk-select" id="setupExistingProviders" name="setupExistingProviders" data-option="setupExistingProviders">
+                    {% for i in range(0, _empAccount.providers.length + 1) -%}
+                    <option {% if myData.existingproviders == i %}selected{% endif %} value="{{i}}">{{i}}</option>
+                    {%- endfor %}
+                </select>
+            </div>
+
+            <div data-pro-components="true">
+
+                    <h1 class="govuk-heading-s">UI Components</h1>
+        
+                    <!-- Search -->
+                    <div class="govuk-form-group" style="margin-bottom: 10px">
+                        <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="setupSearch" name="setupSearch" type="checkbox" value="setupSearch" data-option="setupSearch" {% if myData.search == "true" %}checked{% endif %}>
+                            <label class="govuk-label govuk-checkboxes__label" for="setupSearch">
+                            Search
+                            </label>
+                        </div>
+                        </div>
+                    </div>
+        
+                    <!-- Filters -->
+                    <div class="govuk-form-group" style="margin-bottom: 10px">
+                        <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="setupFilters" name="setupFilters" type="checkbox" value="setupFilters" data-option="setupFilters" {% if myData.filters == "true" %}checked{% endif %}>
+                            <label class="govuk-label govuk-checkboxes__label" for="setupFilters">
+                            Filters (not functioning)
+                            </label>
+                        </div>
+                        </div>
+                    </div>
+        
+                    <!-- Paging -->
+                    <div class="govuk-form-group" >
+                        <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="setupPaging" name="setupPaging" type="checkbox" value="setupPaging" data-option="setupPaging" {% if myData.paging == "true" %}checked{% endif %}>
+                            <label class="govuk-label govuk-checkboxes__label" for="setupPaging">
+                            Paging (not functioning)
+                            </label>
+                        </div>
+                        </div>
+                    </div>
+        
+            </div>
+
+    </div>
+
+    <div class="govuk-grid-column-one-half" >
             <h1 class="govuk-heading-s">Spend controls</h1>
 
             <!-- Funding is paused -->
@@ -176,48 +221,7 @@
                     </div>
                 </div>
             </div>
-
-    </div>
-
-    <div class="govuk-grid-column-one-half" data-pro-components="true">
-
-            <h1 class="govuk-heading-s">UI Components</h1>
-
-            <!-- Search -->
-            <div class="govuk-form-group" style="margin-bottom: 10px">
-                <div class="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="setupSearch" name="setupSearch" type="checkbox" value="setupSearch" data-option="setupSearch" {% if myData.search == "true" %}checked{% endif %}>
-                    <label class="govuk-label govuk-checkboxes__label" for="setupSearch">
-                    Search
-                    </label>
-                </div>
-                </div>
-            </div>
-
-            <!-- Filters -->
-            <div class="govuk-form-group" style="margin-bottom: 10px">
-                <div class="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="setupFilters" name="setupFilters" type="checkbox" value="setupFilters" data-option="setupFilters" {% if myData.filters == "true" %}checked{% endif %}>
-                    <label class="govuk-label govuk-checkboxes__label" for="setupFilters">
-                    Filters (not functioning)
-                    </label>
-                </div>
-                </div>
-            </div>
-
-            <!-- Paging -->
-            <div class="govuk-form-group" >
-                <div class="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="setupPaging" name="setupPaging" type="checkbox" value="setupPaging" data-option="setupPaging" {% if myData.paging == "true" %}checked{% endif %}>
-                    <label class="govuk-label govuk-checkboxes__label" for="setupPaging">
-                    Paging (not functioning)
-                    </label>
-                </div>
-                </div>
-            </div>
+        
 
     </div>
 </div>
@@ -317,6 +321,74 @@
                     <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete-confirmation?t=emp">/reserve-delete-confirmation?t=emp</a></td>
                     <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete-confirmation?t=pro">/reserve-delete-confirmation?t=pro</a></td>
                 </tr>
+
+
+
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell" colspan="3"><h2 class="govuk-heading-m" style="margin-top:20px">Add provider (during reservation creation)</h2></th>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Add provider (> 1 existing)</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-provider?ep=2">/reserve-choose-provider?ep=2</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Add provider 2 (> 1 existing)</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-provider-3?ep=2">/reserve-choose-provider-3?ep=2</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Add provider (1 existing)</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-provider?ep=1">/reserve-choose-provider?ep=1</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Add provider 2 (1 existing)/<br>Add provider (0 existing)</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-provider-2?ep=0">/reserve-choose-provider-2?ep=0</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Add provider - confirm</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-confirm-provider">/reserve-confirm-provider</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
+
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell" colspan="3"><h2 class="govuk-heading-m" style="margin-top:20px">Add/change/remove provider (from manage)</h2></th>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Add provider (> 0 existing)/<br>Change provider</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-provider-3-b?ep=2">/reserve-choose-provider-3-b?ep=2</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Add provider (0 existing)</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-enter-provider?ep=0">/reserve-enter-provider?ep=0</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Add provider - confirm</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-confirm-provider-b">/reserve-confirm-provider-b</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Add provider - confirmation</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-added-provider-confirmation">/reserve-added-provider-confirmation</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Delete provider</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete-provider">/reserve-delete-provider</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Delete provider - confirmation</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-delete-provider-confirmation">/reserve-delete-provider-confirmation</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
+
+
+
                 <tr class="govuk-table__row">
                     <th class="govuk-table__cell" colspan="3"><h2 class="govuk-heading-m" style="margin-top:20px">Spend controls</h2></th>
                 </tr>
@@ -362,6 +434,11 @@
                     <th class="govuk-table__cell">500</th>
                     <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-500?t=emp" >/reserve-500?t=emp</a></td>
                     <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-500?t=pro" >/reserve-500?t=pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Total meltdown</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-meltdown"  >/reserve-meltdown</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-meltdown"  >/reserve-meltdown</a></td>
                 </tr>
             </tbody>
         </table>

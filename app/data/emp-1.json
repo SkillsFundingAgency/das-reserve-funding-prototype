@@ -26,7 +26,8 @@
             "entity": "aston",
             "status": "available",
             "visible": false,
-            "provider": "TRAINING UK"
+            "provider": "TRAINING UK",
+            "provideractive": true
         },
         {
             "id": "ifczfwvohl",
@@ -43,7 +44,8 @@
             "entity": "aston",
             "status": "used",
             "visible": false,
-            "provider": "TRAINING UK"
+            "provider": "TRAINING UK",
+            "provideractive": true
         },
         {
             "id": "noovehpqwr",
@@ -60,7 +62,8 @@
             "entity": "aston",
             "status": "available",
             "visible": false,
-            "provider": "TRAINING UK"
+            "provider": "TRAINING UK",
+            "provideractive": true
         },
         {
             "id": "ipqoemekaj",

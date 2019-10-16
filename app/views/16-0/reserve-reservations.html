@@ -66,6 +66,7 @@
                   {% endif %}
                   <th scope="col" class="govuk-table__header">Apprenticeship training</th>
                   <th scope="col" class="govuk-table__header">Apprenticeship start date</th>
+                  <th scope="col" class="govuk-table__header">Provider</th>
                   <th scope="col" class="govuk-table__header"></th>
                   <th scope="col" class="govuk-table__header"></th>
                 </tr>
@@ -98,15 +99,29 @@
                     <td class="govuk-table__cell">{{_courseLabel}}{% if _reservation.status == "used" and _account.entities.length == 1 %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">used</strong>{% endif %}</td>
                     <td class="govuk-table__cell" style="white-space: nowrap;">{{_startDateLabel}}{% if _reservation.status == "expired" %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">expired</strong>{% endif %}</td>
                     <td class="govuk-table__cell" >
+                        {% if _reservation.provideractive %}
+                          {{_reservation.provider}}<br>
+                          <a href="reserve-delete-provider?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Delete</a><br>
+                          <a href="reserve-choose-provider-3-b?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Change</a>
+                          {% else %}
+                          <!-- TODDO if 0 known providers -->
+                          {% if myData.existingproviders == 0 %}
+                            <a href="reserve-enter-provider?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Add</a>
+                          {% else %}
+                            <a href="reserve-choose-provider-3-b?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Add</a>
+                          {% endif %}
+                        {% endif %}
+                    </td>
+                    <td class="govuk-table__cell" >
                       {% if _reservation.status == "available" %}
-                      <a href="#add" class="govuk-link">Add&nbsp;apprentice</a>
+                      <a href="#add" class="govuk-link govuk-link--no-visited-state">Add&nbsp;apprentice</a>
                       {% else %}
                       &nbsp;
                       {% endif %}
                     </td>
                     <td class="govuk-table__cell" >
                         {% if _reservation.status == "available" %}
-                        <a href="reserve-delete?delete={{_reservation.id}}" class="govuk-link">Delete</a>
+                        <a href="reserve-delete?delete={{_reservation.id}} govuk-link--no-visited-state" class="govuk-link">Delete</a>
                         {% else %}
                         &nbsp;
                         {% endif %}

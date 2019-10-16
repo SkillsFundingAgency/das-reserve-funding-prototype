@@ -27,28 +27,22 @@
         <p class="govuk-body"><span class="govuk-!-font-weight-bold">[Traning provider name</span><br>{{myData.selectedProvider.name}}]</p>
 
         <!-- Change link -->
-        {% set _changeLink = "reserve-choose-provider-2" %}
-        {% if myData.existingproviders > 1 %}
-            {% set _changeLink = "reserve-choose-provider-3" %}
-        {% endif %}
-        {% if myData.managing == "true" and myData.existingproviders == 0 %}
+        {% set _changeLink = "reserve-choose-provider-3-b" %}
+        {% if myData.existingproviders == 0 %}
             {% set _changeLink = "reserve-enter-provider" %}
         {% endif %}
 
-        <!-- Confirm link -->
-        {% set _confirmLink = "reserve-check-answers" %}
-        {% if myData.managing == "true" %}
-          {% set _confirmLink = "reserve-confirmation-provider-added" %}
-        {% endif %}
-
         <p class="govuk-body">[If this is not the right training provider, <a href="{{_changeLink}}" class="govuk-link govuk-link--no-visited-state">try a different UKPRN</a>]</p>
-
-        <!-- Button -->
-        {% from "govuk/components/button/macro.njk" import govukButton %}
-        {{ govukButton({
-            text: "[Confirm and continue]",
-            href: _confirmLink
-        }) }}
+        
+        <form method="POST">
+          <div class="govuk-form-group">
+            <!-- Button -->
+            {% from "govuk/components/button/macro.njk" import govukButton %}
+            {{ govukButton({
+                text: "[Confirm and continue]"
+            }) }}
+          </div>
+        </form>
 
     </div>
 </div>
