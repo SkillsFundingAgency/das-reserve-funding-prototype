@@ -47,12 +47,15 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                         <h1 class="govuk-fieldset__heading">
                             {% if myData.existingproviders == 1 %}
-                                [Add {{_account.providers[0].name|upper}} as the training provider for this reservation?]
+                                Assign this reservation to {{_account.providers[0].name}}?
                             {% else %}
-                                [Add a training provider for this reservation?]
+                                Assign this reservation to a training provider?
                             {% endif %}
                         </h1>
                     </legend>
+                    <span class="govuk-hint">
+                        Assigning a reservation to a training provider allows them to use it on your behalf.
+                    </span>
                     {% if myData.validationErrors.whichProviderAnswer %}
                     <span id="whichProviderAnswer-error" class="govuk-error-message">
                         <span class="govuk-visually-hidden">Error:</span>
@@ -63,13 +66,13 @@
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="whichProvider-1" name="whichProviderAnswer" type="radio" value="yes" {% if myData.whichProviderAnswerTemp == 'yes' %}checked{% endif %}>
                             <label class="govuk-label govuk-radios__label" for="whichProvider-1">
-                                [Yes]
+                                Yes
                             </label>
                         </div>
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="whichProvider-2" name="whichProviderAnswer" type="radio" value="no" {% if myData.whichProviderAnswerTemp == 'no' %}checked{% endif %}>
                             <label class="govuk-label govuk-radios__label" for="whichProvider-2">
-                                [No]
+                                No
                             </label>
                         </div>
                     </div>
@@ -79,7 +82,7 @@
             <!-- Button -->
             {% from "govuk/components/button/macro.njk" import govukButton %}
             {{ govukButton({
-              text: "[Continue]"
+              text: "Save and continue"
             }) }}
 
         </form>

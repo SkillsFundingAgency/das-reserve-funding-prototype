@@ -20,7 +20,7 @@
     <div class="govuk-grid-column-two-thirds">
 
         <h1 class="govuk-heading-xl" >
-            [Confirm the training provider that you want to add to this reservation]
+            Confirm the training provider you want to assign to this reservation
         </h1>
 
         <p class="govuk-body"><span class="govuk-!-font-weight-bold">[Traning provider UKPRN</span><br>{{myData.selectedProvider.id}}]</p>
@@ -41,12 +41,12 @@
           {% set _confirmLink = "reserve-confirmation-provider-added" %}
         {% endif %}
 
-        <p class="govuk-body">[If this is not the right training provider, <a href="{{_changeLink}}" class="govuk-link govuk-link--no-visited-state">try a different UKPRN</a>]</p>
+        <p class="govuk-body">If this is not the right training provider, <a href="{{_changeLink}}" class="govuk-link govuk-link--no-visited-state">try a different UKPRN</a>]</p>
 
         <!-- Button -->
         {% from "govuk/components/button/macro.njk" import govukButton %}
         {{ govukButton({
-            text: "[Confirm and continue]",
+            text: "Confirm and continue",
             href: _confirmLink
         }) }}
 
