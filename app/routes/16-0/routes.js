@@ -218,7 +218,8 @@ module.exports = function (router,_myData) {
                 "reserve-confirm-provider-b",
                 "reserve-delete-provider",
                 "reserve-delete-provider-confirmation",
-                "reserve-added-provider-confirmation"
+                "reserve-added-provider-confirmation",
+                "reserve-manage-reservation"
             ]
         if(_providerPages.indexOf(_page) > -1){
             _type = "pro"
@@ -1139,6 +1140,19 @@ module.exports = function (router,_myData) {
     // Delete provider confirmation
     router.get('/' + version + '/reserve-delete-provider-confirmation', function (req, res) {
         res.render(version + '/reserve-delete-provider-confirmation', {
+            myData:req.session.myData
+        });
+    });
+
+    // Manage reservation
+    router.get('/' + version + '/reserve-manage-reservation', function (req, res) {
+        req.session.myData.selectedReservation = req.query.reservation || req.session.myData.accounts[req.session.myData.account].reservations[0].id
+        var _reservation = returnReservationData(req, req.session.myData.selectedReservation)
+        req.session.myData.selectedProvider = {
+            "name": _reservation.item.provider,
+            "id": returnProviderID(req,_reservation.item.provider)
+        }
+        res.render(version + '/reserve-manage-reservation', {
             myData:req.session.myData
         });
     });

@@ -1,0 +1,97 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+<!-- Selected reservation -->
+{% set _reservation = {} %}
+{% for reservation in _account.reservations %}
+    {% if myData.selectedReservation == reservation.id %}
+        {% set _reservation = reservation %}
+    {% endif %}
+{% endfor %}
+
+<!-- Entity name -->
+{% set _entityNameLabel = "" %}
+{% for _entity in _account.entities %}
+    {% if _reservation.entity == _entity.id %}
+        {% set _entityNameLabel = _entity.name %}
+    {% endif %}
+{% endfor %}
+
+<!-- Start date -->
+{% set _startDateLabel = "" %}
+{% for _startDate in myData.startDates %}
+    {% if _reservation.startDate == _startDate.id %}
+        {% set _startDateLabel = _startDate.range %}
+    {% endif %}
+{% endfor %}
+
+<!-- Course -->
+{% set _courseLabel = "" %}
+{% for _course in myData.courses.list %}
+    {% if _reservation.course == _course.value %}
+        {% set _courseLabel = _course.name + " - Level " + _course.level %}
+    {% endif %}
+{% endfor %}
+
+<!-- Provider -->
+{% set _providerLabel = "" %}
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl">
+            [Manage Reservation]
+        </h1>
+
+        <!-- Add apprentice -->
+        {% from "govuk/components/button/macro.njk" import govukButton %}
+        {{ govukButton({
+          text: "[Add apprentice]"
+        }) }}
+
+        <!-- Delete reservation -->
+        {% if _reservation.status == "available" %}
+        <p class="govuk-body"><a href="reserve-delete?delete={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">[Delete reservation]</a></p>
+        {% endif %}
+
+        <p class="govuk-body"><span class="govuk-!-font-weight-bold">Organisation</span><br>{{_entityNameLabel}}</p>
+        <p class="govuk-body"><span class="govuk-!-font-weight-bold">Course</span><br>{{_courseLabel}}</p>
+        <p class="govuk-body"><span class="govuk-!-font-weight-bold">Start date</span><br>{{_startDateLabel}}</p>
+
+
+        <!-- Manage provider -->
+        {% if _reservation.provideractive %}
+            <p class="govuk-body"><span class="govuk-!-font-weight-bold">Provider</span><br>{{myData.selectedProvider.name}}<br>{{myData.selectedProvider.id}}</p>
+            <p class="govuk-body"><a href="reserve-choose-provider-3-b?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">[Change provider]</a></p>
+            <p class="govuk-body"><a href="reserve-delete-provider?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">[Delete provider]</a></p>
+        {% else %}
+            <p class="govuk-body"><span class="govuk-!-font-weight-bold">Provider</span><br>No provider added</p>
+            {% set _addProviderPage = "reserve-choose-provider-3-b" %}
+            {% if myData.existingproviders == 0 %}
+                {% set _addProviderPage = "reserve-enter-provider" %}            
+            {% endif %}
+            <p class="govuk-body"><a href="{{_addProviderPage}}?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Add provider</a></p>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
