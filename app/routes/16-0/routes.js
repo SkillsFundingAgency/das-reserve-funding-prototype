@@ -40,6 +40,16 @@ module.exports = function (router,_myData) {
         });
     }
 
+    function returnProviderID(req,_name){
+        var _valueToReturn = "12345678"
+        req.session.myData.accounts[req.session.myData.account].providers.forEach(function(_provider, index) {
+            if(_name == _provider.name) {
+                _valueToReturn = _provider.id
+            }
+        });
+        return _valueToReturn;
+    }
+
     function returnReservationData(req, _id){
         var _returnReservation = {
             "item": null,
@@ -888,19 +898,10 @@ module.exports = function (router,_myData) {
                 myData: req.session.myData
             });
         } else {
-
             // Selected Provider data
             req.session.myData.selectedProvider = {
-                "name": "TRAINING UK",
-                "id": req.session.myData.ukprnAnswerTemp
-            }
-            if(req.session.myData.whichProvider3AnswerTemp != "other"){
-                req.session.myData.selectedProvider.name = req.session.myData.whichProvider3AnswerTemp
-                req.session.myData.accounts[req.session.myData.account].providers.forEach(function(_provider, index) {
-                    if(req.session.myData.whichProvider3AnswerTemp == _provider.name) {
-                        req.session.myData.selectedProvider.id = _provider.id
-                    }
-                });
+                "name": (req.session.myData.whichProvider3AnswerTemp != "other") ? req.session.myData.whichProvider3AnswerTemp : "TRAINING UK",
+                "id": (req.session.myData.whichProvider3AnswerTemp != "other") ? returnProviderID(req,req.session.myData.whichProvider3AnswerTemp) : req.session.myData.ukprnAnswerTemp
             }
             req.session.myData.addProvider = true
             
@@ -976,19 +977,10 @@ module.exports = function (router,_myData) {
                 myData: req.session.myData
             });
         } else {
-
             // Selected Provider data
             req.session.myData.selectedProvider = {
-                "name": "TRAINING UK",
-                "id": req.session.myData.ukprnAnswerTemp
-            }
-            if(req.session.myData.whichProvider3AnswerTemp != "other"){
-                req.session.myData.selectedProvider.name = req.session.myData.whichProvider3AnswerTemp
-                req.session.myData.accounts[req.session.myData.account].providers.forEach(function(_provider, index) {
-                    if(req.session.myData.whichProvider3AnswerTemp == _provider.name) {
-                        req.session.myData.selectedProvider.id = _provider.id
-                    }
-                });
+                "name": (req.session.myData.whichProvider3AnswerTemp != "other") ? req.session.myData.whichProvider3AnswerTemp : "TRAINING UK",
+                "id": (req.session.myData.whichProvider3AnswerTemp != "other") ? returnProviderID(req,req.session.myData.whichProvider3AnswerTemp) : req.session.myData.ukprnAnswerTemp
             }
             
             req.session.myData.whichProvider3Answer = req.session.myData.whichProvider3AnswerTemp
@@ -1059,21 +1051,11 @@ module.exports = function (router,_myData) {
                 myData: req.session.myData
             });
         } else {
-
             // Selected Provider data
             req.session.myData.selectedProvider = {
-                "name": "TRAINING UK",
-                "id": req.session.myData.ukprnAnswerTemp
+                "name": (req.session.myData.whichProvider3AnswerTemp != "other") ? req.session.myData.whichProvider3AnswerTemp : "TRAINING UK",
+                "id": (req.session.myData.whichProvider3AnswerTemp != "other") ? returnProviderID(req,req.session.myData.whichProvider3AnswerTemp) : req.session.myData.ukprnAnswerTemp
             }
-            if(req.session.myData.whichProvider3AnswerTemp != "other"){
-                req.session.myData.selectedProvider.name = req.session.myData.whichProvider3AnswerTemp
-                req.session.myData.accounts[req.session.myData.account].providers.forEach(function(_provider, index) {
-                    if(req.session.myData.whichProvider3AnswerTemp == _provider.name) {
-                        req.session.myData.selectedProvider.id = _provider.id
-                    }
-                });
-            }
-            
             req.session.myData.ukprnAnswer = req.session.myData.ukprnAnswerTemp
             req.session.myData.ukprnAnswerTemp = ""
 

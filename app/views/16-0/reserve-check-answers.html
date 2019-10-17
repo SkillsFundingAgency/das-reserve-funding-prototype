@@ -99,6 +99,28 @@
                     </a>
                 </dd>
             </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    [Provider]
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if myData.addProvider == true %}
+                        {{myData.selectedProvider.name}}<br>
+                        {{myData.selectedProvider.id}}
+                    {% else %}
+                        [Not added]
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if myData.existingproviders == 0 %}
+                    <a class="govuk-link" href="reserve-choose-provider-2">
+                    {% else %}
+                    <a class="govuk-link" href="reserve-choose-provider">
+                    {% endif %}
+                        Change
+                    </a>
+                </dd>
+            </div>
         </dl>
 
         <form method="POST">
