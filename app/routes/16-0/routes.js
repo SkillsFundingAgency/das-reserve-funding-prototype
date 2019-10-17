@@ -219,7 +219,8 @@ module.exports = function (router,_myData) {
                 "reserve-delete-provider",
                 "reserve-delete-provider-confirmation",
                 "reserve-added-provider-confirmation",
-                "reserve-manage-reservation"
+                "reserve-manage-reservation",
+                "reserve-dropout"
             ]
         if(_providerPages.indexOf(_page) > -1){
             _type = "pro"
@@ -419,6 +420,9 @@ module.exports = function (router,_myData) {
         req.session.myData.paging = req.query.c_pg || req.session.myData.paging
         req.session.myData.search = req.query.c_sr || req.session.myData.search
         req.session.myData.filters = req.query.c_ft || req.session.myData.filters
+
+        //Dropout type
+        req.session.myData.dropout = req.query.do || req.session.myData.dropout
 
         // Set default answers
         setDefaultAnswers(req, "emp")
@@ -656,7 +660,8 @@ module.exports = function (router,_myData) {
             req.session.myData.knowCourseAnswerTemp = ""
             req.session.myData.whichCourseAnswerTemp = ""
             if(req.session.myData.knowCourseAnswer == "no") {
-                res.redirect(301, '/' + version + '/reserve-dropout-course');
+                req.session.myData.dropout = "course"
+                res.redirect(301, '/' + version + '/reserve-dropout');
             } else {
                 res.redirect(301, '/' + version + '/reserve-choose-start-date');
             }
@@ -664,8 +669,8 @@ module.exports = function (router,_myData) {
     });
 
     // Drop out - course
-    router.get('/' + version + '/reserve-dropout-course', function (req, res) {
-        res.render(version + '/reserve-dropout-course', {
+    router.get('/' + version + '/reserve-dropout', function (req, res) {
+        res.render(version + '/reserve-dropout', {
             myData:req.session.myData
         });
     });
@@ -699,11 +704,18 @@ module.exports = function (router,_myData) {
         } else {
             req.session.myData.whichStartDateAnswer = req.session.myData.whichStartDateAnswerTemp
             req.session.myData.whichStartDateAnswerTemp = ""
-            if(req.session.myData.existingproviders == 0){
-                res.redirect(301, '/' + version + '/reserve-choose-provider-2');
+
+            if(req.session.myData.whichStartDateAnswer == "dontknow") {
+                req.session.myData.dropout = "date"
+                res.redirect(301, '/' + version + '/reserve-dropout');
             } else {
-                res.redirect(301, '/' + version + '/reserve-choose-provider');
+                if(req.session.myData.existingproviders == 0){
+                    res.redirect(301, '/' + version + '/reserve-choose-provider-2');
+                } else {
+                    res.redirect(301, '/' + version + '/reserve-choose-provider');
+                }
             }
+            
         }
     });
 

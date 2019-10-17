@@ -26,10 +26,16 @@
             <h1 class="govuk-heading-l">
               Government funding for this apprenticeship cannot be reserved 
             </h1>
-        
-            <p class="govuk-body-l">
-              You must know which apprenticeship training the apprentice will take in order to reserve government funding for apprenticeship training.
-            </p>
+
+            {% if myData.dropout == "date" %}
+              <p class="govuk-body-l">
+                You must know when the apprentice will begin their training in order to reserve government funding for apprenticeship training.
+              </p>
+            {% else %}
+              <p class="govuk-body-l">
+                You must know which apprenticeship training the apprentice will take in order to reserve government funding for apprenticeship training.
+              </p>
+            {% endif %}
         
             <p>
               Use the <a href="#">Find apprenticeship training</a> service to view apprenticeship training courses and choose a training provider.
