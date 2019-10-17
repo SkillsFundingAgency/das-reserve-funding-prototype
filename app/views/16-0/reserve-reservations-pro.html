@@ -194,7 +194,7 @@
               {% endif %}
             </td>
             <td class="govuk-table__cell" >
-                {% if _reservation.status == "available" and _reservation.owned == true %}
+                {% if _reservation.status == "available" %}
                   <a href="reserve-delete?delete={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Delete</a>
                 {% else %}
                   &nbsp;
