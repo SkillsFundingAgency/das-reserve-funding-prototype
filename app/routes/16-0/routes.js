@@ -958,7 +958,7 @@ module.exports = function (router,_myData) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.whichProvider3Answer = {
                 "anchor": "whichProvider3-1",
-                "message": "[whichProvider3 to do]"
+                "message": "Select whether to assign this reservation or not"
             }
         }
         // Other selected
@@ -968,21 +968,21 @@ module.exports = function (router,_myData) {
                 req.session.myData.validationError = "true"
                 req.session.myData.validationErrors.ukprnAnswer = {
                     "anchor": "ukprn-1",
-                    "message": "[ukPRN not ENTERED to do]"
+                    "message": "Number not recognised. Check the number you've entered is correct or contact your training provider for help"
                 }
             // if not valid (not a number, not 8 digits long)
             } else if(isNaN(req.session.myData.ukprnAnswerTemp) || req.session.myData.ukprnAnswerTemp.length != 8) {
                 req.session.myData.validationError = "true"
                 req.session.myData.validationErrors.ukprnAnswer = {
                     "anchor": "ukprn-1",
-                    "message": "[ukPRN not VALID to do]"
+                    "message": "Number not recognised. Check the number you've entered is correct or contact your training provider for help"
                 }
             // if not a match
             } else if(req.session.myData.ukprnAnswerTemp == "00000000"){
                 req.session.myData.validationError = "true"
                 req.session.myData.validationErrors.ukprnAnswer = {
                     "anchor": "ukprn-1",
-                    "message": "[ukPRN not FOUND to do]"
+                    "message": "Number not recognised. Check the number you've entered is correct or contact your training provider for help"
                 }
             }
         }
@@ -1042,21 +1042,21 @@ module.exports = function (router,_myData) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.ukprnAnswer = {
                 "anchor": "ukprn-1",
-                "message": "[ukPRN not ENTERED to do]"
+                "message": "Number not recognised. Check the number you've entered is correct or contact your training provider for help"
             }
         // if not valid (not a number, not 8 digits long)
         } else if(isNaN(req.session.myData.ukprnAnswerTemp) || req.session.myData.ukprnAnswerTemp.length != 8) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.ukprnAnswer = {
                 "anchor": "ukprn-1",
-                "message": "[ukPRN not VALID to do]"
+                "message": "Number not recognised. Check the number you've entered is correct or contact your training provider for help"
             }
         // if not a match
         } else if(req.session.myData.ukprnAnswerTemp == "00000000"){
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.ukprnAnswer = {
                 "anchor": "ukprn-1",
-                "message": "[ukPRN not FOUND to do]"
+                "message": "Number not recognised. Check the number you've entered is correct or contact your training provider for help"
             }
         }
 

@@ -46,19 +46,12 @@
                 <fieldset class="govuk-fieldset" >
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                         <h1 class="govuk-fieldset__heading">
-                            [What is the UKPRN of the provider?]
+                            Search for a training provider
                         </h1>
                     </legend>
-                    {% if myData.validationErrors.ukprnAnswer %}
-                    <span id="ukprnAnswer-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span>
-                        {{myData.validationErrors.ukprnAnswer.message}}
-                    </span>
-                    {% endif %}
-
                     <div class="govuk-form-group">
                         <label class="govuk-label" for="ukprn-1">
-                            [UKPRN]
+                            Enter a UK Provider Reference Number
                         </label>
                         {% if myData.validationErrors.ukprnAnswer %}
                         <span id="ukprnAnswer-error" class="govuk-error-message">
@@ -74,7 +67,7 @@
             <!-- Button -->
             {% from "govuk/components/button/macro.njk" import govukButton %}
             {{ govukButton({
-              text: "[Continue]"
+              text: "Continue"
             }) }}
 
         </form>

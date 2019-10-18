@@ -23,9 +23,10 @@
             Confirm the training provider you want to assign to this reservation
         </h1>
 
-        <p class="govuk-body"><span class="govuk-!-font-weight-bold">[Traning provider UKPRN</span><br>{{myData.selectedProvider.id}}]</p>
-        <p class="govuk-body"><span class="govuk-!-font-weight-bold">[Traning provider name</span><br>{{myData.selectedProvider.name}}]</p>
-
+        <div class="govuk-form-group">
+          <p class="govuk-body">{{myData.selectedProvider.name}}<br>{{myData.selectedProvider.id}}</p>
+        </div>
+        
         <!-- Change link -->
         {% set _changeLink = "reserve-choose-provider-2" %}
         {% if myData.existingproviders > 1 %}
@@ -41,7 +42,7 @@
           {% set _confirmLink = "reserve-confirmation-provider-added" %}
         {% endif %}
 
-        <p class="govuk-body">If this is not the right training provider, <a href="{{_changeLink}}" class="govuk-link govuk-link--no-visited-state">try a different UKPRN</a>]</p>
+        <p class="govuk-body">If this is not the right training provider, <a href="{{_changeLink}}" class="govuk-link govuk-link--no-visited-state">try a different UKPRN</a></p>
 
         <!-- Button -->
         {% from "govuk/components/button/macro.njk" import govukButton %}

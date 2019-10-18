@@ -22,14 +22,18 @@
         <!-- Panel -->
         <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-8" style="background-color:#28a197">
             <h1 class="govuk-panel__title">
-              [Provider added]
+                Training provider successfully added
             </h1>
+        </div>
+
+        <div class="govuk-form-group">
+          <p class="govuk-body">{{myData.selectedProvider.name}}<br>{{myData.selectedProvider.id}}</p>
         </div>
 
         <!-- Button -->
         {% from "govuk/components/button/macro.njk" import govukButton %}
         {{ govukButton({
-            text: "[Continue]",
+            text: "Return to manage reservations",
             href: "reserve-reservations"
         }) }}
 

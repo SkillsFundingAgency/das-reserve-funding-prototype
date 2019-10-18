@@ -46,9 +46,12 @@
                 <fieldset class="govuk-fieldset" >
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                         <h1 class="govuk-fieldset__heading">
-                            [Choose a training provider to add to this reservation? B]
+                            Select a training provider
                         </h1>
                     </legend>
+                    <span class="govuk-hint">
+                        Select which training provider you want to assign this reservation to.
+                    </span>
                     {% if myData.validationErrors.whichProvider3Answer %}
                     <span id="whichProvider3Answer-error" class="govuk-error-message">
                         <span class="govuk-visually-hidden">Error:</span>
@@ -62,7 +65,8 @@
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="whichProvider3-{{loop.index}}" name="whichProvider3Answer" type="radio" value="{{_provider.name}}" {% if myData.whichProvider3AnswerTemp == '{{_provider.name}}' %}checked{% endif %}>
                                 <label class="govuk-label govuk-radios__label" for="whichProvider3-{{loop.index}}">
-                                    [{{_provider.name}}]
+                                    {{_provider.name}}<br>
+                                    {{_provider.id}}
                                 </label>
                             </div>
 
@@ -71,13 +75,13 @@
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="whichProvider3-{{_account.providers.length + 1}}" name="whichProvider3Answer" type="radio" value="other" {% if myData.whichProvider3AnswerTemp == 'other' %}checked{% endif %} data-aria-controls="conditional-other">
                             <label class="govuk-label govuk-radios__label" for="whichProvider3-{{_account.providers.length + 1}}">
-                                [Other]
+                                Other
                             </label>
                         </div>
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-other">
                             <div class="govuk-form-group">
                                 <label class="govuk-label" for="ukprn-1">
-                                    [UKPRN]
+                                    UK Provider Reference Number
                                 </label>
                                 {% if myData.validationErrors.ukprnAnswer %}
                                 <span id="ukprnAnswer-error" class="govuk-error-message">
@@ -95,7 +99,7 @@
             <!-- Button -->
             {% from "govuk/components/button/macro.njk" import govukButton %}
             {{ govukButton({
-              text: "[Continue]"
+              text: "Save and continue"
             }) }}
 
         </form>
