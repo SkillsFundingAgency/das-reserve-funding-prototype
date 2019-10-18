@@ -58,37 +58,38 @@
     <div class="govuk-grid-column-two-thirds">
 
         <h1 class="govuk-heading-xl">
-            [Manage Reservation]
+                Reservation details
         </h1>
+
+
 
         <!-- Add apprentice -->
         {% from "govuk/components/button/macro.njk" import govukButton %}
         {{ govukButton({
-          text: "[Add apprentice]"
+          text: "Add apprentice"
         }) }}
 
         <!-- Delete reservation -->
         {% if _reservation.status == "available" %}
-        <p class="govuk-body"><a href="reserve-delete?delete={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">[Delete reservation]</a></p>
+        <p class="govuk-body"><a href="reserve-delete?delete={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Delete reservation</a></p>
         {% endif %}
 
         <p class="govuk-body"><span class="govuk-!-font-weight-bold">Organisation</span><br>{{_entityNameLabel}}</p>
-        <p class="govuk-body"><span class="govuk-!-font-weight-bold">Course</span><br>{{_courseLabel}}</p>
+        <p class="govuk-body"><span class="govuk-!-font-weight-bold">Apprenticeship training course</span><br>{{_courseLabel}}</p>
         <p class="govuk-body"><span class="govuk-!-font-weight-bold">Start date</span><br>{{_startDateLabel}}</p>
-
 
         <!-- Manage provider -->
         {% if _reservation.provideractive %}
-            <p class="govuk-body"><span class="govuk-!-font-weight-bold">Provider</span><br>{{myData.selectedProvider.name}}<br>{{myData.selectedProvider.id}}</p>
-            <p class="govuk-body"><a href="reserve-choose-provider-3-b?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">[Change provider]</a></p>
-            <p class="govuk-body"><a href="reserve-delete-provider?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">[Delete provider]</a></p>
+            <p class="govuk-body"><span class="govuk-!-font-weight-bold">Training provider</span><br>{{myData.selectedProvider.name}}<br>{{myData.selectedProvider.id}}</p>
+            <p class="govuk-body"><a href="reserve-choose-provider-3-b?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Change training provider</a></p>
+            <p class="govuk-body"><a href="reserve-delete-provider?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Delete training provider</a></p>
         {% else %}
-            <p class="govuk-body"><span class="govuk-!-font-weight-bold">Provider</span><br>No provider added</p>
             {% set _addProviderPage = "reserve-choose-provider-3-b" %}
             {% if myData.existingproviders == 0 %}
                 {% set _addProviderPage = "reserve-enter-provider" %}            
             {% endif %}
-            <p class="govuk-body"><a href="{{_addProviderPage}}?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Add provider</a></p>
+            <p class="govuk-body"><span class="govuk-!-font-weight-bold">No training provider assigned</span></p>
+            <p class="govuk-body"><a href="{{_addProviderPage}}?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Assign a training provider</a></p>
         {% endif %}
 
     </div>
