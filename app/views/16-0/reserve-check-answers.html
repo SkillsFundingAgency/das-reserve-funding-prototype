@@ -67,23 +67,6 @@
             {% endif %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    Apprenticeship training course
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    {% for _course in myData.courses.list %}
-                        {% if myData.whichCourseAnswer == _course.value %}
-                            {{_course.name}} - Level {{_course.level}}
-                        {% endif %}
-                    {% endfor %}
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="reserve-choose-course">
-                        Change
-                    </a>
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
                     Apprenticeship training start date
                 </dt>
                 <dd class="govuk-summary-list__value">
@@ -95,6 +78,23 @@
                 </dd>
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link" href="reserve-choose-start-date">
+                        Change
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Apprenticeship training course
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for _course in myData.courses.list %}
+                        {% if myData.whichCourseAnswer == _course.value %}
+                            {{_course.name}} - Level {{_course.level}}
+                        {% endif %}
+                    {% endfor %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="reserve-choose-course">
                         Change
                     </a>
                 </dd>

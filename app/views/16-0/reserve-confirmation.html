@@ -58,6 +58,18 @@
             {% endif %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
+                    Apprenticeship start date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for _startDate in myData.startDates %}
+                        {% if myData.whichStartDateAnswer == _startDate.id %}
+                            {{_startDate.range}}
+                        {% endif %}
+                    {% endfor %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     Apprenticeship training
                 </dt>
                 <dd class="govuk-summary-list__value">
@@ -77,18 +89,6 @@
                             You can change the course when you add an apprentice's details.
                         </div>
                     </details>
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Apprenticeship start date
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    {% for _startDate in myData.startDates %}
-                        {% if myData.whichStartDateAnswer == _startDate.id %}
-                            {{_startDate.range}}
-                        {% endif %}
-                    {% endfor %}
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
