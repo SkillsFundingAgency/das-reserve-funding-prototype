@@ -1117,38 +1117,38 @@ module.exports = function (router,_myData) {
     });
     router.post('/' + version + '/reserve-delete-provider', function (req, res) {
         // Answer
-        req.session.myData.deleteAnswerTemp = req.body.deleteAnswer
+        // req.session.myData.deleteAnswerTemp = req.body.deleteAnswer
         //Set default answer if includeValidation is false and no answer given
-        if(req.session.myData.includeValidation == "false"){
-            req.session.myData.deleteAnswerTemp = req.session.myData.deleteAnswerTemp || 'yes'
-        }
+        // if(req.session.myData.includeValidation == "false"){
+        //     req.session.myData.deleteAnswerTemp = req.session.myData.deleteAnswerTemp || 'yes'
+        // }
         // Validation
-        if(!req.session.myData.deleteAnswerTemp) {
-            req.session.myData.validationError = "true"
-            req.session.myData.validationErrors.deleteAnswer = {
-                "anchor": "delete-1",
-                "message": "[to do]"
-            }
-        }
+        // if(!req.session.myData.deleteAnswerTemp) {
+        //     req.session.myData.validationError = "true"
+        //     req.session.myData.validationErrors.deleteAnswer = {
+        //         "anchor": "delete-1",
+        //         "message": "[to do]"
+        //     }
+        // }
         // Next action
-        if(req.session.myData.validationError == "true") {
-            res.render(version + '/reserve-delete-provider', {
-                myData: req.session.myData
-            });
-        } else {
-            req.session.myData.deleteAnswer = req.session.myData.deleteAnswerTemp
-            req.session.myData.deleteAnswerTemp = ""
-            if(req.session.myData.deleteAnswer == "yes"){
+        // if(req.session.myData.validationError == "true") {
+        //     res.render(version + '/reserve-delete-provider', {
+        //         myData: req.session.myData
+        //     });
+        // } else {
+            // req.session.myData.deleteAnswer = req.session.myData.deleteAnswerTemp
+            // req.session.myData.deleteAnswerTemp = ""
+            // if(req.session.myData.deleteAnswer == "yes"){
                 //Delete provider from reservation
                 var _reservation = returnReservationData(req, req.session.myData.selectedReservation)
                 if(_reservation.item){
                     _reservation.item.provideractive = false
                 }
                 res.redirect(301, '/' + version + '/reserve-delete-provider-confirmation');
-            } else {
-                res.redirect(301, '/' + version + '/reserve-reservations');
-            }
-        }
+            // } else {
+            //     res.redirect(301, '/' + version + '/reserve-reservations');
+            // }
+        // }
     });
 
     // Delete provider confirmation

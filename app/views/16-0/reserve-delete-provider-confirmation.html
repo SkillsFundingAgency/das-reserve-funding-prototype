@@ -9,6 +9,13 @@
   {% extends "layout.html" %}
 {% endif %}
 
+{% set _reservation = {} %}
+{% for reservation in _account.reservations %}
+    {% if myData.selectedReservation == reservation.id %}
+        {% set _reservation = reservation %}
+    {% endif %}
+{% endfor %}
+
 {% block content %}
 
 {{ govukBackLink({
@@ -22,14 +29,14 @@
         <!-- Panel -->
         <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-8" style="background-color:#28a197">
             <h1 class="govuk-panel__title">
-              [Provider deleted from reservation]
+                {{_reservation.provider}} removed from reservation
             </h1>
         </div>
 
         <!-- Button -->
         {% from "govuk/components/button/macro.njk" import govukButton %}
         {{ govukButton({
-            text: "[Continue]",
+            text: "Return to manage reservations",
             href: "reserve-reservations"
         }) }}
 
