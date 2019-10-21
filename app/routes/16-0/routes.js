@@ -424,6 +424,12 @@ module.exports = function (router,_myData) {
         //Dropout type
         req.session.myData.dropout = req.query.do || req.session.myData.dropout
 
+        //End of two months from now
+        var _EndOfTwoMonthsFromNow = new Date()
+        _EndOfTwoMonthsFromNow.setMonth(_EndOfTwoMonthsFromNow.getMonth() + 3);
+        _EndOfTwoMonthsFromNow.setDate(0);
+        req.session.myData.EndOfTwoMonthsFromNowDateFriendly = _EndOfTwoMonthsFromNow.getDate() + " " + req.session.myData.months[_EndOfTwoMonthsFromNow.getMonth()] + " " + _EndOfTwoMonthsFromNow.getFullYear()
+
         // Set default answers
         setDefaultAnswers(req, "emp")
         

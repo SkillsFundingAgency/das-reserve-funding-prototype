@@ -13,7 +13,8 @@ var _myData = {
     "pro": "pro-1",
     "account": "emp-1",
     "type": "emp",
-    "courses": require(__dirname + '/data/courses.json')
+    "courses": require(__dirname + '/data/courses.json'),
+    "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 }
 
 require('./routes/14-0/routes.js')(router,JSON.parse(JSON.stringify(_myData)));
