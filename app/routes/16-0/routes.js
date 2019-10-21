@@ -1072,13 +1072,14 @@ module.exports = function (router,_myData) {
                 myData: req.session.myData
             });
         } else {
-            // Selected Provider data
-            req.session.myData.selectedProvider = {
-                "name": (req.session.myData.whichProvider3AnswerTemp != "other") ? req.session.myData.whichProvider3AnswerTemp : "TRAINING UK",
-                "id": (req.session.myData.whichProvider3AnswerTemp != "other") ? returnProviderID(req,req.session.myData.whichProvider3AnswerTemp) : req.session.myData.ukprnAnswerTemp
-            }
             req.session.myData.ukprnAnswer = req.session.myData.ukprnAnswerTemp
             req.session.myData.ukprnAnswerTemp = ""
+
+            // Selected Provider data
+            req.session.myData.selectedProvider = {
+                "name": "TRAINING UK",
+                "id": req.session.myData.ukprnAnswer
+            }
 
             res.redirect(301, '/' + version + '/reserve-confirm-provider-b');
         }
