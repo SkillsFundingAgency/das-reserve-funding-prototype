@@ -174,14 +174,14 @@
             <td class="govuk-table__cell" style="white-space: nowrap;">
               {{_reservation.entity | upper}}
               {% if _reservation.status == "used" %}
-              <br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Allocated</strong>
+              <br><strong class="" style="margin-top:10px">Apprentice added</strong>
               {% endif %}
             </td>
             <td class="govuk-table__cell">{{_reservation.courselabel}}</td>
             <td class="govuk-table__cell" style="white-space: nowrap;">
               {{_reservation.startDatelabel}}
               {% if _reservation.status == "expired" %}
-                <br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Expired</strong>
+                <br><strong class="" style="margin-top:10px">Expired</strong>
               {% elif _reservation.status == "used" %}
                 <!-- <br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Apprentice added</strong> -->
               {% endif %}

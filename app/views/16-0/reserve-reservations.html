@@ -55,7 +55,7 @@
         </h1>
 
         {% if _reservationstotal > 0 %}
-          <p class="govuk-heading-m"><a class="govuk-link" href="{{_reserveStartURL}}">Reserve more funding</a></p>
+          <p class="govuk-heading-m"><a class="govuk-link govuk-link--no-visited-state" href="{{_reserveStartURL}}">Reserve more funding</a></p>
           <p class="govuk-body">{{_reservationstotal}} {% if _reservationstotal == 1 %}reservation{% else %}reservations{% endif %}</p>
           <table class="govuk-table">
               <!-- <caption class="govuk-table__caption">Dates and amounts</caption> -->
@@ -93,15 +93,19 @@
                 
                   <tr class="govuk-table__row">
                     {% if _account.entities.length > 1 %}
-                    <td class="govuk-table__cell">{{_entityLabel}}{% if _reservation.status == "used" %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Allocated</strong>{% endif %}</td>
+                    <td class="govuk-table__cell">{{_entityLabel}}{% if _reservation.status == "used" %}<br><strong class="" style="margin-top:10px">Apprentice added</strong>{% endif %}</td>
                     {% endif %}
-                    <td class="govuk-table__cell">{{_courseLabel}}{% if _reservation.status == "used" and _account.entities.length == 1 %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">Allocated</strong>{% endif %}</td>
-                    <td class="govuk-table__cell" style="white-space: nowrap;">{{_startDateLabel}}{% if _reservation.status == "expired" %}<br><strong class="govuk-tag govuk-tag--inactive" style="margin-top:10px">expired</strong>{% endif %}</td>
+                    <td class="govuk-table__cell">{{_courseLabel}}{% if _reservation.status == "used" and _account.entities.length == 1 %}<br><strong class="" style="margin-top:10px">Apprentice added</strong>{% endif %}</td>
+                    <td class="govuk-table__cell" style="white-space: nowrap;">{{_startDateLabel}}{% if _reservation.status == "expired" %}<br><strong class="" style="margin-top:10px">Expired</strong>{% endif %}</td>
                     <td class="govuk-table__cell" style="white-space: nowrap;" >
                         {% if _reservation.provideractive %}
                           {{_reservation.provider}}
-                        {% else %}
-                          &nbsp;
+                        {% elif _reservation.status != "expired" or _reservation.status != "used" %}
+                        {% set _addProviderPage = "reserve-choose-provider-3-b" %}
+                        {% if myData.existingproviders == 0 %}
+                            {% set _addProviderPage = "reserve-enter-provider" %}            
+                        {% endif %}
+                        <!-- <a href="{{_addProviderPage}}?reservation={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Assign</a> -->
                         {% endif %}
                     </td>
                     <td class="govuk-table__cell" >
