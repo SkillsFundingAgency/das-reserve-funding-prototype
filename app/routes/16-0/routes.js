@@ -151,6 +151,22 @@ module.exports = function (router,_myData) {
         })
     }
 
+    function sortEmployers(req){
+        var _employers = req.session.myData.accounts[req.session.myData.account].employers
+        if(_employers){
+            _employers.sort(function(a,b){
+                //Sort on employer name
+                if (a.name.toUpperCase() < b.name.toUpperCase()){
+                    return -1;
+                } else if(a.name.toUpperCase() > b.name.toUpperCase()){
+                    return 1;
+                } else {
+                    return 0;
+                }
+            })
+        }
+    }
+
     function setDefaultAnswers(req, _type){
         // Employer 
         var _empStartDate = req.session.myData.startDates[0].id,
@@ -402,6 +418,9 @@ module.exports = function (router,_myData) {
         //Sort reservations
         sortReservations(req)
 
+        //Sort employers
+        sortEmployers(req)
+
         //Restrictions
         req.session.myData.limit = req.query.l || req.session.myData.limit
         req.session.myData.upcoming = req.query.up || req.session.myData.upcoming
@@ -480,7 +499,7 @@ module.exports = function (router,_myData) {
         setReservationData(req)
 
         //Search
-        _reservations = req.session.myData.accounts[req.session.myData.account].reservations
+        var _reservations = req.session.myData.accounts[req.session.myData.account].reservations
         //Clear search
         req.session.myData.searchapplied = false
 
@@ -576,6 +595,52 @@ module.exports = function (router,_myData) {
 
     // Choose organisation - pro
     router.get('/' + version + '/reserve-choose-org-pro', function (req, res) {
+
+        //Search
+        var _employers = req.session.myData.accounts[req.session.myData.account].employers
+        //Clear search
+        req.session.myData.empsearchapplied = false
+
+        var _searchQ = req.query.q
+        if(_searchQ || _searchQ == ""){
+            _searchQ = _searchQ.trim()
+            if(_searchQ != ""){
+
+                //Defaults
+                req.session.myData.empsearchTerm = _searchQ
+                req.session.myData.empsearchapplied = true
+                _employers.forEach(function(_employer, index) {
+                    _employer.search = true
+                })
+
+                function doSearch(_v){
+                    if(_v == "version1"){
+                        // Version 1: check for matches on whole search query
+                        _employers.forEach(function(_employer, index) {
+                            _employer.search = false
+                            var _searchWithin = _employer.name
+                            if(_searchWithin.toUpperCase().indexOf(_searchQ.toUpperCase()) != -1) {
+                                _employer.search = true
+                            }
+                        });
+                    } else if(_v == "version2"){
+                        // Version 2: Check for matches - ON EACH PART OF SEARCH QUERY
+                        var _searchQParts = _searchQ.split(" ");
+                        _employers.forEach(function(_employer, index) {
+                            _employer.search = false
+                            var _searchWithin = _employer.name
+                            _searchQParts.forEach(function(_searchQPart, index) {
+                                if(_searchWithin.toUpperCase().indexOf(_searchQPart.toUpperCase()) != -1) {
+                                    _employer.search = true
+                                }
+                            });
+                        });
+                    }
+                }
+
+                doSearch("version1")
+            }
+        }
         
         res.render(version + '/reserve-choose-org-pro', {
             myData:req.session.myData

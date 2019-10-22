@@ -1,6 +1,14 @@
-{% set _account = myData.accounts[myData.pro] %}\
+{% set _account = myData.accounts[myData.pro] %}
 
-{% set _employersTotal = _account.employers | length %}
+{% set _employersTotal = _account.employers|length %}
+{% set _employers = [] %}
+{% set _employersFilteredTotal = 0 %}
+{% for _employer in _account.employers %}
+  {% if myData.empsearchapplied == false or (myData.empsearchapplied == true and _employer.search == true) %}
+    {% set _employersFilteredTotal = _employersFilteredTotal + 1 %}
+    {% set _employers = (_employers.push(_employer), _employers) %}
+  {% endif %}
+{% endfor %}
 
 <!-- Layout type -->
 {% if _account.type == "emp" %}
@@ -31,8 +39,34 @@
 
         <p class="govuk-body">This is the employer you are reserving funds on behalf of.</p>
 
-        <p class="govuk-body">{{_employersTotal}} {% if _employersTotal == 1 %}result{% else %}results{% endif %} found.</p>
+        <!-- Search box -->
+        <form method="GET" >
+          <div class="search-wrapper govuk-form-group" >
+            <label for="search-employers" class="govuk-label" >
+                Search employers
+            </label>
+            <div class="search-input-wrapper">
+              <input type="search" value="{% if myData.empsearchapplied == true %}{{myData.empsearchTerm}}{% endif %}" id="search-employers" name="q" title="Search" class="govuk-input">
+              <div class="search-input-submit-wrapper">
+                <button type="submit" class="search-submit">Search</button>
+              </div>
+            </div>
+          </div>
+        </form>
 
+        <!-- Clear search -->
+        {% if myData.empsearchapplied == true %}
+          <p class="govuk-body"><a href="reserve-choose-org-pro" class="govuk-link govuk-link--no-visited-state">
+            Clear search
+          </a></p>
+        {% endif %}
+      
+      <!-- Count -->
+      <p class="govuk-body">
+        {{_employersFilteredTotal}} {% if _employersFilteredTotal == 1 %}employer{% else %}employers{% endif %}{% if myData.empsearchapplied == true %} matching <strong>‘{{myData.empsearchTerm}}’</strong>{% endif %}
+      </p> 
+
+      {% if _employersFilteredTotal > 0 %}
         <table class="govuk-table">
             <thead class="govuk-table__head">
               <tr class="govuk-table__row">
@@ -43,10 +77,10 @@
               </tr>
             </thead>
             <tbody class="govuk-table__body">
-            {% for _employer in _account.employers %}
+            {% for _employer in _employers %}
                 <tr class="govuk-table__row">
                   <th scope="row" class="govuk-table__header">{{_employer.name|upper}}</th>
-                  <td class="govuk-table__cell">{{_employer.name|upper}}</td>
+                  <td class="govuk-table__cell">{{_employer.aname}}</td>
                   <td class="govuk-table__cell">{{_employer.id}}</td>
                   <td class="govuk-table__cell govuk-table__cell--numeric" >
                     <a href="reserve-confirm-org?employer={{_employer.id}}" class="govuk-link">Select</a>
@@ -55,6 +89,7 @@
               {% endfor %}
           </tbody>
         </table>
+      {% endif %}
 
     </div>
 </div>

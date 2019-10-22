@@ -49,7 +49,7 @@
         <h1 class="govuk-heading-xl" >
             Manage your funding reserved for non-levy employers
         </h1>
-        <p class="govuk-body-l govuk-!-font-weight-bold"><a class="govuk-link govuk-link--no-visited-state" href="{{_reserveStartURL}}">Reserve more funding</a></p>
+        <p class="govuk-body-l govuk-!-font-weight-bold"><a class="govuk-link govuk-link--no-visited-state" href="{{_reserveStartURL}}?type=pro">Reserve more funding</a></p>
   </div>
 </div>
 {% endif %}
@@ -195,7 +195,7 @@
             </td>
             <td class="govuk-table__cell" >
                 {% if _reservation.status == "available" %}
-                  <a href="reserve-delete?delete={{_reservation.id}}" class="govuk-link govuk-link--no-visited-state">Delete</a>
+                  <a href="reserve-delete?delete={{_reservation.id}}&type=pro" class="govuk-link govuk-link--no-visited-state">Delete</a>
                 {% else %}
                   &nbsp;
                 {% endif %}
@@ -244,7 +244,7 @@
   <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl ">There are no funding reservations to use</h1>
       <p class="govuk-body ">You need to reserve funding in order to add a new apprentice.</p>
-      <a role="button" tabindex="1" draggable="false" class="govuk-button" href="{{_reserveStartURL}}">Reserve funding</a>
+      <a role="button" tabindex="1" draggable="false" class="govuk-button" href="{{_reserveStartURL}}?type=pro">Reserve funding</a>
     </div>
 </div>
 {% endif %}
