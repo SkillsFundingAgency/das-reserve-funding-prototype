@@ -43,23 +43,6 @@
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    Apprenticeship training start date
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    {% for _startDate in myData.startDates %}
-                        {% if myData.whichTrainingStartDateAnswer == _startDate.id %}
-                            {{_startDate.range}}
-                        {% endif %}
-                    {% endfor %}
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="reserve-choose-training">
-                        Change
-                    </a>
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
                     Apprenticeship training
                 </dt>
                 <dd class="govuk-summary-list__value">
@@ -81,7 +64,24 @@
                     </details>
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="reserve-choose-training">
+                    <a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-training">
+                        Change
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Apprenticeship training start date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for _startDate in myData.startDates %}
+                        {% if myData.whichTrainingStartDateAnswer == _startDate.id %}
+                            {{_startDate.range}}
+                        {% endif %}
+                    {% endfor %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-training">
                         Change
                     </a>
                 </dd>
