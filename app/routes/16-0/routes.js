@@ -25,6 +25,16 @@ module.exports = function (router,_myData) {
         });
     }
 
+    function setExpiredReservations(req){
+        req.session.myData.accounts[req.session.myData.account].reservations.forEach(function(_reservation, index) {
+            req.session.myData.startDates.forEach(function(_startDate, index) {
+                if(_startDate.id == _reservation.startDate && _startDate.expired == true && _reservation.status != "used"){
+                    _reservation.status = "expired"
+                }
+            });
+        });
+    }
+
     function setActiveProviders(req){
         req.session.myData.accounts[req.session.myData.account].reservations.forEach(function(_reservation, index) {
             var _ep = req.session.myData.existingproviders
@@ -129,19 +139,19 @@ module.exports = function (router,_myData) {
             
             //Sort on employer name FIRST
             if (a.entity.toUpperCase() < b.entity.toUpperCase()){
-                return -1
+                return -1;
             } else if(a.entity.toUpperCase() > b.entity.toUpperCase()){
-                return 1
+                return 1;
             } else {
                 //Sort on course name
                 if(_a_courseName.toUpperCase() < _b_courseName.toUpperCase()) {
-                    return -1
+                    return -1;
                 } else if (_a_courseName.toUpperCase() > _b_courseName.toUpperCase()) {
-                    return 1
+                    return 1;
                 } else {
                     //Sort on start date
                     if(_a_dateIndex > _b_dateIndex) {
-                        return -1
+                        return -1;
                     } else if (_a_dateIndex < _b_dateIndex) {
                         return 1;
                     }
@@ -314,29 +324,34 @@ module.exports = function (router,_myData) {
             {
                 "id": "jun2019",
                 "name": "June 2019",
-                "range": "Jun 2019 to Aug 2019"
+                "range": "Jun 2019 to Aug 2019",
+                "endDate": new Date("08-01-2019"),
             },
             {
                 "id": "jul2019",
                 "name": "July 2019",
-                "range": "Jul 2019 to Sep 2019"
+                "range": "Jul 2019 to Sep 2019",
+                "endDate": new Date("09-01-2019"),
             },
             {
                 "id": "aug2019",
                 "name": "August 2019",
                 "range": "Aug 2019 to Oct 2019",
+                "endDate": new Date("10-01-2019"),
                 "empmvs": true
             },
             {
                 "id": "sep2019",
                 "name": "September 2019",
                 "range": "Sep 2019 to Nov 2019",
+                "endDate": new Date("11-01-2019"),
                 "empmvs": true
             },
             {
                 "id": "oct2019",
                 "name": "October 2019",
                 "range": "Oct 2019 to Dec 2019",
+                "endDate": new Date("12-01-2019"),
                 "empmvs": true,
                 "promvs": true
             },
@@ -344,33 +359,43 @@ module.exports = function (router,_myData) {
                 "id": "nov2019",
                 "name": "November 2019",
                 "range": "Nov 2019 to Jan 2020",
+                "endDate": new Date("01-01-2020"),
                 "promvs": true
             },
             {
                 "id": "dec2019",
                 "name": "December 2019",
                 "range": "Dec 2019 to Feb 2020",
+                "endDate": new Date("02-01-2020"),
                 "promvs": true
             },
             {
                 "id": "jan2020",
                 "name": "January 2020",
                 "range": "Jan 2020 to Mar 2020",
+                "endDate": new Date("03-01-2020"),
                 "promvs": true
             },
             {
                 "id": "feb2020",
                 "name": "February 2020",
                 "range": "Feb 2020 to Apr 2020",
+                "endDate": new Date("04-01-2020"),
                 "promvs": true
             },
             {
                 "id": "mar2020",
                 "name": "March 2020",
                 "range": "Mar 2020 to May 2020",
+                "endDate": new Date("05-01-2020"),
                 "promvs": true
             }
         ]
+        //Set expired true/false against each date object
+        req.session.myData.startDates.forEach(function(_startDate, index) {
+            _startDate.expired = (new Date().setHours(0,0,0,0) >= _startDate.endDate)
+        });
+
         req.session.myData.type = "pro"
         req.session.myData.count = 999999
         req.session.myData.limit = 15
@@ -414,6 +439,9 @@ module.exports = function (router,_myData) {
             _account.visibleSet = true
             setVisibleReservations(req)
         }
+
+        //Expired reservations
+        setExpiredReservations(req)
 
         //Sort reservations
         sortReservations(req)
