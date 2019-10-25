@@ -21,7 +21,7 @@
     "reservations": [
         {
             "id": "fjdcxvnfsa",
-            "startDate": "sep2019",
+            "startDate": "jul2019",
             "course": "196",
             "entity": "aston",
             "status": "available",
@@ -67,7 +67,7 @@
         },
         {
             "id": "ipqoemekaj",
-            "startDate": "aug2019",
+            "startDate": "jul2019",
             "course": "153",
             "entity": "aston",
             "status": "expired",

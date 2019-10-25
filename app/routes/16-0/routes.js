@@ -27,11 +27,17 @@ module.exports = function (router,_myData) {
 
     function setExpiredReservations(req){
         req.session.myData.accounts[req.session.myData.account].reservations.forEach(function(_reservation, index) {
+            var _date
             req.session.myData.startDates.forEach(function(_startDate, index) {
-                if(_startDate.id == _reservation.startDate && _startDate.expired == true && _reservation.status != "used"){
-                    _reservation.status = "expired"
+                if(_startDate.id == _reservation.startDate){
+                    _date = _startDate
                 }
             });
+            if(_reservation.status == "expired" && !_date.expired){
+                _reservation.status = "available"
+            } else if(_date.expired && _reservation.status != "used") {
+                _reservation.status = "expired"
+            }
         });
     }
 
@@ -90,7 +96,6 @@ module.exports = function (router,_myData) {
             });
             //Course labels
             if (_account.courselabels.indexOf(_reservation.courselabel) == -1) {
-                // console.log(_account.courselabels)
                 _account.courselabels.push(_reservation.courselabel)
             }
             _account.courselabels.sort(function(a,b){
@@ -325,33 +330,33 @@ module.exports = function (router,_myData) {
                 "id": "jun2019",
                 "name": "June 2019",
                 "range": "Jun 2019 to Aug 2019",
-                "endDate": new Date("08-01-2019"),
+                "endDate": new Date("09-01-2019"),
             },
             {
                 "id": "jul2019",
                 "name": "July 2019",
                 "range": "Jul 2019 to Sep 2019",
-                "endDate": new Date("09-01-2019"),
+                "endDate": new Date("10-01-2019"),
             },
             {
                 "id": "aug2019",
                 "name": "August 2019",
                 "range": "Aug 2019 to Oct 2019",
-                "endDate": new Date("10-01-2019"),
+                "endDate": new Date("11-01-2019"),
                 "empmvs": true
             },
             {
                 "id": "sep2019",
                 "name": "September 2019",
                 "range": "Sep 2019 to Nov 2019",
-                "endDate": new Date("11-01-2019"),
+                "endDate": new Date("12-01-2019"),
                 "empmvs": true
             },
             {
                 "id": "oct2019",
                 "name": "October 2019",
                 "range": "Oct 2019 to Dec 2019",
-                "endDate": new Date("12-01-2019"),
+                "endDate": new Date("01-01-2020"),
                 "empmvs": true,
                 "promvs": true
             },
@@ -359,35 +364,35 @@ module.exports = function (router,_myData) {
                 "id": "nov2019",
                 "name": "November 2019",
                 "range": "Nov 2019 to Jan 2020",
-                "endDate": new Date("01-01-2020"),
+                "endDate": new Date("02-01-2020"),
                 "promvs": true
             },
             {
                 "id": "dec2019",
                 "name": "December 2019",
                 "range": "Dec 2019 to Feb 2020",
-                "endDate": new Date("02-01-2020"),
+                "endDate": new Date("03-01-2020"),
                 "promvs": true
             },
             {
                 "id": "jan2020",
                 "name": "January 2020",
                 "range": "Jan 2020 to Mar 2020",
-                "endDate": new Date("03-01-2020"),
+                "endDate": new Date("04-01-2020"),
                 "promvs": true
             },
             {
                 "id": "feb2020",
                 "name": "February 2020",
                 "range": "Feb 2020 to Apr 2020",
-                "endDate": new Date("04-01-2020"),
+                "endDate": new Date("05-01-2020"),
                 "promvs": true
             },
             {
                 "id": "mar2020",
                 "name": "March 2020",
                 "range": "Mar 2020 to May 2020",
-                "endDate": new Date("05-01-2020"),
+                "endDate": new Date("06-01-2020"),
                 "promvs": true
             }
         ]
