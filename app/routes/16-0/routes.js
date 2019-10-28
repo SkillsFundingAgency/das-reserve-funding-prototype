@@ -342,15 +342,13 @@ module.exports = function (router,_myData) {
                 "id": "aug2019",
                 "name": "August 2019",
                 "range": "Aug 2019 to Oct 2019",
-                "endDate": new Date("11-01-2019"),
-                "empmvs": true
+                "endDate": new Date("11-01-2019")
             },
             {
                 "id": "sep2019",
                 "name": "September 2019",
                 "range": "Sep 2019 to Nov 2019",
-                "endDate": new Date("12-01-2019"),
-                "empmvs": true
+                "endDate": new Date("12-01-2019")
             },
             {
                 "id": "oct2019",
@@ -365,35 +363,40 @@ module.exports = function (router,_myData) {
                 "name": "November 2019",
                 "range": "Nov 2019 to Jan 2020",
                 "endDate": new Date("02-01-2020"),
-                "promvs": true
+                "promvs": true,
+                "empmvs": true
             },
             {
                 "id": "dec2019",
                 "name": "December 2019",
                 "range": "Dec 2019 to Feb 2020",
                 "endDate": new Date("03-01-2020"),
-                "promvs": true
+                "promvs": true,
+                "empmvs": true
             },
             {
                 "id": "jan2020",
                 "name": "January 2020",
                 "range": "Jan 2020 to Mar 2020",
                 "endDate": new Date("04-01-2020"),
-                "promvs": true
+                "promvs": true,
+                "empmvs": true
             },
             {
                 "id": "feb2020",
                 "name": "February 2020",
                 "range": "Feb 2020 to Apr 2020",
                 "endDate": new Date("05-01-2020"),
-                "promvs": true
+                "promvs": true,
+                "empmvs": true
             },
             {
                 "id": "mar2020",
                 "name": "March 2020",
                 "range": "Mar 2020 to May 2020",
                 "endDate": new Date("06-01-2020"),
-                "promvs": true
+                "promvs": true,
+                "empmvs": true
             }
         ]
         //Set expired true/false against each date object
