@@ -1,0 +1,98 @@
+{% set _account = myData.accounts[myData.account] %}
+{% set _currentPage = 'provider-home' %}
+
+{% set _reserveStartURL = "reserve-start" %}
+{% if myData.paused != "false" %}
+    {% set _reserveStartURL = "reserve-funding-paused" %}
+{% elif myData.upcoming != "false" %}
+    {% set _reserveStartURL = "reserve-upcoming" %}
+{% endif %}
+
+{% extends "layout-as-pro.html" %}
+
+{% block pageTitle %}
+{{_account.name}} - Apprenticeships
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row" style="padding-top: 40px">
+    <div class="govuk-grid-column-full">
+
+        <h1 class="govuk-heading-xl" style="margin-bottom: 0">{{_account.name}}</h1>
+        <p class="govuk-body" style="color: #6f777b; margin-top: 0; font-weight: 700;">UKPRN: 10000528</p>
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" style="border-bottom: 5px solid #bfc1c3">
+
+    </div>
+</div>
+<div class="govuk-grid-row" >
+        <div class="govuk-grid-column-two-thirds">
+            <div class="das-cards">
+                    <div class="das-card das-card__pro">
+                        <h2 class="govuk-heading-m">
+                            <a class="govuk-link govuk-link--no-visited-state" href="#">Create a cohort</a>
+                        </h2>
+                        <p class="govuk-body">Create new cohorts on behalf of an employer.</p>
+                    </div>
+
+                    <div class="das-card das-card__pro">
+                        <h2 class="govuk-heading-m">
+                            <a class="govuk-link govuk-link--no-visited-state" href="{{_reserveStartURL}}?type=pro">Get funding for non-levy employers</a>
+                        </h2>
+                        <p class="govuk-body">Secure funding for a non-levy employer to train an apprentice.</p>
+                    </div>
+
+                <div class="das-card das-card__pro">
+                    <h2 class="govuk-heading-m">
+                        <a class="govuk-link govuk-link--no-visited-state" href="#">Your cohorts</a>
+                    </h2>
+                    <p class="govuk-body">Review, edit, approve and add apprentices to new cohorts.</p>
+                </div>
+
+                    <div class="das-card das-card__pro">
+                        <h2 class="govuk-heading-m">
+                            <a class="govuk-link govuk-link--no-visited-state" href="reserve-reservations-pro">Manage your funding reserved for non-levy employers</a>
+                        </h2>
+                        <p class="govuk-body">Add apprentice information to funding you have already reserved for non-levy employers.</p>
+                    </div>
+
+                <div class="das-card das-card__pro">
+                    <h2 class="govuk-heading-m">
+                        <a class="govuk-link govuk-link--no-visited-state" href="#">Manage your apprentices</a>
+                    </h2>
+                    <p class="govuk-body">View and update approved apprentice records.</p>
+                </div>
+
+                <div class="das-card das-card__pro">
+                    <h2 class="govuk-heading-m">
+                        <a class="govuk-link govuk-link--no-visited-state" href="#">Recruit apprentices</a>
+                    </h2>
+                    <p class="govuk-body">Create a vacancy to recruit an apprentice and manage applications.</p>
+                </div>
+
+                <div class="das-card das-card__pro">
+                    <h2 class="govuk-heading-m">
+                        <a class="govuk-link govuk-link--no-visited-state" href="#">Organisations and agreements</a>
+                    </h2>
+                    <p class="govuk-body">Find and view organisations and their agreement IDs.</p>
+                </div>
+            </div>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h3 class="govuk-heading-m" style="margin-top: 40px">Instructions for the apprentices' employer</h3>
+            <p class="govuk-body">Employers need to <a class="govuk-link govuk-link--no-visited-state" href="https://www.gov.uk/guidance/manage-apprenticeship-funds" target="_blank" title="Register to manage their apprenticeship funds">register to manage their apprenticeship funds</a>. </p>
+            <p class="govuk-body">Once they've registered they need to:</p>
+            <ol class="govuk-list govuk-list--number">
+                <li>Add the PAYE schemes that the apprentices will be paid through.</li>
+                <li>Added the employer organisations that will contract with the training provider.</li>
+                <li>Sign agreements for their organisations so that they can spend levy funds.</li>
+                <li>Add apprentices to their account so they can authorise payments to you. </li>
+            </ol>
+        </div>
+    </div>
+
+{% endblock %}

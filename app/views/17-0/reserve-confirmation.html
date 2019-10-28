@@ -1,0 +1,167 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% set _inError = myData.validationError %}
+
+{% block content %}
+
+<div class="govuk-grid-row" style="padding-top: 40px">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% if _inError == "true" %}
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1"
+            data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    {% for name, item in myData.validationErrors %}
+                    <li>
+                        <a href="#{{item.anchor}}">{{item.message}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Panel -->
+        <div class="govuk-panel govuk-panel--confirmation" >
+            <h1 class="govuk-panel__title">
+                You have successfully reserved funding for apprenticeship training
+            </h1>
+        </div>
+
+        <dl class="govuk-summary-list">
+            {% if _account.entities.length > 1 %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Employer
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for _entity in _account.entities %}
+                        {% if myData.whichOrgAnswer == _entity.id %}
+                            {{_entity.name|upper}}
+                        {% endif %}
+                    {% endfor %}
+                </dd>
+            </div>
+            {% endif %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                        Apprenticeship training course
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for _course in myData.courses.list %}
+                        {% if myData.whichCourseAnswer == _course.value %}
+                            {{_course.name}} - Level {{_course.level}}
+                        {% endif %}
+                    {% endfor %}
+                    <br>
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                Can I change the course?
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            You can change the course when you add an apprentice's details.
+                        </div>
+                    </details>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Apprenticeship start date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for _startDate in myData.startDates %}
+                        {% if myData.whichStartDateAnswer == _startDate.id %}
+                            {{_startDate.range}}
+                        {% endif %}
+                    {% endfor %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Training provider
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if myData.addProvider == true %}
+                        {{myData.selectedProvider.name}}<br>
+                        {{myData.selectedProvider.id}}
+                    {% else %}
+                        No training provider assigned
+                    {% endif %}
+                </dd>
+            </div>
+        </dl>
+
+        <h2 class="govuk-heading-l">Making changes</h2>
+
+        <p class="govuk-body">You can add or change the apprenticeship training when you add an apprentice's details.</p>
+        <p class="govuk-body">You will need to reserve new funding to change the apprenticeship training start date to outside of the 3-month window you originally selected.</p>
+
+        <form method="POST">
+
+            <div class="govuk-form-group {% if myData.validationErrors.whatNextAnswer %}govuk-form-group--error{% endif %}">
+                <fieldset class="govuk-fieldset" aria-describedby="radio-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        What's next?
+                    </legend>
+                    {% if myData.validationErrors.whatNextAnswer %}
+                    <span id="whatNextAnswer-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>
+                        {{myData.validationErrors.whatNextAnswer.message}}
+                    </span>
+                    {% endif %}
+                    <div class="govuk-radios" id="whatNextAnswer">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="whatNext-1" name="whatNextAnswer" type="radio" value="recruit" {% if myData.whatNextAnswerTemp == 'recruit' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="whatNext-1">
+                                Recruit an apprentice
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="whatNext-2" name="whatNextAnswer" type="radio" value="fat" {% if myData.whatNextAnswerTemp == 'fat' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="whatNext-2">
+                                Find a training provider
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="whatNext-3" name="whatNextAnswer" type="radio" value="add" {% if myData.whatNextAnswerTemp == 'add' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="whatNext-3">
+                                Add apprentice's details
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="whatNext-4" name="whatNextAnswer" type="radio" value="home" {% if myData.whatNextAnswerTemp == 'home' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="whatNext-4">
+                                Go to homepage
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Button -->
+            {% from "govuk/components/button/macro.njk" import govukButton %}
+            {{ govukButton({
+              text: "Continue"
+            }) }}
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,113 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% set _inError = myData.validationError %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% if _inError == "true" %}
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1"
+            data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    {% for name, item in myData.validationErrors %}
+                    <li>
+                        <a href="#{{item.anchor}}">{{item.message}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <h1 class="govuk-heading-xl">
+            When will the apprentice start their apprenticeship training?
+        </h1>
+
+        <form method="POST">
+
+            <div class="govuk-form-group {% if myData.validationErrors.whichStartDateAnswer %}govuk-form-group--error{% endif %}">
+                <fieldset class="govuk-fieldset" aria-describedby="radio-hint">
+                    <span id="radio-hint" class="govuk-hint">
+                        The apprentice can start their apprenticeship training anytime in the month you choose, or the following 2 months.
+                    </span>
+                    {% if myData.validationErrors.whichStartDateAnswer %}
+                    <span id="whichStartDateAnswer-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>
+                        You must select a start date
+                    </span>
+                    {% endif %}
+                    <div class="govuk-radios" id="whichStartDateAnswer">
+                        {% set _index = 1 %}
+                        {% set _show = true %}
+                        {% set _hiddenSet = false %}
+                        {% for startDate in myData.startDates %}
+                            {% if startDate.empmvs == true %}
+
+                                {% if myData.hidedates == "no" or myData.reservationsadded < myData.hidedates %}
+                                    {% set _show = true %}
+                                {% else %}
+                                    {% if _hiddenSet == false %}
+                                        {% set _show = false %}
+                                        {% set _hiddenSet = true %}
+                                    {% else %}
+                                        {% set _show = true %}
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if _show == true %}
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="whichStartDate-{{_index}}" name="whichStartDateAnswer" type="radio" value="{{startDate.id}}" {% if myData.whichStartDateAnswerTemp == startDate.id %}checked{% endif %}>
+                                    <label class="govuk-label govuk-radios__label" for="whichStartDate-{{_index}}">
+                                        {{startDate.name}}
+                                    </label>
+                                </div>
+                                {% set _index = _index + 1 %}
+                                {% endif %}
+
+                            {% endif %}
+                        {% endfor %}
+                        <div class="govuk-radios__divider">or</div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="whichStartDate-{{_index}}" name="whichStartDateAnswer" type="radio" value="dontknow" {% if myData.whichStartDateAnswerTemp == 'dontknow' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="whichStartDate-{{_index}}">
+                                I don’t know
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Button -->
+            {% from "govuk/components/button/macro.njk" import govukButton %}
+            {{ govukButton({
+              text: "Save and continue"
+            }) }}
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

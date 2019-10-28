@@ -1,0 +1,104 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl">Check your information</h1>
+
+        <p class="govuk-body">You are reserving funding for a non-levy employer to take on an apprentice. This will be paid directly to the training provider, who the employer will confirm at a later date.</p>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Employer
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for _employer in _account.employers %}
+                        {% if myData.selectedEmployer == _employer.id %}
+                            {{_employer.name|upper}}
+                        {% endif %}
+                    {% endfor %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Apprenticeship training course
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for _course in myData.courses.list %}
+                        {% if myData.whichTrainingCourseAnswer == _course.value %}
+                            {{_course.name}} - Level {{_course.level}}
+                        {% endif %}
+                    {% endfor %}
+                    <br>
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                    Can I change the course?
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            You can change the course when adding an apprentice's details.
+                        </div>
+                    </details>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-training">
+                        Change
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Apprenticeship training start date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for _startDate in myData.startDates %}
+                        {% if myData.whichTrainingStartDateAnswer == _startDate.id %}
+                            {{_startDate.range}}
+                        {% endif %}
+                    {% endfor %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link govuk-link--no-visited-state" href="reserve-choose-training">
+                        Change
+                    </a>
+                </dd>
+            </div>
+        </dl>
+
+        <form method="POST">
+
+            <!-- Button -->
+            {% from "govuk/components/button/macro.njk" import govukButton %}
+            {{ govukButton({
+              text: "Confirm"
+            }) }}
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

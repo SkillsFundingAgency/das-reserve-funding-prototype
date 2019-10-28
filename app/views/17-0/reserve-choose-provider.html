@@ -1,0 +1,93 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% set _inError = myData.validationError %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% if _inError == "true" %}
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    {% for name, item in myData.validationErrors %}
+                    <li>
+                        <a href="#{{item.anchor}}">{{item.message}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <form method="POST">
+
+            <div class="govuk-form-group {% if myData.validationErrors.whichProviderAnswer %}govuk-form-group--error{% endif %}">
+                <fieldset class="govuk-fieldset" >
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                        <h1 class="govuk-fieldset__heading">
+                            {% if myData.existingproviders == 1 %}
+                                Assign this reservation to {{_account.providers[0].name}}?
+                            {% else %}
+                                Assign this reservation to a training provider?
+                            {% endif %}
+                        </h1>
+                    </legend>
+                    <span class="govuk-hint">
+                        Assigning a reservation to a training provider allows them to use it on your behalf.
+                    </span>
+                    {% if myData.validationErrors.whichProviderAnswer %}
+                    <span id="whichProviderAnswer-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>
+                        {{myData.validationErrors.whichProviderAnswer.message}}
+                    </span>
+                    {% endif %}
+                    <div class="govuk-radios" id="whichProviderAnswer">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="whichProvider-1" name="whichProviderAnswer" type="radio" value="yes" {% if myData.whichProviderAnswerTemp == 'yes' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="whichProvider-1">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="whichProvider-2" name="whichProviderAnswer" type="radio" value="no" {% if myData.whichProviderAnswerTemp == 'no' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="whichProvider-2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Button -->
+            {% from "govuk/components/button/macro.njk" import govukButton %}
+            {{ govukButton({
+              text: "Save and continue"
+            }) }}
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

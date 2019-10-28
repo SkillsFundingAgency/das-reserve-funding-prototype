@@ -1,0 +1,139 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+{% set _inError = myData.validationError %}
+
+{% set _reservation = {} %}
+{% for reservation in _account.reservations %}
+    {% if myData.selectedReservation == reservation.id %}
+        {% set _reservation = reservation %}
+    {% endif %}
+{% endfor %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% if _inError == "true" %}
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1"
+            data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    {% for name, item in myData.validationErrors %}
+                    <li>
+                        <a href="#{{item.anchor}}">{{item.message}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <h1 class="govuk-heading-xl">
+            Delete Reservation
+        </h1>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Employer
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if myData.type == "pro" %}
+                        {{_reservation.entity}}
+                    {% else %}
+                        {% for _entity in _account.entities %}
+                            {% if _reservation.entity == _entity.id %}
+                                {{_entity.name}}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Apprenticeship start date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for _startDate in myData.startDates %}
+                        {% if _reservation.startDate == _startDate.id %}
+                            {{_startDate.range}}
+                        {% endif %}
+                    {% endfor %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Apprenticeship training course
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for _course in myData.courses.list %}
+                        {% if _reservation.course == _course.value %}
+                            {{_course.name}} - Level {{_course.level}}
+                        {% endif %}
+                    {% endfor %}
+                </dd>
+            </div>
+        </dl>
+
+        <form method="POST">
+
+            <div class="govuk-form-group {% if myData.validationErrors.deleteAnswer %}govuk-form-group--error{% endif %}">
+                <fieldset class="govuk-fieldset" aria-describedby="radio-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        Are you sure that you want to delete this reservation?
+                    </legend>
+                    {% if myData.validationErrors.deleteAnswer %}
+                    <span id="deleteAnswer-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>
+                        {{myData.validationErrors.deleteAnswer.message}}
+                    </span>
+                    {% endif %}
+                    <div class="govuk-radios" id="deleteAnswer">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="delete-1" name="deleteAnswer" type="radio" value="yes" {% if myData.deleteAnswerTemp == 'yes' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="delete-1">
+                                Yes, delete this reservation
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="delete-2" name="deleteAnswer" type="radio" value="no" {% if myData.deleteAnswerTemp == 'no' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="delete-2">
+                                No, go back to manage reservations
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Button -->
+            {% from "govuk/components/button/macro.njk" import govukButton %}
+            {{ govukButton({
+              text: "Confirm"
+            }) }}
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

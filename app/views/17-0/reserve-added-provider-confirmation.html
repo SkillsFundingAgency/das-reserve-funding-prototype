@@ -1,0 +1,43 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% block content %}
+
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+
+<div class="govuk-grid-row" style="padding-top: 40px">
+    <div class="govuk-grid-column-two-thirds">
+
+        <!-- Panel -->
+        <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-8" >
+            <h1 class="govuk-panel__title">
+                Training provider successfully added
+            </h1>
+        </div>
+
+        <div class="govuk-form-group">
+          <p class="govuk-body">{{myData.selectedProvider.name}}<br>{{myData.selectedProvider.id}}</p>
+        </div>
+
+        <!-- Button -->
+        {% from "govuk/components/button/macro.njk" import govukButton %}
+        {{ govukButton({
+            text: "Return to manage reservations",
+            href: "reserve-reservations"
+        }) }}
+
+    </div>
+</div>
+
+{% endblock %}

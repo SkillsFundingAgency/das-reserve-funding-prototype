@@ -1,0 +1,59 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {{ govukBackLink({
+            text: "Back",
+            href: "javascript: window.history.go(-1)",
+            classes: "govuk-!-margin-top-8 govuk-!-margin-bottom-0"
+            }) }}
+
+        <div class="flash-card">
+            <header>
+                <h2 class="govuk-heading-l">
+                    Upcoming change to government-funded training
+                </h2>
+            </header>
+        
+            <p>Government funding for apprenticeship training will be paused on {{myData.EndOfTwoMonthsFromNowDateFriendly}}. You must reserve funding for your training before this date.</p>
+        
+            <p>This change will not affect funding reserved before {{myData.EndOfTwoMonthsFromNowDateFriendly}}</p>
+
+            <form method="POST">
+                <p>
+                    {{govukButton({
+                        text: "Continue",
+                        classes: "govuk-!-margin-bottom-0"
+                    })}}
+                </p>
+            
+                {{ govukCheckboxes({
+                    idPrefix: "upcominghide",
+                    name: "upcominghide",
+                    items: [
+                        {
+                            value: "upcominghide",
+                            text: "Do not show this message again"
+                        }
+                    ]
+                }) }}
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

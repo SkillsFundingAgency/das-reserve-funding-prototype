@@ -1,0 +1,115 @@
+{% set _account = myData.accounts[myData.account] %}
+{% set _currentPage = 'employer-home' %}
+
+{% extends "layout-as-emp.html" %}
+
+{% block pageTitle %}
+Home - Manage apprentices
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row" style="padding-top: 40px">
+    <div class="govuk-grid-column-full">
+
+        <span class="govuk-caption-xl">Account ID: 78NV48</span>
+        <h1 class="govuk-heading-xl" style="margin-bottom: 0">{{_account.name}}</h1>
+
+        <p class="govuk-body">
+            <a href="" class="das-favourites-link govuk-link govuk-link--no-visited-state">
+                <span class="das-favourites-link__icon"><img src="https://das-at-frnt-end.azureedge.net/images/favourite-unchecked-black.svg" alt=""></span>
+                <span class="das-favourites-link__text">View saved favourites</span>
+            </a>
+        </p>
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" style="border-bottom: 5px solid #bfc1c3">
+
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <section class="das-section-dashboard">
+
+            <h2 class="das-section__heading govuk-heading-l">Apprenticeships</h2>
+            <p class="das-section__description govuk-body">Manage your apprentices, recruit apprentice and set training provider permissions</p>
+
+            <div class="das-cards">
+                <div class="das-card">
+                    <h3 class="das-card__heading govuk-heading-m"><a href="#" class="govuk-link govuk-link--no-visited-state">Apprentices</a>
+                    </h3>
+                    <p class="govuk-body">Add apprentices, update details of existing apprentices and authorise payments to training providers.</p>
+                </div>
+                <div class="das-card">
+                    <h3 class="das-card__heading govuk-heading-m"><a href="#" class="govuk-link govuk-link--no-visited-state">Recruitment</a>
+                    </h3>
+                    <p class="govuk-body">Recruit an apprentice by creating a vacancy. This vacancy will be advertised on Find an apprenticeship.</p>
+                </div>
+                <div class="das-card">
+                    <h3 class="das-card__heading govuk-heading-m"><a href="#" class="govuk-link govuk-link--no-visited-state">Training provider permissions</a></h3>
+                    <p class="govuk-body">Set training provider permissions and control what tasks they can do on your behalf.</p>
+                </div>
+                <div class="das-card">
+                    <h3 class="das-card__heading govuk-heading-m"><a href="#" class="govuk-link govuk-link--no-visited-state">Find apprenticeship training</a></h3>
+                    <p class="govuk-body">Search for apprenticeships and see details of approved providers who can deliver the training.</p>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="das-section-dashboard">
+            <h2 class="das-section__heading govuk-heading-l">Finances</h2>
+            <p class="das-section__description govuk-body">Manage your apprenticeship funds</p>
+
+            <div class="das-cards">
+                <div class="das-card">
+                    <h3 class="das-card__heading govuk-heading-m"><a href="reserve-reservations?type=emp" class="govuk-link govuk-link--no-visited-state">Your funding reservations</a></h3>
+                    <p class="govuk-body">Reserve and manage funding.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="das-section-dashboard">
+            <h2 class="das-section__heading govuk-heading-l">Account</h2>
+            <p class="das-section__description govuk-body">Manage your account details and team</p>
+
+            <div class="das-cards">
+                <div class="das-card">
+                    <h3 class="das-card__heading govuk-heading-m"><a href="#" class="govuk-link govuk-link--no-visited-state">Your organisations and agreements</a></h3>
+                    <p class="govuk-body">Add your organisations that will make contracts with training providers.</p>
+                </div>
+                <div class="das-card">
+                    <h3 class="das-card__heading govuk-heading-m"><a href="#" class="govuk-link govuk-link--no-visited-state">Your team</a></h3>
+                    <p class="govuk-body">Control what your team can do and invite new team members.</p>
+                </div>
+                <div class="das-card">
+                    <h3 class="das-card__heading govuk-heading-m"><a href="#" class="govuk-link govuk-link--no-visited-state">PAYE schemes</a></h3>
+                    <p class="govuk-body">Add or remove PAYE schemes.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="das-panel das-panel-filled">
+            <h3 class="govuk-heading-m">Help us improve this service</h3>
+            <p class="govuk-body"><a href="#" target="_blank">Take our 3 minute survey</a> so that we can improve this service.</p>
+            <p class="govuk-body" style="margin-bottom: 0;"><a href="#" target="_blank" class="govuk-button govuk-link" style="margin-bottom: 0;">Take the survey</a></p>
+        </div>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <section>
+            <nav>
+                <ul class="js-tabs" role="tablist">
+                    <li role="tab" id="tab-tasks" aria-controls="pane-tasks"><a href="#pane-tasks" class="selected govuk-link govuk-link--no-visited-state">Tasks</a></li>
+                    <li role="tab" id="tab-activity" aria-controls="pane-activity"><a href="#pane-activity" class="govuk-link govuk-link--no-visited-state">Activity</a></li>
+                </ul>
+            </nav>
+            <div class="das-panes">
+                <div class="js-tab-pane" id="pane-tasks" role="tabpanel" aria-hidden="false" style="display: block;">
+                    <p>You do not have any tasks</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% endblock %}
