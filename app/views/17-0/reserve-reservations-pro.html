@@ -78,59 +78,56 @@
 
 <!-- Filters -->
 {% if _reservationsTotal > 10 and myData.filters == "true" %}
-<div class="govuk-grid-row" style=" background: #DEE0E2; margin-left:0; margin-right:0; margin-bottom: 20px">
-        <div class="govuk-grid-column-one-third" style=" padding: 20px 20px 0 20px;">
-
-            <!-- <p class="govuk-body govuk-!-font-weight-bold">Filter reservations</p> -->
-
-            <!-- Employer filter -->
-            <div class="govuk-form-group" style="margin-bottom: 20px">
-              <label class="govuk-label" for="employer-filter" >
-                Employer
-              </label>
-              <select class="govuk-select" id="employer-filter" name="employer-filter" style="min-width: 100%">
-                <option value="all">All</option>
-                {% for _employer in _account.employers %}
-                <option value="{{_employer.name}}">{{_employer.name|upper}}</option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <a class="govuk-button" href="#" style="margin-bottom: 20px">Filter</a>
-
+<div class="govuk-grid-column-full" style="background-color:#DEE0E2; margin-bottom: 20px; padding-top: 15px">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third" >
+        <!-- Employer filter -->
+        <div class="govuk-form-group" style="margin-bottom: 20px" >
+          <label class="govuk-label" for="employer-filter" >
+            Employer
+          </label>
+          <select class="govuk-select" id="employer-filter" name="employer-filter" style="min-width: 100%">
+            <option value="all">All</option>
+            {% for _employer in _account.employers %}
+            <option value="{{_employer.name}}">{{_employer.name|upper}}</option>
+            {% endfor %}
+          </select>
         </div>
-        <div class="govuk-grid-column-one-third" style=" padding: 20px;">
-
-            <!-- Course filter -->
-            <div class="govuk-form-group" style="margin-bottom: 20px">
-              <label class="govuk-label" for="course-filter" >
-                Course
-              </label>
-              <select class="govuk-select" id="course-filter" name="course-filter" style="min-width: 100%">
-                <option value="all">All</option>
-                {% for _courselabel in _account.courselabels %}
-                  <option value="{{_courselabel}}">{{_courselabel}}</option>
-                {% endfor %}
-              </select>
-            </div>
-
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <!-- Course filter -->
+        <div class="govuk-form-group" style="margin-bottom: 20px" >
+          <label class="govuk-label" for="course-filter" >
+            Course
+          </label>
+          <select class="govuk-select" id="course-filter" name="course-filter" style="min-width: 100%">
+            <option value="all">All</option>
+            {% for _courselabel in _account.courselabels %}
+              <option value="{{_courselabel}}">{{_courselabel}}</option>
+            {% endfor %}
+          </select>
         </div>
-        <div class="govuk-grid-column-one-third" style=" padding: 20px;">
-
-            <!-- Start dates filter -->
-            <div class="govuk-form-group" style="margin-bottom: 20px">
-              <label class="govuk-label" for="startdate-filter">
-                Start date
-              </label>
-              <select class="govuk-select" id="startdate-filter" name="startdate-filter" style="min-width: 100%">
-                <option value="all">All</option>
-                {% for _startDate in myData.startDates %}
-                <option value="{{_startDate.id}}">{{_startDate.range}}</option>
-                {% endfor %}
-              </select>
-            </div>
-
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <!-- Start dates filter -->
+        <div class="govuk-form-group" style="margin-bottom: 20px">
+          <label class="govuk-label" for="startdate-filter">
+            Start date
+          </label>
+          <select class="govuk-select" id="startdate-filter" name="startdate-filter" style="min-width: 100%">
+            <option value="all">All</option>
+            {% for _startDate in myData.startDates %}
+            <option value="{{_startDate.id}}">{{_startDate.range}}</option>
+            {% endfor %}
+          </select>
         </div>
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third" >
+      <a class="govuk-button" href="#" style="margin-bottom: 20px">Filter</a>
+    </div>
+  </div>
 </div>
 {% endif %}
 
@@ -139,16 +136,16 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
 
-      <!-- Clear search -->
-      {% if myData.searchapplied == true %}
-        <p class="govuk-body"><a href="reserve-reservations-pro" class="govuk-link govuk-link--no-visited-state">
-          {% if myData.filters == "false" %}
-          Clear search
-          {% else %}
-          Clear filter
-          {% endif %}
-        </a></p>
-      {% endif %}
+    <!-- Clear search -->
+    {% if myData.searchapplied == true %}
+      <p class="govuk-body"><a href="reserve-reservations-pro" class="govuk-link govuk-link--no-visited-state">
+        {% if myData.filters == "false" %}
+        Clear search
+        {% else %}
+        Clear filter
+        {% endif %}
+      </a></p>
+    {% endif %}
     
     <!-- Count -->
     <p class="govuk-body">
