@@ -2,7 +2,12 @@
 
 .search-wrapper {
   position: relative;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+}
+@media (min-width: 641px) {
+  .search-wrapper {
+    margin-bottom: 30px;
+  }
 }
 .search-submit {
   border: 0;
