@@ -49,11 +49,13 @@
         },
         {
             "id": "noovehpqwr",
-            "startDate": "sep2019",
+            "startDate": "nov2019",
             "course": "196",
             "entity": "aston",
             "status": "available",
-            "visible": false
+            "visible": false,
+            "provider": "TRAINING UK",
+            "provideractive": true
         },
         {
             "id": "wlkwjhttjx",

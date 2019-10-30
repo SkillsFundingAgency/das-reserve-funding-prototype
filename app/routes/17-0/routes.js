@@ -485,6 +485,18 @@ module.exports = function (router,_myData) {
         _EndOfTwoMonthsFromNow.setDate(0);
         req.session.myData.EndOfTwoMonthsFromNowDateFriendly = _EndOfTwoMonthsFromNow.getDate() + " " + req.session.myData.months[_EndOfTwoMonthsFromNow.getMonth()] + " " + _EndOfTwoMonthsFromNow.getFullYear()
 
+        //Now
+        var _now = new Date()
+        req.session.myData.NowDateFriendly = _now.getDate() + " " + req.session.myData.months[_now.getMonth()] + " " + _now.getFullYear()
+
+        //Range from now
+        var _thisMonth = new Date(),
+            _in2Months = new Date()
+        _in2Months.setMonth(_in2Months.getMonth() + 2);
+
+        req.session.myData.RangeFromNowFriendly = req.session.myData.months[_thisMonth.getMonth()].substring(0, 3) + " " + _thisMonth.getFullYear() + " to " + req.session.myData.months[_in2Months.getMonth()].substring(0, 3) + " " + _in2Months.getFullYear()
+        
+
         // Set default answers
         setDefaultAnswers(req, "emp")
         
@@ -1631,6 +1643,20 @@ module.exports = function (router,_myData) {
     // 500
     router.get('/' + version + '/reserve-500', function (req, res) {
         res.render(version + '/reserve-500', {
+            myData:req.session.myData
+        });
+    });
+
+    // Email - deleted res
+    router.get('/' + version + '/reserve-email-deleted-res-emp', function (req, res) {
+        res.render(version + '/reserve-email-deleted-res-emp', {
+            myData:req.session.myData
+        });
+    });
+
+    // Email - created res
+    router.get('/' + version + '/reserve-email-created-res-emp', function (req, res) {
+        res.render(version + '/reserve-email-created-res-emp', {
             myData:req.session.myData
         });
     });
