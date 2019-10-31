@@ -43,16 +43,19 @@
 {% block content %}
 
 <!-- Heading -->
-{% if _reservationsTotal > 0 %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl" >
-            Manage your funding reserved for non-levy employers
+        <h1 class="govuk-heading-xl" style="margin-bottom: 90px">
+            Funding for non-levy employers
         </h1>
+        <p class="govuk-body">This feature is currently only available to employers and training providers taking part in testing.</p>
+
+        {% if _reservationsTotal > 0 %}
         <p class="govuk-body-l govuk-!-font-weight-bold"><a class="govuk-link govuk-link--no-visited-state" href="{{_reserveStartURL}}?type=pro">Reserve more funding</a></p>
+        {% endif %}
   </div>
 </div>
-{% endif %}
+
 
 <!-- Search -->
 {% if _reservationsTotal > 10 and myData.search == "true" %}
@@ -237,7 +240,7 @@
 {% if _reservationsTotal == 0 %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl ">There are no funding reservations to use</h1>
+      <h1 class="govuk-heading-m ">There are no funding reservations to use</h1>
       <p class="govuk-body ">You need to reserve funding in order to add a new apprentice.</p>
       <a role="button" tabindex="1" draggable="false" class="govuk-button" href="{{_reserveStartURL}}?type=pro">Reserve funding</a>
     </div>
