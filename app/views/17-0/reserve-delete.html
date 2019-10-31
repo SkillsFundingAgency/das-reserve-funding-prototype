@@ -61,7 +61,7 @@
                     {% if myData.type == "pro" %}
                         {{_reservation.entity}}
                     {% else %}
-                        {% for _entity in _account.entities %}
+                        {% for _entity in _account.entities2 %}
                             {% if _reservation.entity == _entity.id %}
                                 {{_entity.name}}
                             {% endif %}

@@ -27,117 +27,73 @@
 
         <!-- Employer or Provider -->
         <div class="govuk-form-group">
-            <!-- <label class="govuk-label govuk-!-font-size-24" for="setupType" >
-                Employer or provider
-            </label> -->
             <select class="govuk-select govuk-!-font-size-27 govuk-!-font-weight-bold" style="height: 50px; min-width: 100%" id="setupType" name="setupType" data-option="setupType">
                 <option {% if myData.type == 'emp' %}selected{% endif %} value="emp">Employer</option>
                 <option {% if myData.type == 'pro' %}selected{% endif %} value="pro">Provider</option>
             </select>
         </div>
 
-        <!-- Employer dataset -->
-        <!-- <div class="govuk-form-group" >
-            <label class="govuk-label" for="setupEmpAccount">
-                Employer account
+
+        <!-- Reservations -->
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="setupCount">
+                Preload reservations
             </label>
-            <select class="govuk-select" id="setupEmpAccount" name="setupEmpAccount" data-option="setupEmpAccount">
-                {% for key, _account in myData.accounts %}
-                    {% if _thisAccount.type == "emp" %}
-                        <option {% if myData.emp == key %}selected{% endif %} value="{{key}}">{{_thisAccount.name}}</option>
-                    {% endif %}
-                {% endfor %}
+            <select class="govuk-select" id="setupCount" name="setupCount" data-option="setupCount" style="min-width: 100%">
+                <option {% if myData.count == '0' %}selected{% endif %} value="0">0</option>
+                <option {% if myData.count == '1' %}selected{% endif %} value="1">1</option>
+                <option {% if myData.count == '2' %}selected{% endif %} value="2">2</option>
+                <option {% if myData.count == '8' %}selected{% endif %} value="8">8</option>
+                <option {% if myData.count == '9' %}selected{% endif %} value="9">9</option>
+                <option {% if myData.count == '10' %}selected{% endif %} value="10">10</option>
+                <option {% if myData.count == '25' %}selected{% endif %} value="25" data-preload="pro">25</option>
+                <option {% if myData.count == '100' %}selected{% endif %} value="100" data-preload="pro">100</option>
+                <option {% if myData.count == '999999' %}selected{% endif %} value="999999" id="resTotalCount" >All available</option>
             </select>
+        </div>
+
+        <!-- Entity count (emp) -->
+        <div class="govuk-form-group" id="entitycount">
+            <label class="govuk-label" for="setupEntityCount">
+                Entities
+            </label>
+            <select class="govuk-select" id="setupEntityCount" name="setupEntityCount" data-option="setupEntityCount">
+                {% for i in range(1, _empAccount.entities2.length + 1) -%}
+                <option {% if myData.entitycount == i %}selected{% endif %} value="{{i}}">{{i}}</option>
+                {%- endfor %}
+            </select>
+        </div>
+
+        <!-- Existing providers (emp) -->
+        <div class="govuk-form-group" id="existingproviders">
+            <label class="govuk-label" for="setupExistingProviders">
+                Existing/connected providers
+            </label>
+            <select class="govuk-select" id="setupExistingProviders" name="setupExistingProviders" data-option="setupExistingProviders">
+                {% for i in range(0, _empAccount.providers.length + 1) -%}
+                <option {% if myData.existingproviders == i %}selected{% endif %} value="{{i}}">{{i}}</option>
+                {%- endfor %}
+            </select>
+        </div>
+
+        <!-- <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <h1 class="govuk-heading-s">Account names</h1> -->
+
+        <!-- Employer account name -->
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="setupName">
+                DAS Account name
+            </label>
+            <input class="govuk-input" id="setupName" name="setupName" data-option="setupName" type="text" value="{{_account.name}}">
+        </div>
+
+        <!-- Entity name -->
+        <!-- <div class="govuk-form-group" id="entity">
+            <label class="govuk-label" for="setupEntity">
+                Company Name
+            </label>
+            <input class="govuk-input" id="setupEntity" name="setupEntity" data-option="setupEntity" type="text" value="{{_empAccount.entities[0].name}}" onkeyup="this.value = this.value.toUpperCase();">
         </div> -->
-
-
-            <!-- Employer account name -->
-            <div class="govuk-form-group">
-                <label class="govuk-label" for="setupName">
-                    DAS Account name
-                </label>
-                <input class="govuk-input" id="setupName" name="setupName" data-option="setupName" type="text" value="{{_account.name}}">
-            </div>
-
-            <!-- Entity name -->
-            <div class="govuk-form-group" id="entity">
-                <label class="govuk-label" for="setupEntity">
-                    Company Name
-                </label>
-                <input class="govuk-input" id="setupEntity" name="setupEntity" data-option="setupEntity" type="text" value="{{_empAccount.entities[0].name}}" onkeyup="this.value = this.value.toUpperCase();">
-            </div>
-
-            <!-- Reservations -->
-            <div class="govuk-form-group">
-                <label class="govuk-label" for="setupCount">
-                    Preload reservations
-                </label>
-                <select class="govuk-select" id="setupCount" name="setupCount" data-option="setupCount" style="min-width: 100%">
-                    <option {% if myData.count == '0' %}selected{% endif %} value="0">0</option>
-                    <option {% if myData.count == '1' %}selected{% endif %} value="1">1</option>
-                    <option {% if myData.count == '2' %}selected{% endif %} value="2">2</option>
-                    <option {% if myData.count == '8' %}selected{% endif %} value="8">8</option>
-                    <option {% if myData.count == '9' %}selected{% endif %} value="9">9</option>
-                    <option {% if myData.count == '10' %}selected{% endif %} value="10">10</option>
-                    <option {% if myData.count == '25' %}selected{% endif %} value="25" data-preload="pro">25</option>
-                    <option {% if myData.count == '100' %}selected{% endif %} value="100" data-preload="pro">100</option>
-                    <option {% if myData.count == '999999' %}selected{% endif %} value="999999" id="resTotalCount" >All available</option>
-                </select>
-            </div>
-
-            <!-- Existing providers -->
-            <div class="govuk-form-group" id="existingproviders">
-                <label class="govuk-label" for="setupExistingProviders">
-                    Existing/connected providers
-                </label>
-                <select class="govuk-select" id="setupExistingProviders" name="setupExistingProviders" data-option="setupExistingProviders">
-                    {% for i in range(0, _empAccount.providers.length + 1) -%}
-                    <option {% if myData.existingproviders == i %}selected{% endif %} value="{{i}}">{{i}}</option>
-                    {%- endfor %}
-                </select>
-            </div>
-
-            <div data-pro-components="true">
-
-                    <h1 class="govuk-heading-s">UI Components</h1>
-        
-                    <!-- Search -->
-                    <div class="govuk-form-group" style="margin-bottom: 10px">
-                        <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="setupSearch" name="setupSearch" type="checkbox" value="setupSearch" data-option="setupSearch" {% if myData.search == "true" %}checked{% endif %}>
-                            <label class="govuk-label govuk-checkboxes__label" for="setupSearch">
-                            Search
-                            </label>
-                        </div>
-                        </div>
-                    </div>
-        
-                    <!-- Filters -->
-                    <div class="govuk-form-group" style="margin-bottom: 10px">
-                        <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="setupFilters" name="setupFilters" type="checkbox" value="setupFilters" data-option="setupFilters" {% if myData.filters == "true" %}checked{% endif %}>
-                            <label class="govuk-label govuk-checkboxes__label" for="setupFilters">
-                            Filters (not functioning)
-                            </label>
-                        </div>
-                        </div>
-                    </div>
-        
-                    <!-- Paging -->
-                    <div class="govuk-form-group" >
-                        <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="setupPaging" name="setupPaging" type="checkbox" value="setupPaging" data-option="setupPaging" {% if myData.paging == "true" %}checked{% endif %}>
-                            <label class="govuk-label govuk-checkboxes__label" for="setupPaging">
-                            Paging (not functioning)
-                            </label>
-                        </div>
-                        </div>
-                    </div>
-        
-            </div>
 
     </div>
 
@@ -166,20 +122,6 @@
                     </label>
                 </div>
                 </div>
-            </div>
-
-            <!-- Reservations limit -->
-            <div class="govuk-form-group" id="limit">
-                <label class="govuk-label" for="setupLimit">
-                    Employer limit
-                </label>
-                <select class="govuk-select" id="setupLimit" name="setupLimit" data-option="setupLimit">
-                    <option {% if myData.limit == 'no' %}selected{% endif %} value="no">No limit</option>
-                    <option {% if myData.limit == '5' %}selected{% endif %} value="5">5</option>
-                    <option {% if myData.limit == '10' %}selected{% endif %} value="10">10</option>
-                    <option {% if myData.limit == '11' %}selected{% endif %} value="11">11</option>
-                    <option {% if myData.limit == '15' %}selected{% endif %} value="15">15</option>
-                </select>
             </div>
 
             <!-- Employer limit (pro) -->
@@ -221,8 +163,64 @@
                     </div>
                 </div>
             </div>
-        
 
+            <!-- Reservations limit -->
+            <div class="govuk-form-group" id="limit">
+                <label class="govuk-label" for="setupLimit">
+                    Employer limit
+                </label>
+                <select class="govuk-select" id="setupLimit" name="setupLimit" data-option="setupLimit">
+                    <option {% if myData.limit == 'no' %}selected{% endif %} value="no">No limit</option>
+                    <option {% if myData.limit == '5' %}selected{% endif %} value="5">5</option>
+                    <option {% if myData.limit == '10' %}selected{% endif %} value="10">10</option>
+                    <option {% if myData.limit == '11' %}selected{% endif %} value="11">11</option>
+                    <option {% if myData.limit == '15' %}selected{% endif %} value="15">15</option>
+                </select>
+            </div>
+
+            <!-- UI Components (pro) -->
+            <div data-pro-components="true">
+                    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+                    <h1 class="govuk-heading-s">UI Components</h1>
+        
+                    <!-- Search -->
+                    <div class="govuk-form-group" style="margin-bottom: 10px">
+                        <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="setupSearch" name="setupSearch" type="checkbox" value="setupSearch" data-option="setupSearch" {% if myData.search == "true" %}checked{% endif %}>
+                            <label class="govuk-label govuk-checkboxes__label" for="setupSearch">
+                            Search
+                            </label>
+                        </div>
+                        </div>
+                    </div>
+        
+                    <!-- Filters -->
+                    <div class="govuk-form-group" style="margin-bottom: 10px">
+                        <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="setupFilters" name="setupFilters" type="checkbox" value="setupFilters" data-option="setupFilters" {% if myData.filters == "true" %}checked{% endif %}>
+                            <label class="govuk-label govuk-checkboxes__label" for="setupFilters">
+                            Filters (not functioning)
+                            </label>
+                        </div>
+                        </div>
+                    </div>
+        
+                    <!-- Paging -->
+                    <div class="govuk-form-group" >
+                        <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="setupPaging" name="setupPaging" type="checkbox" value="setupPaging" data-option="setupPaging" {% if myData.paging == "true" %}checked{% endif %}>
+                            <label class="govuk-label govuk-checkboxes__label" for="setupPaging">
+                            Paging (not functioning)
+                            </label>
+                        </div>
+                        </div>
+                    </div>
+        
+            </div>
+        
     </div>
 </div>
 
@@ -498,7 +496,8 @@
         var _startURL = $("#start-url a"),
             _startURLLabel = $("#start-url-label"),
             _options = $("[data-option]"),
-            _entity = $("#entity"),
+            // _entity = $("#entity"),
+            _entitycount = $("#entitycount"),
             _limit = $("#limit"),
             _empLimit = $("#empLimit"),
             _resTotalCount = $("#resTotalCount"),
@@ -516,7 +515,8 @@
                 _setupName = $("#setupName")
 
             if(_thisVal == "emp") {
-                _entity.show()
+                // _entity.show()
+                _entitycount.show()
                 _limit.show()
                 _existingproviders.show()
                 _empLimit.hide()
@@ -524,7 +524,8 @@
                 $("[data-preload]").hide()
                 $("[data-pro-components]").hide()
             } else {
-                _entity.hide()
+                // _entity.hide()
+                _entitycount.hide()
                 _limit.hide()
                 _existingproviders.hide()
                 _empLimit.show()
@@ -548,7 +549,8 @@
 
                 _urlType = "&t=" + _options.filter("#setupType").val(),
                 _urlName = "&n=" + _options.filter("#setupName").val(),
-                _urlEntityName = "&en=" + _options.filter("#setupEntity").val(),
+                // _urlEntityName = "&en=" + _options.filter("#setupEntity").val(),
+                _urlEntitycount = "&ec=" + _options.filter("#setupEntityCount").val(),
                 _urlExistingProviders = "&ep=" + _options.filter("#setupExistingProviders").val(),
                 _urlCount = "&c=" + _options.filter("#setupCount").val(),
                 _urlLimit = "&l=" + _options.filter("#setupLimit").val(),
@@ -567,7 +569,7 @@
             var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming + _urlPaused + _urlDates;
             //Base + type specific
             if(_options.filter("#setupType").val() == "emp") {
-                var _urlPageQueries = _urlPageQueries + _urlEntityName + _urlExistingProviders;
+                var _urlPageQueries = _urlPageQueries + _urlEntitycount + _urlExistingProviders;
             } else {
                 var _urlPageQueries = _urlPageQueries + _urlEmpLimit + _urlPaging + _urlSearch + _urlFilters
             }

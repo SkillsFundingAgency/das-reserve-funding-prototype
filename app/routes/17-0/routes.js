@@ -25,6 +25,13 @@ module.exports = function (router,_myData) {
         });
     }
 
+    function setVisibleEntities(req){
+        var _account = req.session.myData.accounts[req.session.myData.account]
+        _account.entities2.forEach(function(_entity, index) {
+            _entity.visible = (index < req.session.myData.entitycount)
+        });
+    }
+
     function setExpiredReservations(req){
         req.session.myData.accounts[req.session.myData.account].reservations.forEach(function(_reservation, index) {
             var _date
@@ -403,6 +410,7 @@ module.exports = function (router,_myData) {
         req.session.myData.limit = 15
         req.session.myData.emplimit = "no"
         req.session.myData.existingproviders = 1
+        req.session.myData.entitycount = 1
         req.session.myData.hidedates = "no"
         req.session.myData.reservationsadded = 0
         req.session.myData.upcoming = "false"
@@ -434,12 +442,22 @@ module.exports = function (router,_myData) {
         //Account info
         setAccountInfo(req)
 
+        var _account = req.session.myData.accounts[req.session.myData.account]
+
         //Visible reservations
         req.session.myData.count = Number(req.query.c || req.session.myData.count)
-        var _account = req.session.myData.accounts[req.session.myData.account]
         if(req.query.c || !_account.visibleSet){
             _account.visibleSet = true
             setVisibleReservations(req)
+        }
+
+        //Visible entities
+        if(req.session.myData.type == "emp"){
+            req.session.myData.entitycount = Number(req.query.ec || req.session.myData.entitycount)
+            if(req.query.ec || !_account.entityvisibleSet){
+                _account.entityvisibleSet = true
+                setVisibleEntities(req)
+            }
         }
 
         //Expired reservations
@@ -524,7 +542,6 @@ module.exports = function (router,_myData) {
     // Your reservations
     router.get('/' + version + '/reserve-reservations', function (req, res) {
     
-        // setVisibleReservations(req)
         sortReservations(req)
 
         res.render(version + '/reserve-reservations', {
@@ -536,7 +553,6 @@ module.exports = function (router,_myData) {
     // Your reservations - Provider
     router.get('/' + version + '/reserve-reservations-pro', function (req, res) {
         
-        // setVisibleReservations(req)
         sortReservations(req)
         setReservationData(req)
 

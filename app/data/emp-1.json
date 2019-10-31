@@ -8,6 +8,16 @@
             "name": "ASTON MARTIN LIMITED"
         }
     ],
+    "entities2": [
+        {
+            "id": "aston",
+            "name": "ASTON MARTIN LIMITED"
+        },
+        {
+            "id": "kendle",
+            "name": "KENDLE LTD"
+        }
+    ],
     "providers": [
         {
             "id": "12345678",

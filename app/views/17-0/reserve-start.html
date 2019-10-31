@@ -38,7 +38,7 @@
               <li>the <a href="#" target="_blank" class="govuk-link">apprenticeship training course</a> the apprentice will take, which can be changed later</li>
           </ul>
           {% set _nextEmpPage = "reserve-choose-org" %}
-          {% if _account.entities.length == 1 %}
+          {% if myData.entitycount == 1 %}
             {% set _nextEmpPage = "reserve-choose-course" %}
           {% endif %}
           <a role="button" draggable="false" class="govuk-button" tabindex="1" href="{{_nextEmpPage}}">Reserve funding</a>

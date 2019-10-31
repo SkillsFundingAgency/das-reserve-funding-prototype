@@ -42,13 +42,13 @@
         </div>
 
         <dl class="govuk-summary-list">
-            {% if _account.entities.length > 1 %}
+            {% if myData.entitycount > 1 %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     Employer
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    {% for _entity in _account.entities %}
+                    {% for _entity in _account.entities2 %}
                         {% if myData.whichOrgAnswer == _entity.id %}
                             {{_entity.name|upper}}
                         {% endif %}
