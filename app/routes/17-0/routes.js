@@ -20,14 +20,35 @@ module.exports = function (router,_myData) {
     }
 
     function setVisibleReservations(req){
-        req.session.myData.accounts[req.session.myData.account].reservations.forEach(function(_reservation, index) {
-            _reservation.visible = (index < req.session.myData.count)
+        var _account = req.session.myData.accounts[req.session.myData.account],
+            _count = req.session.myData.count,
+            _counter = 0
+        if(_account.type == "emp"){
+            _count = req.session.myData.ecount
+        }
+        _account.employers.forEach(function(_employer, index) {
+            _employer.reservations = 0
+        });
+        _account.reservations.forEach(function(_reservation, index) {
+            if(_reservation.status != "expired" && (_counter < _count)){
+                _reservation.visible = true
+                _account.employers.forEach(function(_employer, index) {
+                    var _check = _employer.name
+                    if(_account.type == "emp"){
+                        _check = _employer.id
+                    }
+                    if(_reservation.entity == _check){
+                        _employer.reservations++
+                    }
+                });
+                _counter++
+            }
         });
     }
 
     function setVisibleEntities(req){
         var _account = req.session.myData.accounts[req.session.myData.account]
-        _account.entities2.forEach(function(_entity, index) {
+        _account.employers.forEach(function(_entity, index) {
             _entity.visible = (index < req.session.myData.entitycount)
         });
     }
@@ -282,11 +303,11 @@ module.exports = function (router,_myData) {
         }
     }
 
-    function createProviderData(req, _count){
+    function createProviderData(req){
 
         req.session.myData.generatedReservations = []
 
-        for (i = 0; i < _count; i++) {
+        for (i = 0; i < 500; i++) {
 
             var _reservation = {
                 "id": randomStr(10),
@@ -305,26 +326,40 @@ module.exports = function (router,_myData) {
             _reservation.course = randomItem(req.session.myData.accounts["pro-1"].courses)
 
             //Entity
-            _reservation.entity = randomItem(req.session.myData.accounts["pro-1"].employers).name
+            var _entity = randomItem(req.session.myData.accounts["pro-1"].employers),
+                _entityCount = _entity.reservations + 1
+            _reservation.entity = _entity.name
 
-            // Status
-            if(_reservation.startDate == "aug2019" || _reservation.startDate == "sep2019"){
-                // Previous months - set to either "expired" or "used"
-                if(randomBoolean(0.7)){
-                    _reservation.status = "used"
-                } else {
-                    _reservation.status = "expired"
-                }
-            } else if(randomBoolean(0.1)){
-                // Current and future months - set some to used
+            // Statuses
+            // Set used
+            if(randomBoolean(0.1)){
                 _reservation.status = "used"
+            } else {
+                _reservation.status = "available"
+            }
+            //Set expired
+            var _date
+            req.session.myData.startDates.forEach(function(_startDate, index) {
+                if(_startDate.id == _reservation.startDate){
+                    _date = _startDate
+                }
+            });
+            if(_date.expired && _reservation.status != "used"){
+                _reservation.status = "expired"
             }
 
             // Owned
             _reservation.owned = randomBoolean(0.3)
 
             //Add to list
-            req.session.myData.generatedReservations.push(_reservation)
+            if((_entityCount <= 3 && _reservation.status != "expired") || _reservation.status == "expired" ){
+                if(_reservation.status != "expired"){
+                    _entity.reservations = _entityCount
+                }
+                req.session.myData.generatedReservations.push(_reservation)
+            } else {
+                //already has 3 non expired reservations
+            }
             
         }
 
@@ -406,8 +441,9 @@ module.exports = function (router,_myData) {
         });
 
         req.session.myData.type = "pro"
-        req.session.myData.count = 999999
-        req.session.myData.limit = 15
+        req.session.myData.count = 25
+        req.session.myData.ecount = 2
+        req.session.myData.limit = 3
         req.session.myData.emplimit = "no"
         req.session.myData.existingproviders = 1
         req.session.myData.entitycount = 1
@@ -418,9 +454,10 @@ module.exports = function (router,_myData) {
         req.session.myData.paging = "false"
         req.session.myData.search = "true"
         req.session.myData.filters = "true"
+        req.session.myData.assignproviders = "false"
 
         //Create fake data - only used when new json data files need to be generated
-        // createProviderData(req,2000)
+        // createProviderData(req)
 
     }
 
@@ -444,9 +481,13 @@ module.exports = function (router,_myData) {
 
         var _account = req.session.myData.accounts[req.session.myData.account]
 
+        //Expired reservations
+        setExpiredReservations(req)
+
         //Visible reservations
         req.session.myData.count = Number(req.query.c || req.session.myData.count)
-        if(req.query.c || !_account.visibleSet){
+        req.session.myData.ecount = Number(req.query.ce || req.session.myData.ecount)
+        if(req.query.c || req.query.ce || !_account.visibleSet){
             _account.visibleSet = true
             setVisibleReservations(req)
         }
@@ -459,9 +500,6 @@ module.exports = function (router,_myData) {
                 setVisibleEntities(req)
             }
         }
-
-        //Expired reservations
-        setExpiredReservations(req)
 
         //Sort reservations
         sortReservations(req)
@@ -487,6 +525,7 @@ module.exports = function (router,_myData) {
         req.session.myData.paging = req.query.c_pg || req.session.myData.paging
         req.session.myData.search = req.query.c_sr || req.session.myData.search
         req.session.myData.filters = req.query.c_ft || req.session.myData.filters
+        req.session.myData.assignproviders = req.query.c_pa || req.session.myData.assignproviders
 
         //Dropout type
         req.session.myData.dropout = req.query.do || req.session.myData.dropout
@@ -838,10 +877,14 @@ module.exports = function (router,_myData) {
                 req.session.myData.dropout = "date"
                 res.redirect(301, '/' + version + '/reserve-dropout');
             } else {
-                if(req.session.myData.existingproviders == 0){
-                    res.redirect(301, '/' + version + '/reserve-choose-provider-2');
+                if(req.session.myData.assignproviders == "true"){
+                    if(req.session.myData.existingproviders == 0){
+                        res.redirect(301, '/' + version + '/reserve-choose-provider-2');
+                    } else {
+                        res.redirect(301, '/' + version + '/reserve-choose-provider');
+                    }
                 } else {
-                    res.redirect(301, '/' + version + '/reserve-choose-provider');
+                    res.redirect(301, '/' + version + '/reserve-check-answers');
                 }
             }
             
@@ -1378,15 +1421,20 @@ module.exports = function (router,_myData) {
             req.session.myData.reserveNowAnswer = req.session.myData.reserveNowAnswerTemp
             req.session.myData.reserveNowAnswerTemp = ""
             if(req.session.myData.reserveNowAnswer == "yes"){
+                _account.employers.forEach(function(_employer, index) {
+                    if(req.session.myData.whichOrgAnswer == _employer.name) {
+                        _employer.reservations++
+                    }
+                });
                 var _reservationToAdd = {
                     "id": randomStr(10),
                     "startDate": req.session.myData.whichStartDateAnswer,
                     "course": req.session.myData.whichCourseAnswer,
                     "entity": req.session.myData.whichOrgAnswer,
                     "status": "available",
-                    "visible": true
+                    "visible": true,
+                    "createdby": "employer"
                 }
-                // TODO add provider info
                 if(req.session.myData.addProvider == true) {
                     _reservationToAdd.provider = req.session.myData.selectedProvider.name
                     _reservationToAdd.provideractive = true
@@ -1415,6 +1463,7 @@ module.exports = function (router,_myData) {
             _selectedEmployerName = ""
         _account.employers.forEach(function(_employer, index) {
             if(req.session.myData.selectedEmployer == _employer.id) {
+                _employer.reservations++
                 _selectedEmployerName = _employer.name
             }
         });
@@ -1541,6 +1590,15 @@ module.exports = function (router,_myData) {
                 //Delete reservation
                 var _reservation = returnReservationData(req, req.session.myData.selectedReservation)
                 if(_reservation.item){
+                    _account.employers.forEach(function(_employer, index) {
+                        var _check = _employer.name
+                        if(_account.type == "emp"){
+                            _check = _employer.id
+                        }
+                        if(_reservation.item.entity == _check){
+                            _employer.reservations--
+                        }
+                    });
                     _reservation.item.visible = false
                 }
                 res.redirect(301, '/' + version + '/reserve-delete-confirmation');

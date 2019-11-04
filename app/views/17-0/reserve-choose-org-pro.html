@@ -78,12 +78,23 @@
             </thead>
             <tbody class="govuk-table__body">
             {% for _employer in _employers %}
+              {% set _employerReachedLimit = false %}
+              {% if _employer.reservations >= myData.limit %}
+                {% set _employerReachedLimit = true %}
+              {% endif %}
                 <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">{{_employer.name|upper}}</th>
+                  <td class="govuk-table__cell">
+                    <strong>{{_employer.name|upper}}</strong>
+                    <br>[{{myData.limit - _employer.reservations}}  {% if myData.limit - _employer.reservations != 1 %}reservations{% else %}reservation{% endif %} left]
+                  </td>
                   <td class="govuk-table__cell">{{_employer.aname}}</td>
                   <td class="govuk-table__cell">{{_employer.id}}</td>
                   <td class="govuk-table__cell govuk-table__cell--numeric" >
+                    {% if _employerReachedLimit == false %}
                     <a href="reserve-confirm-org?employer={{_employer.id}}" class="govuk-link govuk-link--no-visited-state">Select</a>
+                    {% else %}
+                    <!-- [Reached limit] -->
+                    {% endif %}
                   </td>
                 </tr>
               {% endfor %}

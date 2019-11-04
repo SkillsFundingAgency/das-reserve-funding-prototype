@@ -34,8 +34,8 @@
         </div>
 
 
-        <!-- Reservations -->
-        <div class="govuk-form-group">
+        <!-- Reservations (pro) -->
+        <div class="govuk-form-group" id="proCount">
             <label class="govuk-label" for="setupCount">
                 Preload reservations
             </label>
@@ -43,12 +43,44 @@
                 <option {% if myData.count == '0' %}selected{% endif %} value="0">0</option>
                 <option {% if myData.count == '1' %}selected{% endif %} value="1">1</option>
                 <option {% if myData.count == '2' %}selected{% endif %} value="2">2</option>
-                <option {% if myData.count == '8' %}selected{% endif %} value="8">8</option>
-                <option {% if myData.count == '9' %}selected{% endif %} value="9">9</option>
+                <option {% if myData.count == '3' %}selected{% endif %} value="3">3</option>
                 <option {% if myData.count == '10' %}selected{% endif %} value="10">10</option>
-                <option {% if myData.count == '25' %}selected{% endif %} value="25" data-preload="pro">25</option>
-                <option {% if myData.count == '100' %}selected{% endif %} value="100" data-preload="pro">100</option>
-                <option {% if myData.count == '999999' %}selected{% endif %} value="999999" id="resTotalCount" >All available</option>
+                <option {% if myData.count == '25' %}selected{% endif %} value="25" >25</option>
+                <option {% if myData.count == '50' %}selected{% endif %} value="50" >50</option>
+                <option {% if myData.count == '100' %}selected{% endif %} value="100" >100</option>
+                <option {% if myData.count == '999999' %}selected{% endif %} value="999999" id="resTotalCountP" >All available</option>
+            </select>
+        </div>
+
+        <!-- Reservations (emp) -->
+        <div class="govuk-form-group" id="empCount">
+            <label class="govuk-label" for="setupECount">
+                Preload reservations
+            </label>
+            <select class="govuk-select" id="setupECount" name="setupECount" data-option="setupECount" style="min-width: 100%">
+                <option {% if myData.ecount == '0' %}selected{% endif %} value="0">0</option>
+                <option {% if myData.ecount == '1' %}selected{% endif %} value="1">1</option>
+                <option {% if myData.ecount == '2' %}selected{% endif %} value="2">2</option>
+                <option {% if myData.ecount == '3' %}selected{% endif %} value="3">3</option>
+                <option {% if myData.ecount == '999999' %}selected{% endif %} value="999999" id="resTotalCountE" >All available</option>
+            </select>
+        </div>
+
+        <!-- Reservations limit (emp) -->
+        <div class="govuk-form-group" id="limit">
+            <label class="govuk-label" for="setupLimit">
+                Employer limit
+            </label>
+            <select class="govuk-select" id="setupLimit" name="setupLimit" data-option="setupLimit" style="min-width: 100%">
+                <option {% if myData.limit == 'no' %}selected{% endif %} value="no">No limit</option>
+                <option {% if myData.limit == '1' %}selected{% endif %} value="1">1</option>
+                <option {% if myData.limit == '2' %}selected{% endif %} value="2">2</option>
+                <option {% if myData.limit == '3' %}selected{% endif %} value="3">3</option>
+                <option {% if myData.limit == '4' %}selected{% endif %} value="4">4</option>
+                <option {% if myData.limit == '5' %}selected{% endif %} value="5">5</option>
+                <option {% if myData.limit == '10' %}selected{% endif %} value="10">10</option>
+                <option {% if myData.limit == '11' %}selected{% endif %} value="11">11</option>
+                <option {% if myData.limit == '15' %}selected{% endif %} value="15">15</option>
             </select>
         </div>
 
@@ -58,7 +90,7 @@
                 Entities
             </label>
             <select class="govuk-select" id="setupEntityCount" name="setupEntityCount" data-option="setupEntityCount">
-                {% for i in range(1, _empAccount.entities2.length + 1) -%}
+                {% for i in range(1, _empAccount.employers.length + 1) -%}
                 <option {% if myData.entitycount == i %}selected{% endif %} value="{{i}}">{{i}}</option>
                 {%- endfor %}
             </select>
@@ -98,129 +130,129 @@
     </div>
 
     <div class="govuk-grid-column-one-half" >
-            <h1 class="govuk-heading-s">Spend controls</h1>
+        <h1 class="govuk-heading-s">Spend controls</h1>
 
-            <!-- Funding is paused -->
-            <div class="govuk-form-group" style="margin-bottom: 10px" >
-                <div class="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="setupPaused" name="setupPaused" type="checkbox" value="setupPaused" data-option="setupPaused" {% if myData.paused == "true" %}checked{% endif %}>
-                    <label class="govuk-label govuk-checkboxes__label" for="setupPaused">
-                        Funding is paused
-                    </label>
-                </div>
-                </div>
-            </div>
-
-            <!-- Upcoming change -->
-            <div class="govuk-form-group" style="margin-bottom: 10px" >
-                <div class="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="setupUpcoming" name="setupUpcoming" type="checkbox" value="setupUpcoming" data-option="setupUpcoming" {% if myData.upcoming == "true" %}checked{% endif %}>
-                    <label class="govuk-label govuk-checkboxes__label" for="setupUpcoming">
-                        Upcoming change
-                    </label>
-                </div>
-                </div>
-            </div>
-
-            <!-- Employer limit (pro) -->
-            <div class="govuk-form-group" style="margin-bottom: 10px" id="empLimit">
-                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input" id="setupEmpLimit" name="setupEmpLimit" type="checkbox" value="setupEmpLimit" data-option="setupEmpLimit" {% if myData.emplimit == "true" %}checked{% endif %} data-aria-controls="conditional-setupEmpLimit">
-                        <label class="govuk-label govuk-checkboxes__label" for="setupEmpLimit">
-                            Employer reached limit
-                        </label>
-                    </div>
-                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-setupEmpLimit">
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="setupEmpLimitNumber">
-                            After adding how many reservations?
-                            </label>
-                            <input class="govuk-input govuk-!-width-one-third" id="setupEmpLimitNumber" name="setupEmpLimitNumber" data-option="setupEmpLimitNumber" type="number" spellcheck="false" value="2">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hide dates (pro) -->
-            <div class="govuk-form-group" >
-                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input" id="setupDates" name="setupDates" type="checkbox" value="setupDates" data-option="setupDates" {% if myData.hidedates == "true" %}checked{% endif %} data-aria-controls="conditional-setupDates">
-                        <label class="govuk-label govuk-checkboxes__label" for="setupDates">
-                            Hide first date option
-                        </label>
-                    </div>
-                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-setupDates">
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="setupDatesNumber">
-                            After adding how many reservations?
-                            </label>
-                            <input class="govuk-input govuk-!-width-one-third" id="setupDatesNumber" name="setupDatesNumber" data-option="setupDatesNumber" type="number" spellcheck="false" value="1">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Reservations limit -->
-            <div class="govuk-form-group" id="limit">
-                <label class="govuk-label" for="setupLimit">
-                    Employer limit
+        <!-- Funding is paused -->
+        <div class="govuk-form-group" style="margin-bottom: 10px" >
+            <div class="govuk-checkboxes">
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="setupPaused" name="setupPaused" type="checkbox" value="setupPaused" data-option="setupPaused" {% if myData.paused == "true" %}checked{% endif %}>
+                <label class="govuk-label govuk-checkboxes__label" for="setupPaused">
+                    Funding is paused
                 </label>
-                <select class="govuk-select" id="setupLimit" name="setupLimit" data-option="setupLimit">
-                    <option {% if myData.limit == 'no' %}selected{% endif %} value="no">No limit</option>
-                    <option {% if myData.limit == '5' %}selected{% endif %} value="5">5</option>
-                    <option {% if myData.limit == '10' %}selected{% endif %} value="10">10</option>
-                    <option {% if myData.limit == '11' %}selected{% endif %} value="11">11</option>
-                    <option {% if myData.limit == '15' %}selected{% endif %} value="15">15</option>
-                </select>
+            </div>
+            </div>
+        </div>
+
+        <!-- Upcoming change -->
+        <div class="govuk-form-group" style="margin-bottom: 10px" >
+            <div class="govuk-checkboxes">
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="setupUpcoming" name="setupUpcoming" type="checkbox" value="setupUpcoming" data-option="setupUpcoming" {% if myData.upcoming == "true" %}checked{% endif %}>
+                <label class="govuk-label govuk-checkboxes__label" for="setupUpcoming">
+                    Upcoming change
+                </label>
+            </div>
+            </div>
+        </div>
+
+        <!-- Employer limit (pro) -->
+        <!-- <div class="govuk-form-group" style="margin-bottom: 10px;" id="empLimit" >
+            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="setupEmpLimit" name="setupEmpLimit" type="checkbox" value="setupEmpLimit" data-option="setupEmpLimit" {% if myData.emplimit == "true" %}checked{% endif %} data-aria-controls="conditional-setupEmpLimit">
+                    <label class="govuk-label govuk-checkboxes__label" for="setupEmpLimit">
+                        Employer reached limit
+                    </label>
+                </div>
+                <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-setupEmpLimit">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="setupEmpLimitNumber">
+                        After adding how many reservations?
+                        </label>
+                        <input class="govuk-input govuk-!-width-one-third" id="setupEmpLimitNumber" name="setupEmpLimitNumber" data-option="setupEmpLimitNumber" type="number" spellcheck="false" value="2">
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Hide dates (pro) -->
+        <div class="govuk-form-group" >
+            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="setupDates" name="setupDates" type="checkbox" value="setupDates" data-option="setupDates" {% if myData.hidedates == "true" %}checked{% endif %} data-aria-controls="conditional-setupDates">
+                    <label class="govuk-label govuk-checkboxes__label" for="setupDates">
+                        Hide first date option
+                    </label>
+                </div>
+                <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-setupDates">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="setupDatesNumber">
+                        After adding how many reservations?
+                        </label>
+                        <input class="govuk-input govuk-!-width-one-third" id="setupDatesNumber" name="setupDatesNumber" data-option="setupDatesNumber" type="number" spellcheck="false" value="1">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UI Components (pro) -->
+        
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <h1 class="govuk-heading-s">UI / flow components</h1>
+
+        <div data-pro-components="true">
+            <!-- Search -->
+            <div class="govuk-form-group" style="margin-bottom: 10px">
+                <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="setupSearch" name="setupSearch" type="checkbox" value="setupSearch" data-option="setupSearch" {% if myData.search == "true" %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label" for="setupSearch">
+                    Search
+                    </label>
+                </div>
+                </div>
             </div>
 
-            <!-- UI Components (pro) -->
-            <div data-pro-components="true">
-                    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-                    <h1 class="govuk-heading-s">UI Components</h1>
-        
-                    <!-- Search -->
-                    <div class="govuk-form-group" style="margin-bottom: 10px">
-                        <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="setupSearch" name="setupSearch" type="checkbox" value="setupSearch" data-option="setupSearch" {% if myData.search == "true" %}checked{% endif %}>
-                            <label class="govuk-label govuk-checkboxes__label" for="setupSearch">
-                            Search
-                            </label>
-                        </div>
-                        </div>
-                    </div>
-        
-                    <!-- Filters -->
-                    <div class="govuk-form-group" style="margin-bottom: 10px">
-                        <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="setupFilters" name="setupFilters" type="checkbox" value="setupFilters" data-option="setupFilters" {% if myData.filters == "true" %}checked{% endif %}>
-                            <label class="govuk-label govuk-checkboxes__label" for="setupFilters">
-                            Filters (not functioning)
-                            </label>
-                        </div>
-                        </div>
-                    </div>
-        
-                    <!-- Paging -->
-                    <div class="govuk-form-group" >
-                        <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="setupPaging" name="setupPaging" type="checkbox" value="setupPaging" data-option="setupPaging" {% if myData.paging == "true" %}checked{% endif %}>
-                            <label class="govuk-label govuk-checkboxes__label" for="setupPaging">
-                            Paging (not functioning)
-                            </label>
-                        </div>
-                        </div>
-                    </div>
-        
+            <!-- Filters -->
+            <div class="govuk-form-group" style="margin-bottom: 10px">
+                <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="setupFilters" name="setupFilters" type="checkbox" value="setupFilters" data-option="setupFilters" {% if myData.filters == "true" %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label" for="setupFilters">
+                    Filters (not functioning)
+                    </label>
+                </div>
+                </div>
             </div>
-        
+
+            <!-- Paging -->
+            <div class="govuk-form-group" >
+                <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="setupPaging" name="setupPaging" type="checkbox" value="setupPaging" data-option="setupPaging" {% if myData.paging == "true" %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label" for="setupPaging">
+                    Paging (not functioning)
+                    </label>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div data-emp-components="true">
+            <!-- Provider assignments -->
+            <div class="govuk-form-group" >
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="setupProAssign" name="setupProAssign" type="checkbox" value="setupProAssign" data-option="setupProAssign" {% if myData.paging == "true" %}checked{% endif %}>
+                        <label class="govuk-label govuk-checkboxes__label" for="setupProAssign">
+                        Assign to providers
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -237,8 +269,6 @@
         </p>
 
         <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-
-         
 
     </div>
     <!-- <div class="govuk-grid-column-one-third">
@@ -499,8 +529,11 @@
             // _entity = $("#entity"),
             _entitycount = $("#entitycount"),
             _limit = $("#limit"),
-            _empLimit = $("#empLimit"),
-            _resTotalCount = $("#resTotalCount"),
+            // _empLimit = $("#empLimit"),
+            _empCount = $("#empCount"),
+            _proCount = $("#proCount"),
+            _resTotalCountE = $("#resTotalCountE"),
+            _resTotalCountP = $("#resTotalCountP"),
             _existingproviders = $("#existingproviders")
 
         _options.change(function(){
@@ -517,21 +550,27 @@
             if(_thisVal == "emp") {
                 // _entity.show()
                 _entitycount.show()
-                _limit.show()
+                // _limit.show()
                 _existingproviders.show()
-                _empLimit.hide()
-                _resTotalCount.text("All available (" + {{_empResCount|dump|safe}} + ")")
+                // _empLimit.hide()
+                _empCount.show()
+                _proCount.hide()
+                _resTotalCountE.text("All available (" + {{_empResCount|dump|safe}} + ")")
                 $("[data-preload]").hide()
                 $("[data-pro-components]").hide()
+                $("[data-emp-components]").show()
             } else {
                 // _entity.hide()
                 _entitycount.hide()
-                _limit.hide()
+                // _limit.hide()
                 _existingproviders.hide()
-                _empLimit.show()
-                _resTotalCount.text("All available (" + {{_proResCount|dump|safe}} + ")")
+                // _empLimit.show()
+                _empCount.hide()
+                _proCount.show()
+                _resTotalCountP.text("All available (" + {{_proResCount|dump|safe}} + ")")
                 $("[data-preload]").show()
                 $("[data-pro-components]").show()
+                $("[data-emp-components]").hide()
             }
             _setupName.val(_companyName)
 
@@ -552,26 +591,28 @@
                 // _urlEntityName = "&en=" + _options.filter("#setupEntity").val(),
                 _urlEntitycount = "&ec=" + _options.filter("#setupEntityCount").val(),
                 _urlExistingProviders = "&ep=" + _options.filter("#setupExistingProviders").val(),
+                _urlECount = "&ce=" + _options.filter("#setupECount").val(),
                 _urlCount = "&c=" + _options.filter("#setupCount").val(),
                 _urlLimit = "&l=" + _options.filter("#setupLimit").val(),
 
-                _urlEmpLimit = (_options.filter("#setupEmpLimit").is(":checked")) ? ("&el=" + _options.filter("#setupEmpLimitNumber").val()) : ("&el=no"),
+                // _urlEmpLimit = (_options.filter("#setupEmpLimit").is(":checked")) ? ("&el=" + _options.filter("#setupEmpLimitNumber").val()) : ("&el=no"),
                 _urlDates = (_options.filter("#setupDates").is(":checked")) ? ("&d=" + _options.filter("#setupDatesNumber").val()) : ("&d=no"),
                 _urlUpcoming = (_options.filter("#setupUpcoming").is(":checked")) ? ("&up=true") : ("&up=false"),
                 _urlPaused = (_options.filter("#setupPaused").is(":checked")) ? ("&p=true") : ("&p=false"),
 
                 _urlPaging = (_options.filter("#setupPaging").is(":checked")) ? ("&c_pg=true") : ("&c_pg=false"),
                 _urlSearch = (_options.filter("#setupSearch").is(":checked")) ? ("&c_sr=true") : ("&c_sr=false"),
-                _urlFilters = (_options.filter("#setupFilters").is(":checked")) ? ("&c_ft=true") : ("&c_ft=false");
+                _urlFilters = (_options.filter("#setupFilters").is(":checked")) ? ("&c_ft=true") : ("&c_ft=false"),
+                _urlProAssign = (_options.filter("#setupProAssign").is(":checked")) ? ("&c_pa=true") : ("&c_pa=false");
            
             //Queries combined
             //Base
-            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlCount + _urlLimit + _urlUpcoming + _urlPaused + _urlDates;
+            var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlLimit + _urlUpcoming + _urlPaused + _urlDates;
             //Base + type specific
             if(_options.filter("#setupType").val() == "emp") {
-                var _urlPageQueries = _urlPageQueries + _urlEntitycount + _urlExistingProviders;
+                var _urlPageQueries = _urlPageQueries + _urlEntitycount + _urlExistingProviders + _urlProAssign + _urlECount;
             } else {
-                var _urlPageQueries = _urlPageQueries + _urlEmpLimit + _urlPaging + _urlSearch + _urlFilters
+                var _urlPageQueries = _urlPageQueries + _urlPaging + _urlSearch + _urlFilters + _urlCount
             }
             //URL text
             var _startURLText = _urlBase + _urlPageQueries,

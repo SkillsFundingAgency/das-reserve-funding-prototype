@@ -5,6 +5,13 @@
 {% set _reservationsTotal = 0 %}
 {% set _reservationsFilteredTotal = 0 %}
 {% for _reservation in _account.reservations %}
+
+  <!-- Expired -->
+  {% if _reservation.status == "expired" %}
+
+  {% endif %}
+
+  <!-- Visible -->
   {% if _reservation.visible == true %}
       {% set _reservationsTotal = _reservationsTotal + 1 %}
       {% if myData.searchapplied == false or (myData.searchapplied == true and _reservation.search == true) %}
@@ -12,8 +19,8 @@
         {% set _reservations = (_reservations.push(_reservation), _reservations) %}
       {% endif %}
   {% endif %}
-{% endfor %}
 
+{% endfor %}
 
 <!-- Layout type -->
 {% if _account.type == "emp" %}
@@ -176,6 +183,7 @@
               {% if _reservation.status == "used" %}
               <br><strong>Apprentice added</strong>
               {% endif %}
+              <br>{{_entityCount}}
             </td>
             <td class="govuk-table__cell">{{_reservation.courselabel}}</td>
             <td class="govuk-table__cell" style="white-space: nowrap;">

@@ -59,7 +59,7 @@
                     </span>
                     {% endif %}
                     <div class="govuk-radios" id="whichOrgAnswer">
-                        {% for entity in _account.entities2 %}
+                        {% for entity in _account.employers %}
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="whichOrg-{{loop.index}}" name="whichOrgAnswer" type="radio" value="{{entity.id}}" {% if myData.whichOrgAnswerTemp == entity.id %}checked{% endif %}>
                             <label class="govuk-label govuk-radios__label" for="whichOrg-{{loop.index}}">

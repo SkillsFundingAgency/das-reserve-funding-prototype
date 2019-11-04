@@ -26,7 +26,7 @@
 
 <!-- Entity name -->
 {% set _entityNameLabel = "" %}
-{% for _entity in _account.entities2 %}
+{% for _entity in _account.employers %}
     {% if _reservation.entity == _entity.id %}
         {% set _entityNameLabel = _entity.name %}
     {% endif %}
