@@ -33,33 +33,34 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <h1 class="govuk-heading-xl" >
-            Choose an employer
-        </h1>
+      <h1 class="govuk-heading-xl" >
+          [Which non-levy employer are you reserving funds for?]
+      </h1>
 
-        <p class="govuk-body">This is the employer you are reserving funds on behalf of.</p>
+      <!-- Search box -->
 
-        <!-- Search box -->
-        <form method="GET" >
-          <div class="search-wrapper govuk-form-group" >
-            <label for="search-employers" class="govuk-label" >
-                Search employers
-            </label>
-            <div class="search-input-wrapper">
-              <input type="search" value="{% if myData.empsearchapplied == true %}{{myData.empsearchTerm}}{% endif %}" id="search-employers" name="q" title="Search" class="govuk-input">
-              <div class="search-input-submit-wrapper">
-                <button type="submit" class="search-submit">Search</button>
-              </div>
+      <!-- TODO -->
+      <!-- If no javascript -->
+      <form method="GET" >
+        <div class="search-wrapper govuk-form-group" >
+          <label for="search-employers" class="govuk-label" >
+              [Search employer, account name or agreement ID]
+          </label>
+          <div class="search-input-wrapper">
+            <input type="search" value="{% if myData.empsearchapplied == true %}{{myData.empsearchTerm}}{% endif %}" id="search-employers" name="q" title="Search" class="govuk-input">
+            <div class="search-input-submit-wrapper">
+              <button type="submit" class="search-submit">Search</button>
             </div>
           </div>
-        </form>
+        </div>
+      </form>
 
-        <!-- Clear search -->
-        {% if myData.empsearchapplied == true %}
-          <p class="govuk-body"><a href="reserve-choose-org-pro" class="govuk-link govuk-link--no-visited-state">
-            Clear search
-          </a></p>
-        {% endif %}
+      <!-- Clear search -->
+      {% if myData.empsearchapplied == true %}
+        <p class="govuk-body"><a href="reserve-choose-org-pro" class="govuk-link govuk-link--no-visited-state">
+          Clear search
+        </a></p>
+      {% endif %}
       
       <!-- Count -->
       <p class="govuk-body">
@@ -72,7 +73,7 @@
               <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header">Employer</th>
                 <th scope="col" class="govuk-table__header">Account name</th>
-                <th scope="col" class="govuk-table__header">Agreement ID</th>
+                <th scope="col" class="govuk-table__header">Agreement&nbsp;ID</th>
                 <th scope="col" class="govuk-table__header"></th>
               </tr>
             </thead>
@@ -85,7 +86,7 @@
                 <tr class="govuk-table__row">
                   <td class="govuk-table__cell">
                     <strong>{{_employer.name|upper}}</strong>
-                    <br>[{{myData.limit - _employer.reservations}}  {% if myData.limit - _employer.reservations != 1 %}reservations{% else %}reservation{% endif %} left]
+                    <br><span class="govuk-!-font-size-16">[{{myData.limit - _employer.reservations}} of {{myData.limit}} {% if myData.limit != 1 %}reservations{% else %}reservation{% endif %} left]</span>
                   </td>
                   <td class="govuk-table__cell">{{_employer.aname}}</td>
                   <td class="govuk-table__cell">{{_employer.id}}</td>
@@ -105,4 +106,25 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block pageScripts %}
+<!-- <script src="/public/javascripts/accessible-autocomplete.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.autocomplete-element').each(function() {
+    //   var _defaultValue = '{{_defaultValue}}';
+      var selectEl = document.querySelector('#' + $(this).attr('id') )
+      accessibleAutocomplete.enhanceSelectElement({
+        autoselect: false,
+        defaultValue: '',
+        minLength: 3,
+        selectElement: selectEl,
+        placeholder: 'Start typing to search employers',
+        showAllValues: false,
+        displayMenu: "overlay"
+      })
+    })
+  })
+</script> -->
 {% endblock %}

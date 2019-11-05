@@ -715,7 +715,7 @@ module.exports = function (router,_myData) {
                         // Version 1: check for matches on whole search query
                         _employers.forEach(function(_employer, index) {
                             _employer.search = false
-                            var _searchWithin = _employer.name
+                            var _searchWithin = _employer.name + " " + _employer.aname + " " + _employer.id
                             if(_searchWithin.toUpperCase().indexOf(_searchQ.toUpperCase()) != -1) {
                                 _employer.search = true
                             }
@@ -725,7 +725,7 @@ module.exports = function (router,_myData) {
                         var _searchQParts = _searchQ.split(" ");
                         _employers.forEach(function(_employer, index) {
                             _employer.search = false
-                            var _searchWithin = _employer.name
+                            var _searchWithin = _employer.name + " " + _employer.aname + " " + _employer.id
                             _searchQParts.forEach(function(_searchQPart, index) {
                                 if(_searchWithin.toUpperCase().indexOf(_searchQPart.toUpperCase()) != -1) {
                                     _employer.search = true
