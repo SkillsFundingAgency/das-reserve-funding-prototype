@@ -872,22 +872,16 @@ module.exports = function (router,_myData) {
         } else {
             req.session.myData.whichStartDateAnswer = req.session.myData.whichStartDateAnswerTemp
             req.session.myData.whichStartDateAnswerTemp = ""
-
-            if(req.session.myData.whichStartDateAnswer == "dontknow") {
-                req.session.myData.dropout = "date"
-                res.redirect(301, '/' + version + '/reserve-dropout');
-            } else {
-                if(req.session.myData.assignproviders == "true"){
-                    if(req.session.myData.existingproviders == 0){
-                        res.redirect(301, '/' + version + '/reserve-choose-provider-2');
-                    } else {
-                        res.redirect(301, '/' + version + '/reserve-choose-provider');
-                    }
+                
+            if(req.session.myData.assignproviders == "true"){
+                if(req.session.myData.existingproviders == 0){
+                    res.redirect(301, '/' + version + '/reserve-choose-provider-2');
                 } else {
-                    res.redirect(301, '/' + version + '/reserve-check-answers');
+                    res.redirect(301, '/' + version + '/reserve-choose-provider');
                 }
+            } else {
+                res.redirect(301, '/' + version + '/reserve-check-answers');
             }
-            
         }
     });
 

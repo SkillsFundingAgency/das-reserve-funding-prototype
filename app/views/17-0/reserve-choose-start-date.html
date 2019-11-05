@@ -88,13 +88,6 @@
 
                             {% endif %}
                         {% endfor %}
-                        <div class="govuk-radios__divider">or</div>
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="whichStartDate-{{_index}}" name="whichStartDateAnswer" type="radio" value="dontknow" {% if myData.whichStartDateAnswerTemp == 'dontknow' %}checked{% endif %}>
-                            <label class="govuk-label govuk-radios__label" for="whichStartDate-{{_index}}">
-                                I don’t know
-                            </label>
-                        </div>
                     </div>
                 </fieldset>
             </div>
