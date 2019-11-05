@@ -111,35 +111,68 @@ module.exports = function (router,_myData) {
     }
 
     function setReservationData(req){
-        var _account = req.session.myData.accounts[req.session.myData.account]
-        _account.courselabels = []
+        var _account = req.session.myData.accounts[req.session.myData.account],
+            _tempCourseLabels = [],
+            _tempStartDateLabels = []
+        _account.courses = []
+        _account.startDates = []
         _account.reservations.forEach(function(_reservation, index) {
-            // Employer
-            // _reservation.searchstring = _reservation.entity
             //Course
             req.session.myData.courses.list.forEach(function(_course, index) {
                 if(_course.value == _reservation.course){
                     _reservation.courselabel = _course.name + " - Level " + _course.level
                 }
             });
-            //Course labels
-            if (_account.courselabels.indexOf(_reservation.courselabel) == -1) {
-                _account.courselabels.push(_reservation.courselabel)
-            }
-            _account.courselabels.sort(function(a,b){
-                if (a.toUpperCase() < b.toUpperCase()){
-                    return -1
-                } else if(a.toUpperCase() > b.toUpperCase()){
-                    return 1
+            if(_reservation.visible){
+                //Course labels on account
+                if (_tempCourseLabels.indexOf(_reservation.courselabel) == -1) {
+                    _tempCourseLabels.push(_reservation.courselabel)
+                    _account.courses.push(
+                        {
+                            "label": _reservation.courselabel,
+                            "id": _reservation.course
+                        }
+                    )
                 }
-                return 0;
-            });
+                _account.courses.sort(function(a,b){
+                    if (a.label.toUpperCase() < b.label.toUpperCase()){
+                        return -1
+                    } else if(a.label.toUpperCase() > b.label.toUpperCase()){
+                        return 1
+                    }
+                    return 0;
+                });
+            }
+
             //Start date label
             req.session.myData.startDates.forEach(function(_startDate, index) {
                 if(_startDate.id == _reservation.startDate){
                     _reservation.startDatelabel = _startDate.range
+                    _reservation.startDateOrder = index
                 }
             });
+            //Start date labels on account
+            if(_reservation.visible){
+                if (_tempStartDateLabels.indexOf(_reservation.startDatelabel) == -1) {
+                    _tempStartDateLabels.push(_reservation.startDatelabel)
+                    _account.startDates.push(
+                        {
+                            "label": _reservation.startDatelabel,
+                            "id": _reservation.startDate,
+                            "order": _reservation.startDateOrder
+                        }
+                    )
+                }
+                _account.startDates.sort(function(a,b){
+                    if (a.order < b.order){
+                        return -1
+                    } else if(a.order > b.order){
+                        return 1
+                    }
+                    return 0;
+                });
+            }
+
         });
     }
 
@@ -595,52 +628,109 @@ module.exports = function (router,_myData) {
         sortReservations(req)
         setReservationData(req)
 
-        //Search
+        //
+        //Search and filters
+        //
         var _reservations = req.session.myData.accounts[req.session.myData.account].reservations
-        //Clear search
+        //Clear search and filters
+        req.session.myData.searchorfilterapplied = false
         req.session.myData.searchapplied = false
+        req.session.myData.filterapplied = false
+        req.session.myData.filterempapplied = false
+        req.session.myData.filtercourseapplied = false
+        req.session.myData.filterdateapplied = false
+        req.session.myData.searchfilters = []
+        var _searchMatchCount = 0,
+            _searchQ = req.query.q,
+            _filterEmp = req.query.emp_ft,
+            _filterCourse = req.query.course_ft,
+            _filterDate = req.query.date_ft
+        _reservations.forEach(function(_reservation, index) {
+            _reservation.search = true
+        });
 
-        var _searchQ = req.query.q
+        // Search
         if(_searchQ || _searchQ == ""){
             _searchQ = _searchQ.trim()
             if(_searchQ != ""){
-
-                //Defaults
                 req.session.myData.searchTerm = _searchQ
+                req.session.myData.searchorfilterapplied = true
                 req.session.myData.searchapplied = true
-                _reservations.forEach(function(_reservation, index) {
-                    _reservation.search = true
-                })
+                req.session.myData.searchfilters.push("‘" + req.session.myData.searchTerm + "’")
+                _searchMatchCount++
+            }
+        }
+        // Employer
+        if(_filterEmp && _filterEmp != "all"){
+            req.session.myData.filterEmp = _filterEmp
+            req.session.myData.searchorfilterapplied = true
+            req.session.myData.filterapplied = true
+            req.session.myData.filterempapplied = true
+            req.session.myData.searchfilters.push(req.session.myData.filterEmp)
+            _searchMatchCount++
+        } else {
+            req.session.myData.filterEmp = "all"
+        }
+        // Course
+        if(_filterCourse && _filterCourse != "all"){
+            req.session.myData.filterCourse = _filterCourse
+            req.session.myData.searchorfilterapplied = true
+            req.session.myData.filterapplied = true
+            req.session.myData.filtercourseapplied = true
+            var _courseLabel = ""
+            req.session.myData.courses.list.forEach(function(_course, index) {
+                if(_course.value == req.session.myData.filterCourse){
+                    _courseLabel = _course.name + " - Level " + _course.level
+                }
+            });
+            req.session.myData.searchfilters.push(_courseLabel)
+            _searchMatchCount++
+        } else {
+            req.session.myData.filterCourse = "all"
+        }
+        // Date
+        if(_filterDate && _filterDate != "all"){
+            req.session.myData.filterDate = _filterDate
+            req.session.myData.searchorfilterapplied = true
+            req.session.myData.filterapplied = true
+            req.session.myData.filterdateapplied = true
+            var _dateLabel = ""
+            req.session.myData.startDates.forEach(function(_date, index) {
+                if(_date.id == req.session.myData.filterDate){
+                    _dateLabel = _date.range
+                }
+            });
+            req.session.myData.searchfilters.push(_dateLabel)
+            _searchMatchCount++
+        } else {
+            req.session.myData.filterDate = "all"
+        }
 
-                function doSearch(_v){
-                    if(_v == "version1"){
-                        // Version 1: check for matches on whole search query
-                        _reservations.forEach(function(_reservation, index) {
-                            _reservation.search = false
-                            var _searchWithin = _reservation.entity + " " + _reservation.courselabel
-                            if(_searchWithin.toUpperCase().indexOf(_searchQ.toUpperCase()) != -1) {
-                                _reservation.search = true
-                                _reservation.searchorder
-                            }
-                        });
-                    } else if(_v == "version1"){
-                        // Version 2: Check for matches - ON EACH PART OF SEARCH QUERY
-                        var _searchQParts = _searchQ.split(" ");
-                        _reservations.forEach(function(_reservation, index) {
-                            _reservation.search = false
-                            var _searchWithin = _reservation.entity + " " + _reservation.courselabel
-                            _searchQParts.forEach(function(_searchQPart, index) {
-                                if(_searchWithin.toUpperCase().indexOf(_searchQPart.toUpperCase()) != -1) {
-                                    _reservation.search = true
-                                    _reservation.searchorder
-                                }
-                            });
-                        });
-                    }
+        // Check if matches all it needs to
+        if(req.session.myData.searchorfilterapplied == true) {
+            _reservations.forEach(function(_reservation, index) {
+                _reservation.search = false
+                var _resSearchMatchCount = 0
+                // // if search applied and matches search
+                if(req.session.myData.searchapplied && ((_reservation.entity + " " + _reservation.courselabel).toUpperCase().indexOf(_searchQ.toUpperCase()) != -1)){
+                    _resSearchMatchCount++
+                }
+                // // if employer filter applied and matches employer
+                if (req.session.myData.filterempapplied && _filterEmp == _reservation.entity) {
+                    _resSearchMatchCount++
+                }
+                // // if course filter applied and matches course
+                if(req.session.myData.filtercourseapplied && _filterCourse == _reservation.course){
+                    _resSearchMatchCount++
+                }
+                // // if date filter applied and matches date
+                if(req.session.myData.filterdateapplied && _filterDate == _reservation.startDate){
+                    _resSearchMatchCount++
                 }
 
-                doSearch("version1")
-            }
+                _reservation.search = (_resSearchMatchCount == _searchMatchCount)
+
+            });
         }
 
         res.render(version + '/reserve-reservations-pro', {

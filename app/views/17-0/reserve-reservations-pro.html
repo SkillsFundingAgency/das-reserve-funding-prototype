@@ -14,7 +14,7 @@
   <!-- Visible -->
   {% if _reservation.visible == true %}
       {% set _reservationsTotal = _reservationsTotal + 1 %}
-      {% if myData.searchapplied == false or (myData.searchapplied == true and _reservation.search == true) %}
+      {% if myData.searchorfilterapplied == false or (myData.searchorfilterapplied == true and _reservation.search == true) %}
         {% set _reservationsFilteredTotal = _reservationsFilteredTotal + 1 %}
         {% set _reservations = (_reservations.push(_reservation), _reservations) %}
       {% endif %}
@@ -65,14 +65,16 @@
 
 
 <!-- Search -->
-{% if _reservationsTotal > 10 and myData.search == "true" %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <!-- Search box -->
-    <form method="GET" >
+{% if _reservationsTotal > 10 and (myData.search == "true" or myData.filters == "true") %}
+<form method="GET" >
+
+  <!-- Search -->
+  {% if myData.search == "true" %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
       <div class="search-wrapper govuk-form-group" >
         <label for="search-reservations" class="govuk-label" >
-            Search employer or apprenticeship training course
+          Search employer or apprenticeship training course
         </label>
         <div class="search-input-wrapper">
           <input type="search" value="{% if myData.searchapplied == true %}{{myData.searchTerm}}{% endif %}" id="search-reservations" name="q" title="Search" class="govuk-input">
@@ -81,64 +83,66 @@
           </div>
         </div>
       </div>
-    </form>
+    </div>
   </div>
-</div>
-{% endif %}
+  {% endif %}
 
-<!-- Filters -->
-{% if _reservationsTotal > 10 and myData.filters == "true" %}
-<div class="govuk-grid-column-full" style="background-color:#DEE0E2; margin-bottom: 20px; padding-top: 15px">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third" >
-        <!-- Employer filter -->
-        <div class="govuk-form-group" style="margin-bottom: 20px" >
-          <label class="govuk-label" for="employer-filter" >
-            Employer
-          </label>
-          <select class="govuk-select" id="employer-filter" name="employer-filter" style="min-width: 100%">
-            <option value="all">All</option>
-            {% for _employer in _account.employers %}
-            <option value="{{_employer.name}}">{{_employer.name|upper}}</option>
-            {% endfor %}
-          </select>
-        </div>
+  <!-- Filters -->
+  {% if myData.filters == "true" %}
+  <div class="govuk-grid-column-full" style="background-color:#DEE0E2; margin-bottom: 20px; padding-top: 15px">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third" >
+          <!-- Employer filter -->
+          <div class="govuk-form-group" style="margin-bottom: 20px" >
+            <label class="govuk-label" for="emp_ft" >
+              Employer
+            </label>
+            <select class="govuk-select" id="emp_ft" name="emp_ft" style="min-width: 100%">
+              <option value="all">All</option>
+              {% for _employer in _account.employers %}
+              <option value="{{_employer.name}}" {% if myData.filterEmp == _employer.name %}selected{% endif %}>{{_employer.name|upper}}</option>
+              {% endfor %}
+            </select>
+          </div>
+      </div>
+      <div class="govuk-grid-column-one-third">
+          <!-- Course filter -->
+          <div class="govuk-form-group" style="margin-bottom: 20px" >
+            <label class="govuk-label" for="course_ft" >
+                Apprenticeship training course
+            </label>
+            <select class="govuk-select" id="course_ft" name="course_ft" style="min-width: 100%">
+              <option value="all">All</option>
+              {% for _course in _account.courses %}
+                <option value="{{_course.id}}" {% if myData.filterCourse == _course.id %}selected{% endif %}>{{_course.label}}</option>
+              {% endfor %}
+            </select>
+          </div>
+      </div>
+      <div class="govuk-grid-column-one-third">
+          <!-- Start dates filter -->
+          <div class="govuk-form-group" style="margin-bottom: 20px">
+            <label class="govuk-label" for="date_ft">
+              Start date
+            </label>
+            <select class="govuk-select" id="date_ft" name="date_ft" style="min-width: 100%">
+              <option value="all">All</option>
+              {% for _startDate in _account.startDates %}
+              <option value="{{_startDate.id}}" {% if myData.filterDate == _startDate.id %}selected{% endif %}>{{_startDate.label}}</option>
+              {% endfor %}
+            </select>
+          </div>
+      </div>
     </div>
-    <div class="govuk-grid-column-one-third">
-        <!-- Course filter -->
-        <div class="govuk-form-group" style="margin-bottom: 20px" >
-          <label class="govuk-label" for="course-filter" >
-              Apprenticeship training course
-          </label>
-          <select class="govuk-select" id="course-filter" name="course-filter" style="min-width: 100%">
-            <option value="all">All</option>
-            {% for _courselabel in _account.courselabels %}
-              <option value="{{_courselabel}}">{{_courselabel}}</option>
-            {% endfor %}
-          </select>
-        </div>
-    </div>
-    <div class="govuk-grid-column-one-third">
-        <!-- Start dates filter -->
-        <div class="govuk-form-group" style="margin-bottom: 20px">
-          <label class="govuk-label" for="startdate-filter">
-            Start date
-          </label>
-          <select class="govuk-select" id="startdate-filter" name="startdate-filter" style="min-width: 100%">
-            <option value="all">All</option>
-            {% for _startDate in myData.startDates %}
-            <option value="{{_startDate.id}}">{{_startDate.range}}</option>
-            {% endfor %}
-          </select>
-        </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third" >
+        <button type="submit" class="govuk-button" style="margin-bottom: 20px">Apply filters</button>
+      </div>
     </div>
   </div>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third" >
-      <a class="govuk-button" href="#" style="margin-bottom: 20px">Apply filters</a>
-    </div>
-  </div>
-</div>
+  {% endif %}
+
+</form>
 {% endif %}
 
 <!-- Table -->
@@ -147,7 +151,7 @@
   <div class="govuk-grid-column-full">
 
     <!-- Clear search -->
-    {% if myData.searchapplied == true %}
+    {% if myData.searchorfilterapplied == true %}
       <p class="govuk-body"><a href="reserve-reservations-pro" class="govuk-link govuk-link--no-visited-state">
         {% if myData.filters == "false" %}
         Clear search
@@ -159,7 +163,15 @@
     
     <!-- Count -->
     <p class="govuk-body">
-      {{_reservationsFilteredTotal}} {% if _reservationsFilteredTotal == 1 %}reservation{% else %}reservations{% endif %}{% if myData.searchapplied == true %} matching <strong>‘{{myData.searchTerm}}’</strong>{% endif %}
+      <!-- Just search -->
+      {% if myData.searchapplied == true and myData.filterapplied == false %}
+        {{_reservationsFilteredTotal}} {% if _reservationsFilteredTotal == 1 %}reservation{% else %}reservations{% endif %} matching <strong>‘{{myData.searchTerm}}’</strong>
+      {% endif %}
+      <!-- Just filter -->
+      {% if myData.searchorfilterapplied == true %}
+        {{_reservationsFilteredTotal}} {% if _reservationsFilteredTotal == 1 %}reservation{% else %}reservations{% endif %} matching {% for _term in myData.searchfilters %}{% if loop.first == false and loop.last == false and loop.length > 1 %}, {% endif %}{% if loop.last and loop.length > 1 %} and {% endif %}<strong>{{_term}}</strong>{% endfor %}
+      {% endif %}
+      <!-- Both search and filter -->
     </p> 
 
     {% if _reservationsFilteredTotal > 0 %}
@@ -176,7 +188,7 @@
         </thead>
         <tbody class="govuk-table__body">
         {% for _reservation in _reservations %}
-          {% if myData.searchapplied == false or (myData.searchapplied == true and _reservation.search == true) %}
+          {% if myData.searchorfilterapplied == false or (myData.searchorfilterapplied == true and _reservation.search == true) %}
           <tr class="govuk-table__row">
             <td class="govuk-table__cell" style="white-space: nowrap;">
               {{_reservation.entity | upper}}
