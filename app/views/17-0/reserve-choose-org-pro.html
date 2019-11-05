@@ -41,6 +41,7 @@
 
       <!-- TODO -->
       <!-- If no javascript -->
+      {% if _employersTotal > 5 %}
       <form method="GET" >
         <div class="search-wrapper govuk-form-group" >
           <label for="search-employers" class="govuk-label" >
@@ -54,6 +55,7 @@
           </div>
         </div>
       </form>
+      {% endif %}
 
       <!-- Clear search -->
       {% if myData.empsearchapplied == true %}
@@ -79,19 +81,19 @@
             </thead>
             <tbody class="govuk-table__body">
             {% for _employer in _employers %}
-              {% set _employerReachedLimit = false %}
-              {% if _employer.reservations >= myData.limit %}
-                {% set _employerReachedLimit = true %}
-              {% endif %}
                 <tr class="govuk-table__row">
                   <td class="govuk-table__cell">
                     <strong>{{_employer.name|upper}}</strong>
-                    <br><span class="govuk-!-font-size-16">[{{myData.limit - _employer.reservations}} of {{myData.limit}} {% if myData.limit != 1 %}reservations{% else %}reservation{% endif %} left]</span>
+                    {% set _left = myData.limit - _employer.reservations %}
+                    {% if _left < 0 %}{% set _left = 0 %}{% endif %}
+                    {% if myData.limit != "no" %}
+                    <br><span class="govuk-!-font-size-16">[{{_left}} of {{myData.limit}} {% if myData.limit != 1 %}reservations{% else %}reservation{% endif %} left]</span>
+                    {% endif %}
                   </td>
                   <td class="govuk-table__cell">{{_employer.aname}}</td>
                   <td class="govuk-table__cell">{{_employer.id}}</td>
                   <td class="govuk-table__cell govuk-table__cell--numeric" >
-                    {% if _employerReachedLimit == false %}
+                    {% if _employer.reservations < myData.limit or myData.limit == "no" %}
                     <a href="reserve-confirm-org?employer={{_employer.id}}" class="govuk-link govuk-link--no-visited-state">Select</a>
                     {% else %}
                     <!-- [Reached limit] -->
