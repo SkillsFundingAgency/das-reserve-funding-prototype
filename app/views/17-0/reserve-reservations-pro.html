@@ -6,11 +6,6 @@
 {% set _reservationsFilteredTotal = 0 %}
 {% for _reservation in _account.reservations %}
 
-  <!-- Expired -->
-  {% if _reservation.status == "expired" %}
-
-  {% endif %}
-
   <!-- Visible -->
   {% if _reservation.visible == true %}
       {% set _reservationsTotal = _reservationsTotal + 1 %}
@@ -21,6 +16,12 @@
   {% endif %}
 
 {% endfor %}
+
+<!-- Search term for JavaScript  -->
+{% set _searchTerm = "" %}
+{% if myData.searchapplied == true %}
+  {% set _searchTerm = myData.searchTerm or "" %}
+{% endif %}
 
 <!-- Layout type -->
 {% if _account.type == "emp" %}
@@ -274,7 +275,7 @@ $(document).ready(function () {
   var _searchapplied = {{myData.searchapplied|dump|safe}},
       _searchValue = "";
   if(_searchapplied == true) {
-    _searchValue = {{myData.searchTerm|dump|safe}} || ""
+    _searchValue = {{_searchTerm|dump|safe}}
   }
   $('#search-reservations').val(_searchValue)
   //Filters
