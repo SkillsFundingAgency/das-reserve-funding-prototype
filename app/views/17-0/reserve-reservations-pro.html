@@ -91,14 +91,14 @@
   {% if myData.filters == "true" %}
   <div class="govuk-grid-column-full" style="background-color:#DEE0E2; margin-bottom: 20px; padding-top: 15px">
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-third" >
+      <div class="govuk-grid-column-one-third" id="filters" >
           <!-- Employer filter -->
           <div class="govuk-form-group" style="margin-bottom: 20px" >
             <label class="govuk-label" for="emp_ft" >
               Employer
             </label>
-            <select class="govuk-select" id="emp_ft" name="emp_ft" style="min-width: 100%">
-              <option value="all">All</option>
+            <select class="govuk-select filter" id="emp_ft" name="emp_ft" style="min-width: 100%">
+              <option value="all" {% if myData.filterEmp == "all" %}selected{% endif %}>All</option>
               {% for _employer in _account.employers %}
                 {% if _employer.reservations > 0 %}
                 <option value="{{_employer.name}}" {% if myData.filterEmp == _employer.name %}selected{% endif %}>{{_employer.name|upper}}</option>
@@ -113,8 +113,8 @@
             <label class="govuk-label" for="course_ft" >
                 Apprenticeship training course
             </label>
-            <select class="govuk-select" id="course_ft" name="course_ft" style="min-width: 100%">
-              <option value="all">All</option>
+            <select class="govuk-select filter" id="course_ft" name="course_ft" style="min-width: 100%">
+              <option value="all" {% if myData.filterCourse == "all" %}selected{% endif %}>All</option>
               {% for _course in _account.courses %}
                 <option value="{{_course.id}}" {% if myData.filterCourse == _course.id %}selected{% endif %}>{{_course.label}}</option>
               {% endfor %}
@@ -127,8 +127,8 @@
             <label class="govuk-label" for="date_ft">
               Start date
             </label>
-            <select class="govuk-select" id="date_ft" name="date_ft" style="min-width: 100%">
-              <option value="all">All</option>
+            <select class="govuk-select filter" id="date_ft" name="date_ft" style="min-width: 100%">
+              <option value="all" {% if myData.filterDate == "all" %}selected{% endif %}>All</option>
               {% for _startDate in _account.startDates %}
               <option value="{{_startDate.id}}" {% if myData.filterDate == _startDate.id %}selected{% endif %}>{{_startDate.label}}</option>
               {% endfor %}
@@ -261,4 +261,28 @@
 </div>
 {% endif %}
 
+{% endblock %}
+
+{% block pageScripts %}
+<script>
+$(document).ready(function () {
+  
+  //
+  // Back buttons usage fixes
+  //
+  //Search
+  var _searchapplied = {{myData.searchapplied|dump|safe}},
+      _searchValue = ""
+  if(_searchapplied == true){
+    _searchValue = {{myData.searchTerm|dump|safe}}
+  }
+  $('#search-reservations').val(_searchValue)
+  //Filters
+  $("select.filter").each(function () {
+      // console.log($(this).val($(this).find('option[selected]')))
+      $(this).val($(this).find('option[selected]').val());
+  });
+
+})
+</script>
 {% endblock %}

@@ -490,6 +490,10 @@ module.exports = function (router,_myData) {
         req.session.myData.filters = "true"
         req.session.myData.assignproviders = "false"
 
+        req.session.myData.filterEmp = "all"
+        req.session.myData.filterCourse = "all"
+        req.session.myData.filterDate = "all"
+
         //Create fake data - only used when new json data files need to be generated
         // createProviderData(req)
 
