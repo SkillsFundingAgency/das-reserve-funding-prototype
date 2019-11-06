@@ -34,7 +34,7 @@
     <div class="govuk-grid-column-two-thirds">
 
       <h1 class="govuk-heading-xl" >
-          [Which non-levy employer are you reserving funds for?]
+          Which non-levy employer are you reserving funds for?
       </h1>
 
       <!-- Search box -->
@@ -45,7 +45,7 @@
       <form method="GET" >
         <div class="search-wrapper govuk-form-group" >
           <label for="search-employers" class="govuk-label" >
-              [Search employer, account name or agreement ID]
+              Search employer, account name or agreement ID
           </label>
           <div class="search-input-wrapper">
             <input type="search" value="{% if myData.empsearchapplied == true %}{{myData.empsearchTerm}}{% endif %}" id="search-employers" name="q" title="Search" class="govuk-input">
@@ -87,7 +87,7 @@
                     {% set _left = myData.limit - _employer.reservations %}
                     {% if _left < 0 %}{% set _left = 0 %}{% endif %}
                     {% if myData.limit != "no" %}
-                    <br><span class="govuk-!-font-size-16">[{{_left}} of {{myData.limit}} {% if myData.limit != 1 %}reservations{% else %}reservation{% endif %} left]</span>
+                    <br><span class="govuk-!-font-size-16">{{_left}} of {{myData.limit}} {% if myData.limit != 1 %}reservations{% else %}reservation{% endif %} left</span>
                     {% endif %}
                   </td>
                   <td class="govuk-table__cell">{{_employer.aname}}</td>
