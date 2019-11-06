@@ -100,7 +100,9 @@
             <select class="govuk-select" id="emp_ft" name="emp_ft" style="min-width: 100%">
               <option value="all">All</option>
               {% for _employer in _account.employers %}
-              <option value="{{_employer.name}}" {% if myData.filterEmp == _employer.name %}selected{% endif %}>{{_employer.name|upper}}</option>
+                {% if _employer.reservations > 0 %}
+                <option value="{{_employer.name}}" {% if myData.filterEmp == _employer.name %}selected{% endif %}>{{_employer.name|upper}}</option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>

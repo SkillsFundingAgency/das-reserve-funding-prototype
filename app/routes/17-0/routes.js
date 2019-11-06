@@ -117,6 +117,7 @@ module.exports = function (router,_myData) {
         _account.courses = []
         _account.startDates = []
         _account.reservations.forEach(function(_reservation, index) {
+            
             //Course
             req.session.myData.courses.list.forEach(function(_course, index) {
                 if(_course.value == _reservation.course){
