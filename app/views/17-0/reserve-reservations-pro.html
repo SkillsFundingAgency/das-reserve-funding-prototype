@@ -272,14 +272,13 @@ $(document).ready(function () {
   //
   //Search
   var _searchapplied = {{myData.searchapplied|dump|safe}},
-      _searchValue = ""
-  if(_searchapplied == true){
-    _searchValue = {{myData.searchTerm|dump|safe}}
+      _searchValue = "";
+  if(_searchapplied == true) {
+    _searchValue = {{myData.searchTerm|dump|safe}} || ""
   }
   $('#search-reservations').val(_searchValue)
   //Filters
   $("select.filter").each(function () {
-      // console.log($(this).val($(this).find('option[selected]')))
       $(this).val($(this).find('option[selected]').val());
   });
 
