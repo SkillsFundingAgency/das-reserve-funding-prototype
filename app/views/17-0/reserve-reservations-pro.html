@@ -163,16 +163,8 @@
     
     <!-- Count -->
     <p class="govuk-body">
-      <!-- Just search -->
-      {% if myData.searchapplied == true and myData.filterapplied == false %}
-        {{_reservationsFilteredTotal}} {% if _reservationsFilteredTotal == 1 %}reservation{% else %}reservations{% endif %} matching <strong>‘{{myData.searchTerm}}’</strong>
-      {% endif %}
-      <!-- Just filter -->
-      {% if myData.searchorfilterapplied == true %}
-        {{_reservationsFilteredTotal}} {% if _reservationsFilteredTotal == 1 %}reservation{% else %}reservations{% endif %} matching {% for _term in myData.searchfilters %}{% if loop.first == false and loop.last == false and loop.length > 1 %}, {% endif %}{% if loop.last and loop.length > 1 %} and {% endif %}<strong>{{_term}}</strong>{% endfor %}
-      {% endif %}
-      <!-- Both search and filter -->
-    </p> 
+        {{_reservationsFilteredTotal}} {% if _reservationsFilteredTotal == 1 %}reservation{% else %}reservations{% endif %}{% if myData.searchorfilterapplied == true %} matching {% for _term in myData.searchfilters %}{% if loop.first == false and loop.last == false and loop.length > 1 %}, {% endif %}{% if loop.last and loop.length > 1 %} and {% endif %}<strong>{{_term}}</strong>{% endfor %}{% endif %}
+    </p>
 
     {% if _reservationsFilteredTotal > 0 %}
     <table class="govuk-table">
