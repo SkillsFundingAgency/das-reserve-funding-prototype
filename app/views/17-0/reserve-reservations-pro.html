@@ -50,6 +50,12 @@
 
 {% block content %}
 
+<style>
+.filter-checkbox-label::before {
+    background: white;
+}
+</style>
+
 <!-- Heading -->
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -137,6 +143,24 @@
           </div>
       </div>
     </div>
+
+    {% if myData.filtersnotowned == "true" %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half" >
+          <div class="govuk-form-group" style="margin-bottom: 20px">
+              <div class="govuk-checkboxes govuk-checkboxes--small">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="notcreated_ft" name="notcreated_ft" type="checkbox" value="{{myData.filterNotCreated}}" {% if myData.filterNotCreated == "true" %}checked{% endif %} >
+                    <label class="govuk-label govuk-checkboxes__label filter-checkbox-label" for="notcreated_ft">
+                      Include reservations you have not created
+                    </label>
+                </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    {% endif %}
+    
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-third" >
         <button type="submit" class="govuk-button" style="margin-bottom: 20px">Apply filters</button>
@@ -214,6 +238,7 @@
                 {% endif %}
               </td>
           </tr>
+
           {% endif %}
         {% endfor %}
       </tbody>

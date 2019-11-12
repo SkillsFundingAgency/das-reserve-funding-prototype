@@ -30,18 +30,30 @@ module.exports = function (router,_myData) {
             _employer.reservations = 0
         });
         _account.reservations.forEach(function(_reservation, index) {
+
+            
+
             if(_reservation.status != "expired" && (_counter < _count)){
-                _reservation.visible = true
-                _account.employers.forEach(function(_employer, index) {
-                    var _check = _employer.name
-                    if(_account.type == "emp"){
-                        _check = _employer.id
-                    }
-                    if(_reservation.entity == _check){
-                        _employer.reservations++
-                    }
-                });
-                _counter++
+                // if ((req.session.myData.filternotcreatedapplied == true) || (req.session.myData.filternotcreatedapplied == false && _reservation.owned == true)) {
+                    // if provider
+                    // if (_account.type == "pro" && req.session.myData.filternotcreatedapplied == true && _reservation.owned != true) {
+                    //     _reservation.visible = true
+                    // }
+
+                    _reservation.visible = true
+                    _counter++
+
+                    _account.employers.forEach(function(_employer, index) {
+                        var _check = _employer.name
+                        if(_account.type == "emp"){
+                            _check = _employer.id
+                        }
+                        if(_reservation.entity == _check){
+                            _employer.reservations++
+                        }
+                    });
+
+                // }
             }
         });
     }
@@ -488,11 +500,13 @@ module.exports = function (router,_myData) {
         req.session.myData.paging = "false"
         req.session.myData.search = "true"
         req.session.myData.filters = "true"
+        req.session.myData.filtersnotowned = "false"
         req.session.myData.assignproviders = "false"
 
         req.session.myData.filterEmp = "all"
         req.session.myData.filterCourse = "all"
         req.session.myData.filterDate = "all"
+        req.session.myData.filterNotCreated = "false"
 
         //Create fake data - only used when new json data files need to be generated
         // createProviderData(req)
@@ -563,6 +577,7 @@ module.exports = function (router,_myData) {
         req.session.myData.paging = req.query.c_pg || req.session.myData.paging
         req.session.myData.search = req.query.c_sr || req.session.myData.search
         req.session.myData.filters = req.query.c_ft || req.session.myData.filters
+        req.session.myData.filtersnotowned = req.query.c_ftno || req.session.myData.filtersnotowned
         req.session.myData.assignproviders = req.query.c_pa || req.session.myData.assignproviders
 
         //Dropout type
@@ -644,12 +659,14 @@ module.exports = function (router,_myData) {
         req.session.myData.filterempapplied = false
         req.session.myData.filtercourseapplied = false
         req.session.myData.filterdateapplied = false
+        req.session.myData.filternotcreatedapplied = false
         req.session.myData.searchfilters = []
         var _searchMatchCount = 0,
             _searchQ = req.query.q,
             _filterEmp = req.query.emp_ft,
             _filterCourse = req.query.course_ft,
-            _filterDate = req.query.date_ft
+            _filterDate = req.query.date_ft,
+            _filterNotCreated = req.query.notcreated_ft
         _reservations.forEach(function(_reservation, index) {
             _reservation.search = true
         });
@@ -710,6 +727,13 @@ module.exports = function (router,_myData) {
         } else {
             req.session.myData.filterDate = "all"
         }
+        // Not created
+        if(_filterNotCreated){
+            req.session.myData.filterNotCreated = "true"
+            req.session.myData.filternotcreatedapplied = true
+        } else {
+            req.session.myData.filterNotCreated = "false"
+        }
 
         // Check if matches all it needs to
         if(req.session.myData.searchorfilterapplied == true) {
@@ -737,6 +761,8 @@ module.exports = function (router,_myData) {
 
             });
         }
+
+        // setVisibleReservations(req)
 
         res.render(version + '/reserve-reservations-pro', {
             myData:req.session.myData

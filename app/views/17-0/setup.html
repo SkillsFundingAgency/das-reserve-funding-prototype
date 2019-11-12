@@ -216,13 +216,25 @@
 
             <!-- Filters -->
             <div class="govuk-form-group" style="margin-bottom: 10px">
-                <div class="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="setupFilters" name="setupFilters" type="checkbox" value="setupFilters" data-option="setupFilters" {% if myData.filters == "true" %}checked{% endif %}>
-                    <label class="govuk-label govuk-checkboxes__label" for="setupFilters">
-                    Filters (not functioning)
-                    </label>
-                </div>
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="setupFilters" name="setupFilters" type="checkbox" value="setupFilters" data-option="setupFilters" {% if myData.filters == "true" %}checked{% endif %} data-aria-controls="conditional-setupFilters">
+                        <label class="govuk-label govuk-checkboxes__label" for="setupFilters">
+                        Filters
+                        </label>
+                    </div>
+                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-setupFilters">
+                        <div class="govuk-form-group">
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="setupNotOwned" name="setupNotOwned" type="checkbox" value="setupNotOwned" data-option="setupNotOwned" {% if myData.filtersnotowned == "true" %}checked{% endif %} >
+                                    <label class="govuk-label govuk-checkboxes__label" for="setupNotOwned">
+                                    Include 'Show not owned'
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -603,6 +615,7 @@
                 _urlPaging = (_options.filter("#setupPaging").is(":checked")) ? ("&c_pg=true") : ("&c_pg=false"),
                 _urlSearch = (_options.filter("#setupSearch").is(":checked")) ? ("&c_sr=true") : ("&c_sr=false"),
                 _urlFilters = (_options.filter("#setupFilters").is(":checked")) ? ("&c_ft=true") : ("&c_ft=false"),
+                _urlFiltersNotOwned = (_options.filter("#setupNotOwned").is(":checked")) ? ("&c_ftno=true") : ("&c_ftno=false"),
                 _urlProAssign = (_options.filter("#setupProAssign").is(":checked")) ? ("&c_pa=true") : ("&c_pa=false");
            
             //Queries combined
@@ -612,7 +625,7 @@
             if(_options.filter("#setupType").val() == "emp") {
                 var _urlPageQueries = _urlPageQueries + _urlEntitycount + _urlExistingProviders + _urlProAssign + _urlECount;
             } else {
-                var _urlPageQueries = _urlPageQueries + _urlPaging + _urlSearch + _urlFilters + _urlCount
+                var _urlPageQueries = _urlPageQueries + _urlPaging + _urlSearch + _urlFilters + _urlFiltersNotOwned + _urlCount;
             }
             //URL text
             var _startURLText = _urlBase + _urlPageQueries,
