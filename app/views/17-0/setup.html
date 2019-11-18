@@ -630,7 +630,7 @@
                 _urlName = "&n=" + _options.filter("#setupName").val(),
                 // _urlEntityName = "&en=" + _options.filter("#setupEntity").val(),
                 _urlEntitycount = "&ec=" + _options.filter("#setupEntityCount").val(),
-                _urlAccountOwner = "&ao=" + _options.filter("#setupOwner").val(),
+                _urlAccountOwner = (_options.filter("#setupOwner").is(":checked")) ? ("&ao=true") : ("&ao=false"),
                 _urlExistingProviders = "&ep=" + _options.filter("#setupExistingProviders").val(),
                 _urlECount = "&ce=" + _options.filter("#setupECount").val(),
                 _urlCount = "&c=" + _options.filter("#setupCount").val(),
