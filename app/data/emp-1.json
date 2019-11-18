@@ -12,12 +12,14 @@
         {
             "id": "aston",
             "name": "ASTON MARTIN LIMITED",
-            "reservations": 0
+            "reservations": 0,
+            "agreementsigned": true
         },
         {
             "id": "kendle",
             "name": "KENDLE LTD",
-            "reservations": 0
+            "reservations": 0,
+            "agreementsigned": false
         }
     ],
     "providers": [

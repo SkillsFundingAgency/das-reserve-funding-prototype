@@ -285,7 +285,7 @@ module.exports = function (router,_myData) {
         req.session.myData.addProvider == req.session.myData.addProvider || false
 
         // Provider
-        req.session.myData.selectedEmployer = req.session.myData.selectedEmployer || req.session.myData.accounts[req.session.myData.pro].employers[0].id
+        req.session.myData.selectedEmployer = req.session.myData.selectedEmployer || req.session.myData.accounts[req.session.myData.account].employers[0].id
         req.session.myData.whichTrainingCourseAnswer = req.session.myData.whichTrainingCourseAnswer || req.session.myData.courses.list[0].value
         req.session.myData.whichTrainingStartDateAnswer = req.session.myData.whichTrainingStartDateAnswer || _proStartDate
     }
@@ -304,7 +304,8 @@ module.exports = function (router,_myData) {
                 "reserve-choose-training",
                 "reserve-confirm-org",
                 "reserve-confirmation-pro",
-                "reserve-reservations-pro"
+                "reserve-reservations-pro",
+                "reserve-unsigned-agreement-pro"
             ],
             _employerPages = [
                 "employer-home",
@@ -325,7 +326,8 @@ module.exports = function (router,_myData) {
                 "reserve-delete-provider-confirmation",
                 "reserve-added-provider-confirmation",
                 "reserve-manage-reservation",
-                "reserve-dropout"
+                "reserve-dropout",
+                "reserve-unsigned-agreement-emp"
             ]
         if(_providerPages.indexOf(_page) > -1){
             _type = "pro"
@@ -502,6 +504,7 @@ module.exports = function (router,_myData) {
         req.session.myData.filters = "true"
         req.session.myData.filtersnotowned = "false"
         req.session.myData.assignproviders = "false"
+        req.session.myData.accountowner = "true"
 
         req.session.myData.filterEmp = "all"
         req.session.myData.filterCourse = "all"
@@ -579,6 +582,9 @@ module.exports = function (router,_myData) {
         req.session.myData.filters = req.query.c_ft || req.session.myData.filters
         req.session.myData.filtersnotowned = req.query.c_ftno || req.session.myData.filtersnotowned
         req.session.myData.assignproviders = req.query.c_pa || req.session.myData.assignproviders
+
+        //Account owner?
+        req.session.myData.accountowner = req.query.ao || req.session.myData.accountowner
 
         //Dropout type
         req.session.myData.dropout = req.query.do || req.session.myData.dropout
@@ -805,9 +811,26 @@ module.exports = function (router,_myData) {
                 myData: req.session.myData
             });
         } else {
+
             req.session.myData.whichOrgAnswer = req.session.myData.whichOrgAnswerTemp
             req.session.myData.whichOrgAnswerTemp = ""
-            res.redirect(301, '/' + version + '/reserve-choose-course');
+
+            //Selected employer
+            var _selectedEmployer
+            _account.employers.forEach(function(_employer, index) {
+                if(req.session.myData.whichOrgAnswer == _employer.id) {
+                    _selectedEmployer = _employer
+                    req.session.myData.selectedEmployer = _employer.id
+                }
+            });
+
+            // If NOT signed agreement
+            if(_selectedEmployer.agreementsigned == false){
+                res.redirect(301, '/' + version + '/reserve-unsigned-agreement-emp');
+            } else {
+                res.redirect(301, '/' + version + '/reserve-choose-course');
+            }
+
         }
     });
 
@@ -1768,9 +1791,24 @@ module.exports = function (router,_myData) {
         }
     });
 
+    //Unisgned agreement pro
+    router.get('/' + version + '/reserve-unsigned-agreement-pro', function (req, res) {
+        req.session.myData.selectedEmployer = req.query.employer || req.session.myData.accounts[req.session.myData.account].employers[0].id
+        res.render(version + '/reserve-unsigned-agreement-pro', {
+            myData:req.session.myData
+        });
+    });
+
+    //Unisgned agreement emp
+    router.get('/' + version + '/reserve-unsigned-agreement-emp', function (req, res) {
+        // req.session.myData.selectedEmployer = req.query.employer || req.session.myData.accounts[req.session.myData.account].employers[0].id
+        res.render(version + '/reserve-unsigned-agreement-emp', {
+            myData:req.session.myData
+        });
+    });
+
     // Limit reached
     router.get('/' + version + '/reserve-limit-reached', function (req, res) {
-        
         res.render(version + '/reserve-limit-reached', {
             myData:req.session.myData
         });

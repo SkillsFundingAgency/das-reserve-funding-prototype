@@ -91,10 +91,20 @@
                     {% endif %}
                   </td>
                   <td class="govuk-table__cell">{{_employer.aname}}</td>
-                  <td class="govuk-table__cell">{{_employer.id}}</td>
+                  <td class="govuk-table__cell">
+                      {% if _employer.agreementsigned == false %}
+                      Agreement not accepted
+                      {% else %}
+                      {{_employer.id}}
+                      {% endif %}
+                  </td>
                   <td class="govuk-table__cell govuk-table__cell--numeric" >
                     {% if _employer.reservations < myData.limit or myData.limit == "no" %}
-                    <a href="reserve-confirm-org?employer={{_employer.id}}" class="govuk-link govuk-link--no-visited-state">Select</a>
+                      {% if _employer.agreementsigned == false %}
+                      <a href="reserve-unsigned-agreement-pro?employer={{_employer.id}}" class="govuk-link govuk-link--no-visited-state">Select</a>
+                      {% else %}
+                      <a href="reserve-confirm-org?employer={{_employer.id}}" class="govuk-link govuk-link--no-visited-state">Select</a>
+                      {% endif %}
                     {% else %}
                     <!-- [Reached limit] -->
                     {% endif %}

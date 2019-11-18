@@ -16,84 +16,98 @@
             "id": "X96DJ3",
             "name": "DH SERVICES LTD",
             "aname": "DH Services",
+            "agreementsigned": false,
             "reservations": 0
         },
         {
             "id": "29J4MX",
             "name": "KENDLE LIMITED",
             "aname": "Kendle",
+            "agreementsigned": true,
             "reservations": 0
         },
         {
             "id": "XNVMDJ",
             "name": "RED CROSS LIMITED",
             "aname": "The Red Cross",
+            "agreementsigned": true,
             "reservations": 0
         },
         {
             "id": "25RG4Y",
             "name": "SAFEBURYS LIMITED",
             "aname": "Safeburys Warehouses",
+            "agreementsigned": true,
             "reservations": 0
         },
         {
             "id": "JU30LP",
             "name": "ACE RECRUIT LTD",
             "aname": "Ideal Recruitment Resourcing",
+            "agreementsigned": true,
             "reservations": 0
         },
         {
             "id": "42BTLT",
             "name": "OFFICE HOLDINGS LTD",
             "aname": "Office Holdings Ltd",
+            "agreementsigned": true,
             "reservations": 0
         },
         {
             "id": "D35ER9",
             "name": "FULL SECURE LIMITED",
             "aname": "Complete Security Services",
+            "agreementsigned": true,
             "reservations": 0
         },
         {
             "id": "79CVF8",
             "name": "J.G. WAREHOUSING LTD.",
             "aname": "James G Warehouses",
+            "agreementsigned": true,
             "reservations": 0
         },
         {
             "id": "HV73JK",
             "name": "LANGDON ENTERPRISES LTD",
             "aname": "R Langdon",
+            "agreementsigned": true,
             "reservations": 0
         },
         {
             "id": "R49PLY",
             "name": "DAR REN LIMITED",
             "aname": "Dar Ren Enterprises",
+            "agreementsigned": true,
             "reservations": 0
         },
         {
             "id": "CYMXGJ",
             "name": "BARGAIN ACCOUNTING LTD",
             "aname": "Roberto Accountants",
+            "agreementsigned": true,
             "reservations": 0
         },
         {
             "id": "V0MXGJ",
             "name": "WALSH AND CO LTD",
             "aname": "Walsh & Co",
+            "agreementsigned": false,
             "reservations": 0
         },
         {
             "id": "X2O42K",
             "name": "BOXON TRADING LTD",
             "aname": "BOXON Traders",
+            "agreementsigned": true,
             "reservations": 0
         },
         {
             "id": "LVWW9L",
             "name": "TABLET MGMT LTD",
             "aname": "Tablet Management",
+            "agreementsigned": true,
             "reservations": 0
         }
     ],

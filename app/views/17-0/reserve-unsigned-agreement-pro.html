@@ -1,0 +1,42 @@
+{% set _account = myData.accounts[myData.account] %}
+
+<!-- Layout type -->
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
+  {% extends "layout.html" %}
+{% endif %}
+
+{% set _selectedEmployer = {} %}
+{% for _employer in _account.employers %}
+    {% if myData.selectedEmployer == _employer.id %}
+        {% set _selectedEmployer = _employer %}
+    {% endif %}
+{% endfor %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+          <h1 class="govuk-heading-xl">[{{_selectedEmployer.name|upper}} has not accepted their employer agreement]</h1>
+
+          <p class="govuk-body">[The employer agreement is between {{_selectedEmployer.name|upper}} and the Education and Skills Funding Agency (ESFA).]</p>
+          <p class="govuk-body">[{{_selectedEmployer.name|upper}} cannot reserve or manage funding until they accept the agreement.]</p>
+          <p class="govuk-body">[They can view their agreement in 'your organisations and agreements' in their manage apprenticeships digital account.]</p>
+
+          <p class="govuk-body">
+            <a role="button" draggable="false" class="govuk-button" tabindex="1" href="provider-home">[Return to home]</a>
+          </p>
+
+    </div>
+</div>
+{% endblock %}

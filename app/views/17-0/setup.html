@@ -119,6 +119,18 @@
             <input class="govuk-input" id="setupName" name="setupName" data-option="setupName" type="text" value="{{_account.name}}">
         </div>
 
+        <!-- Permissions -->
+        <div class="govuk-form-group" id="permissions" >
+            <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="setupOwner" name="setupOwner" type="checkbox" value="setupOwner" data-option="setupOwner" {% if myData.accountowner == "true" %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label" for="setupOwner">
+                        Account owner (can sign agreement)
+                    </label>
+                </div>
+            </div>
+        </div>
+
         <!-- Entity name -->
         <!-- <div class="govuk-form-group" id="entity">
             <label class="govuk-label" for="setupEntity">
@@ -249,6 +261,7 @@
                 </div>
                 </div>
             </div>
+            
         </div>
 
         <div data-emp-components="true">
@@ -442,7 +455,19 @@
                     <td class="govuk-table__cell"  style="color:grey">n/a</td>
                 </tr>
 
-
+                <!-- <tr class="govuk-table__row">
+                    <th class="govuk-table__cell" colspan="3"><h2 class="govuk-heading-m" style="margin-top:20px">Spend controls</h2></th>
+                </tr> -->
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Agreement not signed (account owner)</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-unsigned-agreement-emp?ao=true">/reserve-unsigned-agreement-emp?ao=true</a></td>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-unsigned-agreement-pro">/reserve-unsigned-agreement-pro</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell">Agreement not signed (transactor)</th>
+                    <td class="govuk-table__cell" ><a class="govuk-link govuk-link--no-visited-state" href="reserve-unsigned-agreement-emp?ao=false">/reserve-unsigned-agreement-emp?ao=false</a></td>
+                    <td class="govuk-table__cell"  style="color:grey">n/a</td>
+                </tr>
 
                 <tr class="govuk-table__row">
                     <th class="govuk-table__cell" colspan="3"><h2 class="govuk-heading-m" style="margin-top:20px">Spend controls</h2></th>
@@ -540,6 +565,7 @@
             _options = $("[data-option]"),
             // _entity = $("#entity"),
             _entitycount = $("#entitycount"),
+            _permissions = $("#permissions"),
             _limit = $("#limit"),
             // _empLimit = $("#empLimit"),
             _empCount = $("#empCount"),
@@ -562,6 +588,7 @@
             if(_thisVal == "emp") {
                 // _entity.show()
                 _entitycount.show()
+                _permissions.show()
                 // _limit.show()
                 _existingproviders.show()
                 // _empLimit.hide()
@@ -574,6 +601,7 @@
             } else {
                 // _entity.hide()
                 _entitycount.hide()
+                _permissions.hide()
                 // _limit.hide()
                 _existingproviders.hide()
                 // _empLimit.show()
@@ -602,6 +630,7 @@
                 _urlName = "&n=" + _options.filter("#setupName").val(),
                 // _urlEntityName = "&en=" + _options.filter("#setupEntity").val(),
                 _urlEntitycount = "&ec=" + _options.filter("#setupEntityCount").val(),
+                _urlAccountOwner = "&ao=" + _options.filter("#setupOwner").val(),
                 _urlExistingProviders = "&ep=" + _options.filter("#setupExistingProviders").val(),
                 _urlECount = "&ce=" + _options.filter("#setupECount").val(),
                 _urlCount = "&c=" + _options.filter("#setupCount").val(),
@@ -623,7 +652,7 @@
             var _urlPageQueries = _urlPage + _urlReset + _urlType + _urlName + _urlLimit + _urlUpcoming + _urlPaused + _urlDates;
             //Base + type specific
             if(_options.filter("#setupType").val() == "emp") {
-                var _urlPageQueries = _urlPageQueries + _urlEntitycount + _urlExistingProviders + _urlProAssign + _urlECount;
+                var _urlPageQueries = _urlPageQueries + _urlEntitycount + _urlExistingProviders + _urlProAssign + _urlECount + _urlAccountOwner;
             } else {
                 var _urlPageQueries = _urlPageQueries + _urlPaging + _urlSearch + _urlFilters + _urlFiltersNotOwned + _urlCount;
             }
