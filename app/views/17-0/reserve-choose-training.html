@@ -81,7 +81,7 @@
                     {% if myData.validationErrors.whichTrainingStartDateAnswer %}
                     <span id="whichTrainingStartDateAnswer-error" class="govuk-error-message">
                         <span class="govuk-visually-hidden">Error:</span>
-                        You must select a start date
+                        {{myData.validationErrors.whichTrainingStartDateAnswer.message}}
                     </span>
                     {% endif %}
                     <div class="govuk-radios" id="whichTrainingStartDateAnswer">

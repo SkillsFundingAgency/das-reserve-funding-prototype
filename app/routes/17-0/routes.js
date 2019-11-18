@@ -1005,7 +1005,7 @@ module.exports = function (router,_myData) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.whichStartDateAnswer = {
                 "anchor": "whichStartDate-1",
-                "message": "Select a start date"
+                "message": "You must select an apprenticeship start date"
             }
         }
         // Next action
@@ -1511,7 +1511,7 @@ module.exports = function (router,_myData) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.whichTrainingStartDateAnswer = {
                 "anchor": "whichTrainingStartDate-1",
-                "message": "Select a start date"
+                "message": "You must select an apprenticeship start date"
             }
         }
         // Next action
