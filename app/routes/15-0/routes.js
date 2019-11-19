@@ -287,7 +287,7 @@ module.exports = function (router,_myData) {
                 "id": "nov2019",
                 "name": "November 2019",
                 "range": "Nov 2019 to Jan 2020",
-                "endDate": new Date("02-01-2020")
+                "endDate": new Date("02-01-2020"),
                 "promvs": true
             },
             {
