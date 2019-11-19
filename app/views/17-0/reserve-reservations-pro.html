@@ -250,7 +250,7 @@
 {% endif %}
 
 <!-- Pagination -->
-{% if _reservationsTotal > 50 and myData.paging == "true" %}
+{% if _reservationsTotal > 10 and myData.paging == "true" %}
 {% set _currentPage = 1 %}
 {% set _firstPage = "true" %}
 {% set _lastPage = "false" %}
