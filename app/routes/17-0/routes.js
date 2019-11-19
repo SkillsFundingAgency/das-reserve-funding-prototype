@@ -505,6 +505,7 @@ module.exports = function (router,_myData) {
         req.session.myData.filtersnotowned = "false"
         req.session.myData.assignproviders = "false"
         req.session.myData.accountowner = "true"
+        req.session.myData.accountowners = 1
 
         req.session.myData.filterEmp = "all"
         req.session.myData.filterCourse = "all"
@@ -585,6 +586,7 @@ module.exports = function (router,_myData) {
 
         //Account owner?
         req.session.myData.accountowner = req.query.ao || req.session.myData.accountowner
+        req.session.myData.accountowners = req.query.ac || req.session.myData.accountowners
 
         //Dropout type
         req.session.myData.dropout = req.query.do || req.session.myData.dropout

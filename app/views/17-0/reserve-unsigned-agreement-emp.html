@@ -38,19 +38,26 @@
               <a role="button" draggable="false" class="govuk-button" tabindex="1" href="#">[View the agreement]</a>
             </p>
         {% else %}
-        <h1 class="govuk-heading-xl">[Employer agreement not accepted]</h1>
-        <p class="govuk-body">[The employer agreement is between {{_selectedEmployer.name|upper}} and the Education and Skills Funding Agency (ESFA).]</p>
-        <p class="govuk-body">[{{_selectedEmployer.name|upper}} cannot reserve or manage funding until they accept the agreement.]</p>
-        <h2 class="govuk-heading-m">You do not have permission to accept the agreement]</h2>
-        <p class="govuk-body">[Someone with permission needs to accept the agreement or give you permission to accept it.]</p>
-        <p class="govuk-body">[Name] ([emailaddress]) has permission.]</p>
-        <!-- Team members with permission:
-        [Name] - [emailaddress]
-        [Name 2] - [emailaddress] -->
-        <p class="govuk-body">[Find the agreement in your <a href="#" class="govuk-link">organisations and agreements</a>. Change team members' permission in <a class="govuk-link" href="#">your team</a>.]</p>
-        <p class="govuk-body">
-          <a role="button" draggable="false" class="govuk-button" tabindex="1" href="employer-home">[Return to home]</a>
-        </p>
+          <h1 class="govuk-heading-xl">[Employer agreement not accepted]</h1>
+          <p class="govuk-body">[The employer agreement is between {{_selectedEmployer.name|upper}} and the Education and Skills Funding Agency (ESFA).]</p>
+          <p class="govuk-body">[{{_selectedEmployer.name|upper}} cannot reserve or manage funding until they accept the agreement.]</p>
+          <h2 class="govuk-heading-m">You do not have permission to accept the agreement]</h2>
+          <p class="govuk-body">[Someone with permission needs to accept the agreement or give you permission to accept it.]</p>
+
+          {% if myData.accountowners == 1 %}
+            <p class="govuk-body">[Name] ([emailaddress]) has permission.]</p>
+          {% else %}
+            <p class="govuk-body">[Team members with permission:]</p>
+            <ul class="govuk-list govuk-list--bullet">
+              <li>[Name] - [emailaddress]</li>
+              <li>[Name 2] - [emailaddress]</li>
+            </ul>
+          {% endif %}
+
+          <p class="govuk-body">[Find the agreement in your <a href="#" class="govuk-link">organisations and agreements</a>. Change team members' permission in <a class="govuk-link" href="#">your team</a>.]</p>
+          <p class="govuk-body">
+            <a role="button" draggable="false" class="govuk-button" tabindex="1" href="employer-home">[Return to home]</a>
+          </p>
         {% endif %}
 
     </div>
