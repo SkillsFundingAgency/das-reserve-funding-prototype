@@ -420,13 +420,13 @@ module.exports = function (router,_myData) {
                 "id": "jun2019",
                 "name": "June 2019",
                 "range": "Jun 2019 to Aug 2019",
-                "endDate": new Date("09-01-2019"),
+                "endDate": new Date("09-01-2019")
             },
             {
                 "id": "jul2019",
                 "name": "July 2019",
                 "range": "Jul 2019 to Sep 2019",
-                "endDate": new Date("10-01-2019"),
+                "endDate": new Date("10-01-2019")
             },
             {
                 "id": "aug2019",
