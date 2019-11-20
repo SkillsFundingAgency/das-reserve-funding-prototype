@@ -28,35 +28,37 @@
     <div class="govuk-grid-column-two-thirds">
 
         {% if myData.accountowner == "true" %}
-            <h1 class="govuk-heading-xl">[Employer agreement not accepted]</h1>
+            <h1 class="govuk-heading-xl">Employer agreement not accepted</h1>
 
-            <p class="govuk-body">[The employer agreement is between {{_selectedEmployer.name|upper}} and the Education and Skills Funding Agency (ESFA).]</p>
-            <p class="govuk-body">[{{_selectedEmployer.name|upper}} cannot reserve or manage funding until they accept the agreement.]</p>
-            <p class="govuk-body">[You can view the agreement now or find it later in 'your organisations and agreements'.]</p>
+            <p class="govuk-body">You must accept your employer agreement with the Education and Skills Funding Agency (ESFA) before you can reserve or manage funding.</p>
+
+            <p class="govuk-body">You can view the agreement now or find it later in 'your organisations and agreements'.</p>
+
 
             <p class="govuk-body">
-              <a role="button" draggable="false" class="govuk-button" tabindex="1" href="#">[View the agreement]</a>
+              <a role="button" draggable="false" class="govuk-button" tabindex="1" href="#">View the agreement</a>
             </p>
         {% else %}
-          <h1 class="govuk-heading-xl">[Employer agreement not accepted]</h1>
-          <p class="govuk-body">[The employer agreement is between {{_selectedEmployer.name|upper}} and the Education and Skills Funding Agency (ESFA).]</p>
-          <p class="govuk-body">[{{_selectedEmployer.name|upper}} cannot reserve or manage funding until they accept the agreement.]</p>
-          <h2 class="govuk-heading-m">You do not have permission to accept the agreement]</h2>
-          <p class="govuk-body">[Someone with permission needs to accept the agreement or give you permission to accept it.]</p>
+          <h1 class="govuk-heading-xl">Employer agreement not accepted</h1>
+          <p class="govuk-body">Employers must accept your employer agreement with the Education and Skills Funding Agency (ESFA) before they can reserve or manage funding.</p>
+
+          <h2 class="govuk-heading-m">You do not have permission to accept the agreement</h2>
+
+          <p class="govuk-body">Someone with permission needs to accept the agreement or give you permission to accept it.</p>
 
           {% if myData.accountowners == 1 %}
-            <p class="govuk-body">[Name] ([emailaddress]) has permission.]</p>
+            <p class="govuk-body">[Team member name] ([team member emailaddress]) has permission.</p>
           {% else %}
-            <p class="govuk-body">[Team members with permission:]</p>
+            <p class="govuk-body">Team members with permission:</p>
             <ul class="govuk-list govuk-list--bullet">
-              <li>[Name] - [emailaddress]</li>
-              <li>[Name 2] - [emailaddress]</li>
+              <li>[Team member name] - [Team member emailaddress]</li>
+              <li>[Team member name 2] - [Team member emailaddress 2]</li>
             </ul>
           {% endif %}
 
-          <p class="govuk-body">[Find the agreement in your <a href="#" class="govuk-link">organisations and agreements</a>. Change team members' permission in <a class="govuk-link" href="#">your team</a>.]</p>
+          <p class="govuk-body">Find the agreement in your <a href="#" class="govuk-link">organisations and agreements</a>. Change team members' permission in <a class="govuk-link" href="#">your team</a>.</p>
           <p class="govuk-body">
-            <a role="button" draggable="false" class="govuk-button" tabindex="1" href="employer-home">[Return to home]</a>
+            <a role="button" draggable="false" class="govuk-button" tabindex="1" href="employer-home">Return to homepage</a>
           </p>
         {% endif %}
 

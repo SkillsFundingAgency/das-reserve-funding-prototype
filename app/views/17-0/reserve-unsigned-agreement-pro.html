@@ -27,14 +27,13 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-          <h1 class="govuk-heading-xl">[{{_selectedEmployer.name|upper}} has not accepted their employer agreement]</h1>
+          <h1 class="govuk-heading-xl">{{_selectedEmployer.name|upper}} has not accepted their employer agreement</h1>
 
-          <p class="govuk-body">[The employer agreement is between {{_selectedEmployer.name|upper}} and the Education and Skills Funding Agency (ESFA).]</p>
-          <p class="govuk-body">[{{_selectedEmployer.name|upper}} cannot reserve or manage funding until they accept the agreement.]</p>
-          <p class="govuk-body">[They can view their agreement in 'your organisations and agreements' in their manage apprenticeships digital account.]</p>
+          <p class="govuk-body">{{_selectedEmployer.name|upper}} must accept their employer agreement with the Education and Skills Funding Agency (ESFA) before they can reserve or manage funding.</p>
+          <p class="govuk-body">They can view their agreement in 'your organisations and agreements' within their apprenticeship service account.</p>
 
           <p class="govuk-body">
-            <a role="button" draggable="false" class="govuk-button" tabindex="1" href="provider-home">[Return to home]</a>
+            <a role="button" draggable="false" class="govuk-button" tabindex="1" href="provider-home">Return to homepage</a>
           </p>
 
     </div>
