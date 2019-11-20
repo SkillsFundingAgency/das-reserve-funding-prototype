@@ -910,7 +910,7 @@ module.exports = function (router,_myData) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.confirmOrgAnswer = {
                 "anchor": "confirmOrg-1",
-                "message": "Select whether to secure funds for this employer or not"
+                "message": "Select whether to reserve funding for this employer or not"
             }
         }
         // Next action
@@ -1007,7 +1007,7 @@ module.exports = function (router,_myData) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.whichStartDateAnswer = {
                 "anchor": "whichStartDate-1",
-                "message": "You must select an apprenticeship start date"
+                "message": "Select an apprenticeship start date"
             }
         }
         // Next action
@@ -1505,7 +1505,7 @@ module.exports = function (router,_myData) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.whichTrainingCourseAnswer = {
                 "anchor": "whichTrainingCourse-1",
-                "message": "Select a course"
+                "message": "Select which apprenticeship training your apprentice will take"
             }
         }
         // Validation - start date
@@ -1643,7 +1643,7 @@ module.exports = function (router,_myData) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.whatNextAnswer = {
                 "anchor": "whatNext-1",
-                "message": "Select what you would like to do next"
+                "message": "Select what you want to do next"
             }
         }
         // Next action
@@ -1715,7 +1715,7 @@ module.exports = function (router,_myData) {
             req.session.myData.validationError = "true"
             req.session.myData.validationErrors.deleteAnswer = {
                 "anchor": "delete-1",
-                "message": "Select whether you want to delete this reservation"
+                "message": "Select whether you want to delete this reservation or not"
             }
         }
         // Next action
