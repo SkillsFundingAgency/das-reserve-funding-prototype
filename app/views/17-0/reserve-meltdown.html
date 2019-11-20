@@ -1,21 +1,36 @@
 {% set _account = myData.accounts[myData.account] %}
 
 <!-- Layout type -->
-
+{% set _homepageURL = "employer-home" %}
+{% if _account.type == "emp" %}
+  {% extends "layout-as-emp.html" %}
+{% elif _account.type == "pro" %}
+  {% set _homepageURL = "provider-home" %}
+  {% extends "layout-as-pro.html" %}
+{% else %}
   {% extends "layout.html" %}
+{% endif %}
 
-
+{% block beforeContent %}
+{{ govukBackLink({
+    text: "Back",
+    href: "javascript: window.history.go(-1)"
+  }) }}
+{% endblock %}
 
 {% block content %}
+
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      <h1 class="govuk-heading-l">
-        There has been an error
+      <h1 class="govuk-heading-xl">
+          There is a problem with the service
       </h1>
 
-      <p class="govuk-body">error id: ag-502</p>
+      <p class="govuk-body">This has been logged and will be investigated.</p>
+      <p class="govuk-body">Try again later.</p>
+      <p class="govuk-body"><a href="#" class="govuk-link">Contact the Manage apprenticeships service helpdesk</a> if you need to speak to someone about managing funds.</p>
 
     </div>
 </div>

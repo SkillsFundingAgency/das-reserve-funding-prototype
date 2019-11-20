@@ -23,13 +23,23 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <h1 class="govuk-heading-xl">
-            Access denied
-        </h1>
+      {% if _account.type == "emp" %}
 
-        <p>If you are experiencing difficulty accessing the area of the site you need, first contact an/the account owner to ensure you have the correct role assigned to your account.</p>
+        <h1 class="govuk-heading-xl">Access denied</h1>
+        <p class="govuk-body">A member of your team will need to give you permission to reserve and manage funding.</p>
+        <p class="govuk-body">View team members’ permission in your team.</p>
 
-        <p class="govuk-body"><a href="{{_homepageURL}}" class="govuk-link" >Go back to the service home page</a></p>
+        <p class="govuk-body">
+            <a href="#" role="button" draggable="false" tabindex="1" class="govuk-button">View your team</a>
+        </p>
+
+      {% else %}
+
+        <h1 class="govuk-heading-xl">Access denied</h1>
+        <p class="govuk-body">You need to speak to your organisation’s super user or request this role through <a href="https://logon.fasst.org.uk/" class="govuk-link" >Identity and Access Management System (IDAMS)</a>.</p>
+        <p class="govuk-body">You may have more than one super user in your organisation.</p>
+
+      {% endif %}
 
     </div>
 </div>
